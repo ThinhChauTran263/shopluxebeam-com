@@ -111,7 +111,7 @@
   width: 400px !important;
   height: 100% !important;
   background: #ffffff !important;
-  z-index: 10000 !important; /* Very high z-index */
+  z-index: 999999 !important; /* Maximum z-index */
   display: flex !important;
   flex-direction: column !important;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
@@ -136,7 +136,7 @@
   width: 100% !important;
   height: 100% !important;
   background: rgba(0, 0, 0, 0.5) !important;
-  z-index: 9999 !important;
+  z-index: 999998 !important; /* Just below drawer */
   opacity: 0 !important;
   visibility: hidden !important;
   transition: all 0.3s ease !important;
@@ -186,17 +186,19 @@
 
 /* Cart Header - VERTICAL LAYOUT WITH PROPER SPACING */
 .cart-drawer-header {
-  padding: 15px 20px 25px 20px !important;
+  padding: 15px 0 0 0 !important;
   border-bottom: none !important;
   position: relative !important;
-  min-height: 80px !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .cart-drawer-header::after {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 15px !important;
+  left: 20px !important;
   right: 20px !important;
   height: 1px !important;
   background: #e0e0e0 !important;
@@ -205,7 +207,7 @@
 .cart-drawer-close {
   position: absolute !important;
   top: 15px !important;
-  left: 15px !important;
+  left: 20px !important;
   background: transparent !important;
   border: none !important;
   cursor: pointer !important;
@@ -217,17 +219,20 @@
 .cart-drawer-title {
   font-size: 16px !important;
   font-weight: 400 !important;
-  margin: 35px 0 0 15px !important;
+  margin: 0 !important;
   text-align: left !important;
   color: #000000 !important;
   white-space: normal !important;
   word-spacing: 3px !important;
-  padding: 0 !important;
+  padding: 0 20px 15px 20px !important;
   clear: both !important;
   display: block !important;
-  position: absolute !important;
-  left: 15px !important;
-  top: 50px !important;
+  position: relative !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  line-height: 1.4 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .cart-drawer-title span {
@@ -241,11 +246,11 @@
   padding: 0 !important;
 }
 
-/* Cart Items Container - INDENTED LIKE HEADER WITH SPACE FOR TITLE */
+/* Cart Items Container - ALIGNED WITH HEADER */
 .cart-drawer-items {
   flex: 1 !important;
   overflow-y: auto !important;
-  padding: 10px 20px 10px 50px !important;
+  padding: 10px 20px 10px 20px !important;
   max-height: calc(100vh - 180px) !important;
   min-height: 200px !important;
   background: #ffffff !important;
@@ -263,10 +268,10 @@
   align-items: flex-start;
   gap: 15px;
   padding: 15px 0;
-  margin: 0 0 15px 15px;
+  margin: 0;
   border-bottom: 1px solid #f0f0f0;
   position: relative;
-  width: calc(100% - 15px);
+  width: 100%;
 }
 
 .cart-drawer-item:last-child {
@@ -916,25 +921,24 @@ html body .cart-drawer-footer .cart-subtotal {
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   console.log('Cart drawer script loading...');
   
-  const cartDrawer = document.querySelector('.cart-drawer');
-  const cartOverlay = document.querySelector('.cart-drawer-overlay');
-  const cartClose = document.querySelector('.cart-drawer-close');
-  const cartLinks = document.querySelectorAll('.cart-link-luxe, [href*="cart"]');
-  
-  console.log('Cart drawer elements found:', {
-    drawer: !!cartDrawer,
-    overlay: !!cartOverlay,
-    close: !!cartClose,
-    links: cartLinks.length
-  });
-  
-  if (!cartDrawer) {
-    console.error('Cart drawer not found in DOM!');
-    return;
-  }
+  function initCartDrawer() {
+    const cartDrawer = document.querySelector('.cart-drawer');
+    const cartOverlay = document.querySelector('.cart-drawer-overlay');
+    const cartClose = document.querySelector('.cart-drawer-close');
+    
+    console.log('Cart drawer elements found:', {
+      drawer: !!cartDrawer,
+      overlay: !!cartOverlay,
+      close: !!cartClose
+    });
+    
+    if (!cartDrawer) {
+      console.error('Cart drawer not found in DOM!');
+      return;
+    }
   
   // Apply Sub Total font styles - SEPARATE FUNCTION
   function applySubTotalStyles() {
@@ -1003,24 +1007,8 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
     
-    if (title) {
-      title.style.cssText = `
-        font-size: 16px !important;
-        font-weight: 400 !important;
-        margin: 0 !important;
-        text-align: left !important;
-        color: #000000 !important;
-        white-space: normal !important;
-        word-spacing: 3px !important;
-        display: block !important;
-        line-height: 1.4 !important;
-        padding: 0 !important;
-        clear: both !important;
-        position: absolute !important;
-        left: 15px !important;
-        top: 50px !important;
-      `;
-    }
+    // DO NOT apply inline styles to title - it causes flicker
+    // Title already has correct CSS styles defined in <style> section
   }
   
   // Open cart drawer - ENSURE VISIBILITY
@@ -1053,21 +1041,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Cart drawer should be visible now');
     
-    // Force apply indentation styles immediately
-    setTimeout(() => {
-      const header = cartDrawer.querySelector('.cart-drawer-header');
-      const items = cartDrawer.querySelector('.cart-drawer-items');
-      const closeBtn = cartDrawer.querySelector('.cart-drawer-close');
-      const title = cartDrawer.querySelector('.cart-drawer-title');
-      const subtotal = cartDrawer.querySelector('.cart-subtotal');
+    // Force apply indentation styles immediately - NO DELAY
+    const header = cartDrawer.querySelector('.cart-drawer-header');
+    const items = cartDrawer.querySelector('.cart-drawer-items');
+    const closeBtn = cartDrawer.querySelector('.cart-drawer-close');
+    const title = cartDrawer.querySelector('.cart-drawer-title');
+    const subtotal = cartDrawer.querySelector('.cart-subtotal');
       
       if (header) {
         header.style.cssText = `
-          padding: 15px 20px 25px 20px !important;
+          padding: 15px 0 0 0 !important;
           border-bottom: none !important;
           position: relative !important;
           background: #ffffff !important;
-          min-height: 80px !important;
+          min-height: auto !important;
+          display: flex !important;
+          flex-direction: column !important;
         `;
         
         // Add indented border line
@@ -1077,7 +1066,7 @@ document.addEventListener('DOMContentLoaded', function() {
           borderLine.style.cssText = `
             position: absolute !important;
             bottom: 0 !important;
-            left: 15px !important;
+            left: 20px !important;
             right: 20px !important;
             height: 1px !important;
             background: #e0e0e0 !important;
@@ -1086,13 +1075,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       if (items) {
-        items.style.padding = '10px 20px 10px 50px';
+        items.style.padding = '10px 20px 10px 20px';
       }
       if (closeBtn) {
         closeBtn.style.cssText = `
           position: absolute !important;
           top: 15px !important;
-          left: 15px !important;
+          left: 20px !important;
           background: transparent !important;
           border: none !important;
           cursor: pointer !important;
@@ -1101,22 +1090,8 @@ document.addEventListener('DOMContentLoaded', function() {
           z-index: 10001 !important;
         `;
       }
-      if (title) {
-        title.style.cssText = `
-          font-size: 16px !important;
-          font-weight: 400 !important;
-          margin: 35px 0 0 15px !important;
-          text-align: left !important;
-          color: #000000 !important;
-          white-space: normal !important;
-          word-spacing: 3px !important;
-          display: block !important;
-          line-height: 1.4 !important;
-          padding: 0 !important;
-          clear: both !important;
-          position: relative !important;
-        `;
-      }
+      // DO NOT apply inline styles to title - it causes flicker
+      // Title already has correct CSS styles defined above
       if (subtotal) {
         subtotal.style.cssText = `
           display: flex !important;
@@ -1159,7 +1134,6 @@ document.addEventListener('DOMContentLoaded', function() {
           overflow-wrap: break-word !important;
         `;
       });
-    }, 50);
     
     // Then fetch and update data in background
     fetch('/cart.js')
@@ -1177,8 +1151,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply Sub Total font styles
         applySubTotalStyles();
         
-        // Apply Header indentation
-        applyHeaderIndentation();
+        // DO NOT apply header indentation - it causes title to flicker
+        // Header and title already have correct CSS styles
       })
       .catch(error => {
         console.error('Error fetching cart data:', error);
@@ -1211,9 +1185,36 @@ document.addEventListener('DOMContentLoaded', function() {
   cartLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
+      console.log('Cart link clicked:', this);
       openCart();
+      return false;
     });
   });
+  
+  // Additional event listener for any cart-related clicks - USE CAPTURE
+  document.addEventListener('click', function(e) {
+    // Check if clicking on cart icon/link
+    if (e.target.closest('a[href="/cart"]') ||
+        e.target.closest('a[href*="/cart"]') ||
+        e.target.closest('.cart-link-luxe') || 
+        e.target.closest('.header__icon--cart') ||
+        e.target.closest('.cart-count') ||
+        e.target.closest('[data-cart-drawer]') ||
+        e.target.closest('[data-cart-icon]') ||
+        e.target.closest('.cart-icon') ||
+        e.target.closest('.cart-link') ||
+        e.target.closest('.site-header__cart')) {
+      
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Cart clicked via document listener:', e.target);
+      
+      // Always refresh cart data before opening
+      openCart();
+      return false;
+    }
+  }, true); // USE CAPTURE PHASE
   
   // Close on overlay click
   if (cartOverlay) {
@@ -1389,22 +1390,19 @@ document.addEventListener('DOMContentLoaded', function() {
         titleCount.textContent = data.item_count;
       }
       
-      // If quantity is 0, remove the item from display
+      // If quantity is 0, remove the item from display immediately
       if (quantity === 0) {
         const cartItem = document.querySelector(`[data-line="${line}"]`);
         if (cartItem) {
-          cartItem.style.opacity = '0.5';
-          setTimeout(() => {
-            cartItem.remove();
-            
-            // Re-render if cart is empty
-            if (data.item_count === 0) {
-              const cartItemsContainer = document.querySelector('.cart-drawer-items');
-              if (cartItemsContainer) {
-                cartItemsContainer.innerHTML = '<div class="cart-drawer-empty"><p>No products in the cart.</p></div>';
-              }
+          cartItem.remove();
+          
+          // Re-render if cart is empty
+          if (data.item_count === 0) {
+            const cartItemsContainer = document.querySelector('.cart-drawer-items');
+            if (cartItemsContainer) {
+              cartItemsContainer.innerHTML = '<div class="cart-drawer-empty"><p>No products in the cart.</p></div>';
             }
-          }, 300);
+          }
         }
       }
       
@@ -1562,21 +1560,21 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateCartDrawer(cartData) {
     console.log('Updating cart drawer with:', cartData.item_count, 'items');
     
-    // Update cart count in drawer title
+    // Check if drawer is already updated with this data to prevent unnecessary re-renders
+    const currentCount = document.querySelector('.cart-drawer-title .cart-count');
+    if (currentCount && currentCount.textContent == cartData.item_count) {
+      console.log('Cart drawer already up to date, skipping re-render');
+      return;
+    }
+    
+    // Update cart count in drawer title - ONLY UPDATE NUMBER, NOT ENTIRE TITLE
     const cartCount = document.querySelector('.cart-drawer-title .cart-count');
     if (cartCount) {
       cartCount.textContent = cartData.item_count;
     }
     
-    // Update drawer title completely
-    const drawerTitle = document.querySelector('.cart-drawer-title');
-    if (drawerTitle) {
-      drawerTitle.innerHTML = `
-        <span>There are </span>
-        <span class="cart-count">${cartData.item_count}</span>
-        <span> products</span>
-      `;
-    }
+    // DO NOT update drawer title completely to avoid flicker
+    // The title is already rendered in HTML with correct structure
     
     // Update subtotal
     const subtotalPrice = document.querySelector('.cart-subtotal-price');
@@ -1593,10 +1591,8 @@ document.addEventListener('DOMContentLoaded', function() {
       cartFooter.style.display = cartData.item_count > 0 ? 'block' : 'none';
     }
     
-    // Apply Sub Total font styles
-    setTimeout(() => {
-      applySubTotalStyles();
-    }, 100);
+    // Apply Sub Total font styles immediately - NO DELAY
+    applySubTotalStyles();
     
     console.log('Cart drawer updated successfully');
   }
@@ -1672,10 +1668,9 @@ document.addEventListener('DOMContentLoaded', function() {
     cartItemsContainer.innerHTML = itemsHTML;
     console.log('Cart items rendered:', cartData.items.length, 'items');
     
-    // Force apply styles after DOM update
-    setTimeout(() => {
-      const items = cartItemsContainer.querySelectorAll('.cart-drawer-item');
-      items.forEach(item => {
+    // Apply styles immediately - NO setTimeout to prevent flicker
+    const items = cartItemsContainer.querySelectorAll('.cart-drawer-item');
+    items.forEach(item => {
         item.style.cssText = `
           display: flex !important;
           flex-direction: row !important;
@@ -1826,14 +1821,15 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
       }
       
-      // Apply Sub Total font styles
+      // Apply Sub Total font styles immediately
       applySubTotalStyles();
-    }, 10);
+    });
   }
   
   // Listen for custom cart events from other scripts
   document.addEventListener('cart:updated', function(e) {
     console.log('Cart updated event received:', e.detail);
+    console.log('Cart drawer found:', !!document.querySelector('.cart-drawer'));
     
     // Fetch latest cart data and open drawer
     fetch('/cart.js')
@@ -1892,8 +1888,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update cart count immediately - BEFORE opening drawer
         updateCartCount(cartData.item_count);
         
-        // Update cart drawer content IMMEDIATELY
-        updateCartDrawer(cartData);
+        // DO NOT call updateCartDrawer here - openCart will handle it
+        // This prevents double rendering and flicker
         
         // Open cart IMMEDIATELY with correct count - NO DELAY
         openCart();
@@ -1956,6 +1952,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
   });
-});
+  
+  // Initialize immediately if DOM is ready, otherwise wait
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartDrawer);
+  } else {
+    initCartDrawer();
+  }
+})();
 </script>
-</style>
