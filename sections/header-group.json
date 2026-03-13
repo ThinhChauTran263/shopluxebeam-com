@@ -1,0 +1,21 @@
+{
+  "name": "Header group",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "",
+        "menu": "main-menu",
+        "announcement_text": "❤️Spring Sale Now Live!❤️",
+        "announcement_bg_color": "#a77049",
+        "announcement_text_color": "#ffffff",
+        "header_bg_color": "#ffffff",
+        "header_text_color": "#0b101f"
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

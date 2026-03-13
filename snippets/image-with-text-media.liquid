@@ -1,0 +1,28 @@
+{% comment %}
+  Image with text media snippet
+{% endcomment %}
+
+<div class="image-with-text-media">
+  {% if section.settings.image != blank %}
+    <img src="{{ section.settings.image | image_url: width: 600 }}" 
+         alt="{{ section.settings.image.alt | default: section.settings.title | escape }}" 
+         width="600" 
+         height="auto" 
+         loading="lazy" 
+         class="img-fluid">
+  {% else %}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+  {% endif %}
+</div>
+
+<style>
+  .image-with-text-media {
+    text-align: center;
+  }
+  
+  .image-with-text-media img {
+    border-radius: var(--sti-border-radius);
+    max-width: 100%;
+    height: auto;
+  }
+</style>

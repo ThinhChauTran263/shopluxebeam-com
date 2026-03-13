@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow"
+    },
+    "featured-collection": {
+      "type": "featured-collection"
+    },
+    "multicolumn": {
+      "type": "multicolumn"
+    },
+    "image-with-text": {
+      "type": "image-with-text"
+    },
+    "newsletter": {
+      "type": "newsletter"
+    }
+  },
+  "order": [
+    "slideshow",
+    "featured-collection", 
+    "multicolumn",
+    "image-with-text",
+    "newsletter"
+  ]
+}

@@ -1,0 +1,37 @@
+<script type="importmap">
+  {
+    "imports": {
+      "@luxebeam/utilities": "{{ 'utilities.js' | asset_url }}",
+      "@theme/utilities": "{{ 'utilities.js' | asset_url }}"
+    }
+  }
+</script>
+
+<script
+  src="{{ 'utilities.js' | asset_url }}"
+  type="module"
+  async
+></script>
+
+<script>
+  // LuxeBeam Theme Configuration
+  window.LuxeBeam = {
+    theme: {
+      name: 'LuxeBeam',
+      version: '1.0.0',
+      colors: {
+        primary: '#ff6b35',
+        secondary: '#ff8c42',
+        dark: '#0a0a0a'
+      }
+    },
+    shop: {
+      currency: '{{ shop.currency }}',
+      moneyFormat: '{{ shop.money_format }}',
+      locale: '{{ request.locale.iso_code }}'
+    },
+    cart: {
+      type: '{{ settings.cart_type | default: "drawer" }}'
+    }
+  };
+</script>

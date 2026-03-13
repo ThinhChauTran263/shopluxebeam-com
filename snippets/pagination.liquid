@@ -1,0 +1,157 @@
+{% comment %}
+  Pagination snippet
+{% endcomment %}
+
+{% if paginate.pages > 1 %}
+  <nav class="pagination" role="navigation" aria-label="Pagination">
+    <ul class="pagination-list">
+      {% if paginate.previous %}
+        <li class="pagination-item">
+          <a href="{{ paginate.previous.url }}" class="pagination-link pagination-prev" aria-label="{{ 'general.pagination.previous' | t | default: 'Previous page' }}">
+            <i class="feather-chevron-left"></i>
+            <span>{{ 'general.pagination.previous' | t | default: 'Previous' }}</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for part in paginate.parts %}
+        {% if part.is_link %}
+          <li class="pagination-item">
+            <a href="{{ part.url }}" class="pagination-link" aria-label="{{ 'general.pagination.goto_page' | t: page: part.title | default: 'Go to page' }} {{ part.title }}">
+              {{ part.title }}
+            </a>
+          </li>
+        {% else %}
+          {% if part.title == paginate.current_page %}
+            <li class="pagination-item">
+              <span class="pagination-link pagination-current" aria-current="page" aria-label="{{ 'general.pagination.current_page' | t: page: part.title | default: 'Current page' }} {{ part.title }}">
+                {{ part.title }}
+              </span>
+            </li>
+          {% else %}
+            <li class="pagination-item">
+              <span class="pagination-ellipsis">{{ part.title }}</span>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if paginate.next %}
+        <li class="pagination-item">
+          <a href="{{ paginate.next.url }}" class="pagination-link pagination-next" aria-label="{{ 'general.pagination.next' | t | default: 'Next page' }}">
+            <span>{{ 'general.pagination.next' | t | default: 'Next' }}</span>
+            <i class="feather-chevron-right"></i>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+
+    <div class="pagination-info">
+      <p>
+        {{ 'general.pagination.showing_items' | t: 
+           current_page: paginate.current_page, 
+           total_pages: paginate.pages,
+           total_items: paginate.items
+           | default: 'Showing page' }} 
+        {{ paginate.current_page }} {{ 'general.pagination.of' | t | default: 'of' }} {{ paginate.pages }}
+      </p>
+    </div>
+  </nav>
+{% endif %}
+
+<style>
+  .pagination {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .pagination-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin: 0 0 20px 0;
+    padding: 0;
+    gap: 5px;
+  }
+  
+  .pagination-item {
+    margin: 0;
+  }
+  
+  .pagination-link,
+  .pagination-current,
+  .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--sti-border-radius);
+    color: var(--font-color-body);
+    background-color: var(--background-color-body);
+    transition: all 0.3s ease;
+  }
+  
+  .pagination-link:hover {
+    background-color: var(--font-color-primary);
+    color: #ffffff;
+    border-color: var(--font-color-primary);
+  }
+  
+  .pagination-current {
+    background-color: var(--font-color-primary);
+    color: #ffffff;
+    border-color: var(--font-color-primary);
+    font-weight: 600;
+  }
+  
+  .pagination-ellipsis {
+    border: none;
+    background: none;
+    cursor: default;
+  }
+  
+  .pagination-prev,
+  .pagination-next {
+    gap: 8px;
+  }
+  
+  .pagination-prev i,
+  .pagination-next i {
+    font-size: 16px;
+  }
+  
+  .pagination-info {
+    color: var(--font-color-paragraph);
+    font-size: 14px;
+  }
+  
+  .pagination-info p {
+    margin: 0;
+  }
+  
+  @media (max-width: 767px) {
+    .pagination-list {
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    
+    .pagination-link,
+    .pagination-current,
+    .pagination-ellipsis {
+      min-width: 40px;
+      height: 40px;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+    
+    .pagination-prev span,
+    .pagination-next span {
+      display: none;
+    }
+  }
+</style>

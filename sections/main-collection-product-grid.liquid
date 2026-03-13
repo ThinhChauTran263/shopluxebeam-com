@@ -1,0 +1,124 @@
+{% comment %}
+  Main collection product grid - displays products in a collection with filtering and sorting
+{% endcomment %}
+
+<div class="collection-section section-ptb">
+  <div class="container">
+    {% if collection.description != blank %}
+      <div class="collection-description">
+        {{ collection.description }}
+      </div>
+    {% endif %}
+    
+    <!-- Collection Header -->
+    <div class="collection-header">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="collection-title">{{ collection.title }}</h1>
+          <p class="product-count">{{ collection.products_count }} {{ 'collections.general.items' | t }}</p>
+        </div>
+        <div class="col-md-6">
+          <!-- Sort Options -->
+          <div class="collection-sorting">
+            <label for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+            <select name="sort_by" id="SortBy" class="form-control">
+              <option value="manual">{{ 'collections.sorting.featured' | t }}</option>
+              <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>
+                {{ 'collections.sorting.best_selling' | t }}
+              </option>
+              <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>
+                {{ 'collections.sorting.az' | t }}
+              </option>
+              <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>
+                {{ 'collections.sorting.za' | t }}
+              </option>
+              <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>
+                {{ 'collections.sorting.price_ascending' | t }}
+              </option>
+              <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>
+                {{ 'collections.sorting.price_descending' | t }}
+              </option>
+              <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>
+                {{ 'collections.sorting.date_descending' | t }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Products Grid -->
+    <div class="products-grid">
+      <div class="row">
+        {% paginate collection.products by 12 %}
+          {% for product in collection.products %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+              {% render 'product-card', product: product %}
+            </div>
+          {% else %}
+            <div class="col-12">
+              <div class="empty-collection">
+                <h3>{{ 'collections.general.no_matches' | t }}</h3>
+                <p>{{ 'collections.general.no_products_html' | t }}</p>
+                <a href="{{ routes.all_products_collection_url }}" class="btn btn-style">
+                  {{ 'general.continue_shopping' | t }}
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% endpaginate %}
+      </div>
+      
+      <!-- Pagination -->
+      {% if paginate.pages > 1 %}
+        <div class="pagination-wrapper">
+          {% render 'pagination', paginate: paginate %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Collection sorting
+  document.addEventListener('DOMContentLoaded', function() {
+    const sortSelect = document.getElementById('SortBy');
+    
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        const url = new URL(window.location);
+        url.searchParams.set('sort_by', this.value);
+        window.location.href = url.toString();
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Product Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_options",
+      "label": "Show sort options",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

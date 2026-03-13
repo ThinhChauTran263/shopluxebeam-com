@@ -1,0 +1,1917 @@
+{% comment %}
+  Main product section - Professional e-commerce layout
+{% endcomment %}
+
+<div class="product-page">
+  <div class="container">
+    <div class="product-layout">
+      <!-- Product Images -->
+      <div class="product-gallery">
+        <div class="main-image">
+          {% if product.featured_media %}
+            <img src="{{ product.featured_media | image_url: width: 600 }}" 
+                 alt="{{ product.featured_media.alt | escape }}"
+                 id="main-product-image"
+                 class="img-fluid"
+                 width="600"
+                 height="600">
+          {% else %}
+            <img src="https://via.placeholder.com/600x600/f0f0f0/666666?text=Product+Image" 
+                 alt="{{ product.title }}"
+                 width="600"
+                 height="600">
+          {% endif %}
+        </div>
+        
+        {% if product.media.size > 1 %}
+          <div class="thumbnail-gallery">
+            {% for media in product.media limit: 4 %}
+              <div class="thumbnail {% if forloop.first %}active{% endif %}" data-image="{{ media | image_url: width: 600 }}">
+                <img src="{{ media | image_url: width: 100 }}" 
+                     alt="{{ media.alt | escape }}"
+                     width="100"
+                     height="100">
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <!-- Title & Reviews -->
+        <h1 class="product-title">{{ product.title }}</h1>
+        
+        <div class="product-reviews">
+          <span class="stars">★★★★★</span>
+          <span class="review-count">98 reviews</span>
+        </div>
+
+        <!-- Price -->
+        <div class="product-price">
+          <span class="current-price">{{ product.price | money_without_trailing_zeros }}</span>
+          {% if product.compare_at_price > product.price %}
+            <span class="original-price">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+            <span class="discount-badge">-{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}%</span>
+          {% endif %}
+        </div>
+
+        <!-- Features -->
+        <div class="product-features">
+          <div class="feature-item">
+            <span class="checkmark">✓</span>
+            <span>Strong Powerful Motor</span>
+          </div>
+          <div class="feature-item">
+            <span class="checkmark">✓</span>
+            <span>Long Adjustable Handle</span>
+          </div>
+          <div class="feature-item">
+            <span class="checkmark">✓</span>
+            <span>8 Different Brush Heads</span>
+          </div>
+        </div>
+
+        <!-- Urgency Alert -->
+        <div class="urgency-alert">
+          <span class="alert-icon">⚠</span>
+          <div>
+            <strong>Update: This product is SELLING OUT faster than expected!</strong>
+            <p>Secure yours today while stock lasts.</p>
+          </div>
+        </div>
+
+        <!-- Bundle Options -->
+        <div class="bundle-section">
+          <h3 class="bundle-title">SAVE MORE WITH BUNDLES</h3>
+          
+          <div class="bundle-options">
+            <!-- Single -->
+            <label class="bundle-option">
+              <input type="radio" name="bundle" value="single" checked>
+              <div class="bundle-content">
+                <div class="radio-circle"></div>
+                <div class="bundle-info">
+                  <div class="bundle-left">
+                    <div class="bundle-header">
+                      <span class="bundle-name">Single</span>
+                      <span class="bundle-badge">Free Shipping</span>
+                    </div>
+                    <div class="bundle-subtitle">Standard Sale</div>
+                  </div>
+                  <div class="bundle-price">
+                    <span class="price">$59.99</span>
+                    <span class="original">$179.99</span>
+                  </div>
+                </div>
+              </div>
+            </label>
+
+            <!-- Buy 2 -->
+            <label class="bundle-option popular">
+              <input type="radio" name="bundle" value="buy2">
+              <div class="bundle-content">
+                <div class="radio-circle"></div>
+                <div class="bundle-info">
+                  <div class="bundle-left">
+                    <div class="bundle-header">
+                      <span class="bundle-name">Buy 2 Get 10% Off</span>
+                      <span class="bundle-badge">FREE SHIPPING</span>
+                    </div>
+                    <div class="bundle-subtitle">Most Commonly Purchased</div>
+                  </div>
+                  <div class="bundle-price">
+                    <span class="price">$108.00</span>
+                    <span class="original">$359.98</span>
+                  </div>
+                </div>
+                <span class="popular-badge">Most Popular</span>
+              </div>
+            </label>
+
+            <!-- Buy 3 -->
+            <label class="bundle-option">
+              <input type="radio" name="bundle" value="buy3">
+              <div class="bundle-content">
+                <div class="radio-circle"></div>
+                <div class="bundle-info">
+                  <div class="bundle-left">
+                    <div class="bundle-header">
+                      <span class="bundle-name">Buy 3 Get 15% Off</span>
+                      <span class="bundle-badge">FREE SHIPPING</span>
+                    </div>
+                    <div class="bundle-subtitle">Best value</div>
+                  </div>
+                  <div class="bundle-price">
+                    <span class="price">$153.00</span>
+                    <span class="original">$539.97</span>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Add to Cart -->
+        <form action="{{ routes.cart_add_url }}" method="post" class="product-form" data-ajax-cart="false" novalidate>
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          
+          <button type="button" class="add-to-cart-btn custom-add-to-cart" data-variant-id="{{ product.selected_or_first_available_variant.id }}" {% unless product.available %}disabled{% endunless %}>
+            <span class="btn-text">ADD TO CART</span>
+            <span class="btn-spinner" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                  <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                </svg>
+              </span>
+            <span class="btn-success" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- Trust Badge -->
+        <div class="trust-badge">
+          <div class="shield-icon">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M9 12l2 2 4-4"></path>
+            </svg>
+          </div>
+          <div>
+            <strong>30 Days Risk-Free Trial</strong>
+            <p>Not what you expected? We'll give your money back!</p>
+          </div>
+        </div>
+
+        <!-- Collapsible Sections -->
+        <div class="product-accordion">
+          <details class="accordion-item">
+            <summary>What's Included</summary>
+            <div class="accordion-content">
+              {{ product.description }}
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>Shipping & Delivery Time</summary>
+            <div class="accordion-content">
+              <p>Free shipping on all orders. Delivery within 5-7 business days.</p>
+            </div>
+          </details>
+
+          <details class="accordion-item">
+            <summary>30 Days Risk Free</summary>
+            <div class="accordion-content">
+              <p>Try it risk-free for 30 days. If you're not satisfied, return it for a full refund.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Payment Icons -->
+        {% if section.settings.show_payment_icons %}
+          <div class="payment-icons">
+            {% if section.settings.payment_text != blank %}
+              <p class="payment-text">{{ section.settings.payment_text }}</p>
+            {% endif %}
+            {% if section.settings.payment_icon_1 %}
+              <img src="{{ section.settings.payment_icon_1 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+            {% endif %}
+            {% if section.settings.payment_icon_2 %}
+              <img src="{{ section.settings.payment_icon_2 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+            {% endif %}
+            {% if section.settings.payment_icon_3 %}
+              <img src="{{ section.settings.payment_icon_3 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+            {% endif %}
+            {% if section.settings.payment_icon_4 %}
+              <img src="{{ section.settings.payment_icon_4 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+            {% endif %}
+            {% if section.settings.payment_icon_5 %}
+              <img src="{{ section.settings.payment_icon_5 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scrolling Announcement Bar -->
+<div class="product-scrolling-bar">
+  <div class="scrolling-content-bar">
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      FREE SHIPPING OVER $50
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      OVER 10,000+ HAPPY CUSTOMERS
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      FREE SHIPPING OVER $50
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      OVER 10,000+ HAPPY CUSTOMERS
+    </span>
+    <!-- Duplicate for seamless loop -->
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      FREE SHIPPING OVER $50
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      OVER 10,000+ HAPPY CUSTOMERS
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      FREE SHIPPING OVER $50
+    </span>
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      OVER 10,000+ HAPPY CUSTOMERS
+    </span>
+  </div>
+</div>
+
+<style>
+/* Scrolling Announcement Bar */
+.product-scrolling-bar {
+  background: #1e3a8a;
+  color: #ffffff;
+  padding: 12px 0;
+  overflow: hidden;
+  position: relative;
+  margin: 60px 0;
+}
+
+.scrolling-content-bar {
+  display: flex;
+  animation: scroll-bar 30s linear infinite;
+  white-space: nowrap;
+}
+
+.scroll-item-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 50px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.scroll-item-bar svg {
+  flex-shrink: 0;
+}
+
+@keyframes scroll-bar {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-scrolling-bar {
+    margin: 40px 0;
+    padding: 10px 0;
+  }
+  
+  .scroll-item-bar {
+    padding: 0 30px;
+    font-size: 12px;
+  }
+}
+
+/* Product Page Layout */
+.product-page {
+  padding: 40px 0;
+  background: #f8f8f8;
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+}
+
+/* Product Gallery */
+.product-gallery {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.main-image {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background: #ffffff;
+}
+
+.main-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.thumbnail-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.thumbnail {
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.thumbnail:hover,
+.thumbnail.active {
+  border-color: #ff8200;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Product Info */
+.product-info {
+  max-width: 600px;
+}
+
+.product-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  line-height: 1.3;
+  color: #000000;
+}
+
+.product-reviews {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stars {
+  color: #ffa500;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+.review-count {
+  color: #666666;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Price */
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.current-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.original-price {
+  font-size: 24px;
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.discount-badge {
+  background: #000000;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Features */
+.product-features {
+  margin-bottom: 25px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #333333;
+  font-size: 15px;
+}
+
+.feature-item .checkmark {
+  width: 20px;
+  height: 20px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Urgency Alert */
+.urgency-alert {
+  background: #fff9e6;
+  border: 1px solid #ffd700;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.urgency-alert .alert-icon {
+  width: 24px;
+  height: 24px;
+  background: #ff0000;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.urgency-alert strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #000000;
+  font-size: 15px;
+}
+
+.urgency-alert p {
+  margin: 0;
+  color: #666666;
+  font-size: 13px;
+}
+
+/* Bundle Section */
+.bundle-section {
+  margin-bottom: 30px;
+}
+
+.bundle-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.bundle-title::before,
+.bundle-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #000000;
+}
+
+.bundle-title::before {
+  margin-right: 15px;
+}
+
+.bundle-title::after {
+  margin-left: 15px;
+}
+
+.bundle-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bundle-option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.bundle-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.bundle-content {
+  border: 3px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #ffedc4;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+.bundle-option input[type="radio"]:checked + .bundle-content {
+  border-color: rgb(255, 173, 8);
+  background: rgb(255, 173, 8);
+}
+
+.bundle-option input[type="radio"]:checked + .bundle-content .radio-circle {
+  border-color: #000000;
+  background: #ffffff;
+}
+
+.bundle-option input[type="radio"]:checked + .bundle-content .radio-circle::after {
+  opacity: 1;
+}
+
+.radio-circle {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #cccccc;
+  border-radius: 50%;
+  background: #ffffff;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.bundle-option input[type="radio"]:checked + .bundle-content .radio-circle {
+  border-color: #000000;
+  background: #ffffff;
+}
+
+.bundle-option input[type="radio"]:checked + .bundle-content .radio-circle::after {
+  opacity: 1;
+}
+
+.radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #000000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bundle-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.bundle-left {
+  flex: 1;
+}
+
+.bundle-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.bundle-name {
+  font-weight: 700;
+  color: #000000;
+  font-size: 18px;
+}
+
+.bundle-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #000000;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bundle-subtitle {
+  color: #666666;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.bundle-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.bundle-price .price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1;
+}
+
+.bundle-price .original {
+  font-size: 16px;
+  color: #999999;
+  text-decoration: line-through;
+}
+
+/* Add to Cart Button - Complete Override */
+.add-to-cart-btn {
+  width: 100%;
+  background: #ff8c00 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 50px;
+  padding: 18px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background: #ff7700 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
+}
+
+.add-to-cart-btn:disabled {
+  background: #cccccc !important;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Override ALL Shopify loading states */
+.add-to-cart-btn.btn--loading,
+.add-to-cart-btn.loading,
+.add-to-cart-btn[aria-describedby*="loading"],
+button.btn--loading,
+button.loading {
+  background: #ff8c00 !important;
+  color: #ffffff !important;
+}
+
+.add-to-cart-btn.btn--loading .btn__text,
+.add-to-cart-btn.loading .btn__text,
+.btn--loading .btn__text,
+.loading .btn__text {
+  display: none !important;
+}
+
+.add-to-cart-btn.btn--loading .loading__spinner,
+.add-to-cart-btn.loading .loading__spinner,
+.btn--loading .loading__spinner,
+.loading .loading__spinner,
+.loading-overlay {
+  display: none !important;
+}
+
+/* Custom Button States */
+.add-to-cart-btn .btn-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.add-to-cart-btn .btn-spinner {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-to-cart-btn .btn-success {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom Loading State */
+.add-to-cart-btn.loading {
+  background: #ff8c00 !important;
+}
+
+.add-to-cart-btn.loading .btn-text {
+  display: none !important;
+}
+
+.add-to-cart-btn.loading .btn-spinner {
+  display: flex !important;
+}
+
+.add-to-cart-btn.loading .btn-success {
+  display: none !important;
+}
+
+/* Custom Success State */
+.add-to-cart-btn.success {
+  background: #4caf50 !important;
+}
+
+.add-to-cart-btn.success .btn-text {
+  display: none !important;
+}
+
+.add-to-cart-btn.success .btn-spinner {
+  display: none !important;
+}
+
+.add-to-cart-btn.success .btn-success {
+  display: flex !important;
+}
+
+/* Custom Spinner Animation */
+.btn-spinner svg {
+  animation: customSpin 1s linear infinite;
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes customSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Hide ALL Shopify notifications and loading elements */
+.shopify-section-group-header-group .cart-notification,
+.notification-bar .cart-notification,
+[data-cart-notification].notification,
+.cart-added-notification.notification,
+.loading-overlay,
+.btn-loading-spinner,
+.loading__spinner,
+.spinner,
+.btn__spinner,
+[class*="loading-"],
+[class*="spinner-"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Ensure cart drawer is fully visible and functional */
+.cart-drawer,
+.drawer,
+.js-drawer,
+[data-drawer],
+.cart-popup,
+.mini-cart,
+.drawer-overlay,
+.cart-overlay,
+.overlay {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+}
+
+/* Fix cart drawer header layout - MORE LEFT ALIGNED */
+.cart-drawer__header,
+.drawer__header,
+.cart-header,
+.mini-cart-header,
+.cart-drawer .drawer__header,
+.cart-drawer h2,
+.drawer h2 {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 15px 10px !important;
+  position: relative !important;
+  gap: 0 !important;
+}
+
+/* Close button positioning - closer to left edge */
+.cart-drawer__close,
+.drawer__close,
+.cart-close,
+.mini-cart-close,
+.cart-drawer .drawer__close,
+.cart-drawer button[aria-label*="Close"],
+.drawer button[aria-label*="Close"] {
+  position: static !important;
+  background: none !important;
+  border: none !important;
+  font-size: 24px !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 5px 0 0 !important;
+  order: 1 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Cart title - very close to close button, more left */
+.cart-drawer__header h2,
+.drawer__header h2,
+.cart-header h2,
+.mini-cart-header h2,
+.cart-drawer-title,
+.drawer-title {
+  white-space: nowrap !important;
+  display: block !important;
+  text-align: left !important;
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  order: 2 !important;
+  flex-shrink: 0 !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Override any responsive text wrapping for header */
+@media (max-width: 768px) {
+  .cart-drawer__header,
+  .drawer__header,
+  .cart-header {
+    padding: 10px 15px !important;
+  }
+  
+  .cart-drawer__header h2,
+  .drawer__header h2,
+  .cart-header h2 {
+    font-size: 14px !important;
+  }
+  
+  .cart-drawer__close,
+  .drawer__close {
+    font-size: 20px !important;
+    margin: 0 8px 0 0 !important;
+  }
+}
+
+/* Ensure the entire header container doesn't wrap */
+.cart-drawer__header-wrapper,
+.drawer__header-wrapper {
+  width: 100% !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+/* Force all text in cart header to stay close together */
+.cart-drawer__header *:not(button),
+.drawer__header *:not(button),
+.cart-header *:not(button) {
+  white-space: nowrap !important;
+  display: inline !important;
+  line-height: inherit !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Force single line for any cart title text */
+[class*="cart"] h1,
+[class*="cart"] h2,
+[class*="cart"] h3,
+[class*="drawer"] h1,
+[class*="drawer"] h2,
+[class*="drawer"] h3 {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* FORCE product titles to wrap - STRONGEST CSS */
+.cart-item__name,
+.cart-item__title,
+.cart__item-name,
+.cart__item-title,
+.cart-drawer__item-name,
+.drawer__item-name,
+.mini-cart-item__name,
+.cart-item h3,
+.cart-item h4,
+.cart__item h3,
+.cart__item h4,
+.cart-item .h3,
+.cart-item .h4,
+.cart-item a,
+.cart__item a,
+.cart-drawer__item a,
+.cart-item__link,
+.cart__item-link,
+.cart-drawer .cart-item__name,
+.cart-drawer .cart-item__title,
+.drawer .cart-item__name,
+.drawer .cart-item__title,
+.cart-drawer [class*="item"] h3,
+.cart-drawer [class*="item"] h4,
+.cart-drawer [class*="item"] a,
+.drawer [class*="item"] h3,
+.drawer [class*="item"] h4,
+.drawer [class*="item"] a {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.3 !important;
+  max-width: 160px !important;
+  width: 160px !important;
+  font-size: 13px !important;
+  margin-bottom: 5px !important;
+  hyphens: auto !important;
+  display: block !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* Override ANY CSS that might prevent wrapping */
+.cart-item *,
+.cart__item *,
+.cart-drawer__item *,
+.drawer__item * {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Specific override for product name containers */
+.cart-item__details,
+.cart__item-details,
+.cart-drawer__item-details,
+.drawer__item-details {
+  flex: 1 !important;
+  min-width: 0 !important;
+  max-width: 160px !important;
+  overflow: visible !important;
+}
+
+/* FIX PRODUCT OVERLAP - Ensure NO overlapping elements */
+.cart-item,
+.cart__item,
+.cart-drawer__item,
+.drawer__item,
+.mini-cart-item {
+  padding: 25px 15px !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 15px !important;
+  margin-bottom: 20px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  clear: both !important;
+  min-height: 120px !important;
+  overflow: visible !important;
+}
+
+/* Product image - fixed size, no overlap - FIXED */
+.cart-item__image:not(.cart-drawer .cart-item-image),
+.cart__item-image:not(.cart-drawer .cart-item-image),
+.cart-drawer__item-image:not(.cart-drawer .cart-item-image) {
+  width: 80px !important;
+  height: 80px !important;
+  flex-shrink: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin-right: 10px !important;
+}
+
+.cart-item__image img,
+.cart__item-image img,
+.cart-drawer__item-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Product details - proper spacing, no overlap - FIXED */
+.cart-item__details:not(.cart-drawer .cart-item-details),
+.cart__item-details:not(.cart-drawer .cart-item-details),
+.cart-drawer__item-details:not(.cart-drawer .cart-item-details) {
+  flex: 1 !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 150px) !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Quantity controls - positioned below product info */
+.cart-item__quantity,
+.cart__item-quantity,
+.quantity-selector,
+.cart-item__quantity-controls,
+.cart__item-quantity-controls {
+  margin-top: 15px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  position: relative !important;
+  z-index: 3 !important;
+  clear: both !important;
+}
+
+/* Price positioning */
+.cart-item__price,
+.cart__item-price {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  clear: both !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Remove button - positioned safely */
+.cart-item__remove,
+.cart__item-remove,
+.cart-remove {
+  position: absolute !important;
+  top: 25px !important;
+  right: 15px !important;
+  z-index: 4 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+/* Ensure cart items have proper spacing */
+.cart-item,
+.cart__item,
+.cart-drawer__item,
+.drawer__item,
+.mini-cart-item {
+  padding: 15px 0 !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 15px !important;
+}
+
+/* Product image in cart - FIXED */
+.cart-item__image:not(.cart-drawer .cart-item-image),
+.cart__item-image:not(.cart-drawer .cart-item-image),
+.cart-drawer__item-image:not(.cart-drawer .cart-item-image) {
+  width: 60px !important;
+  height: 60px !important;
+  flex-shrink: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+/* Product details section - FIXED */
+.cart-item__details:not(.cart-drawer .cart-item-details),
+.cart__item-details:not(.cart-drawer .cart-item-details),
+.cart-drawer__item-details:not(.cart-drawer .cart-item-details) {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+/* Price and quantity section */
+.cart-item__price,
+.cart__item-price,
+.cart-item__quantity,
+.cart__item-quantity {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-top: 5px !important;
+}
+
+/* Ensure cart drawer opens properly */
+.cart-drawer.is-open,
+.cart-drawer.active,
+.cart-drawer.open,
+.drawer.is-open,
+.drawer.active,
+.drawer.open,
+.drawer--is-open {
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 9999 !important;
+}
+
+/* Ensure overlay shows when cart is open */
+.drawer-overlay.is-open,
+.drawer-overlay.active,
+.cart-overlay.is-open,
+.cart-overlay.active,
+.overlay.is-open,
+.overlay.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 9998 !important;
+}
+
+/* Disable Shopify form submissions */
+form[action*="cart/add"] {
+  pointer-events: none;
+}
+
+form[action*="cart/add"] button {
+  pointer-events: all;
+}
+</style>
+
+<script>
+// Complete override of Shopify cart behavior
+(function() {
+  // Block all Shopify cart form submissions and loading states
+  document.addEventListener('submit', function(e) {
+    if (e.target.action && e.target.action.includes('cart/add')) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+  }, true);
+  
+  // Override Shopify's loading states
+  document.addEventListener('DOMContentLoaded', function() {
+    // Remove Shopify's loading classes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.target.classList) {
+          if (mutation.target.classList.contains('btn--loading') || 
+              mutation.target.classList.contains('loading')) {
+            mutation.target.classList.remove('btn--loading', 'loading');
+          }
+        }
+      });
+    });
+    
+    // Observe all buttons for class changes
+    document.querySelectorAll('button').forEach(button => {
+      observer.observe(button, { attributes: true, attributeFilter: ['class'] });
+    });
+  });
+})();
+</script>
+
+<script>
+// Thumbnail gallery
+document.addEventListener('DOMContentLoaded', function() {
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  const mainImage = document.getElementById('main-product-image');
+  
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      const newSrc = this.dataset.image;
+      mainImage.src = newSrc;
+      
+      thumbnails.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+  
+  // Bundle selection
+  const bundleOptions = document.querySelectorAll('.bundle-option input[type="radio"]');
+  bundleOptions.forEach(option => {
+    option.addEventListener('change', function() {
+      console.log('Selected bundle:', this.value);
+    });
+  });
+
+  // Custom Add to Cart functionality with complete override
+  const addToCartBtn = document.querySelector('.custom-add-to-cart');
+  
+  if (addToCartBtn) {
+    // Completely replace the button to remove all Shopify event listeners
+    const newBtn = addToCartBtn.cloneNode(true);
+    addToCartBtn.parentNode.replaceChild(newBtn, addToCartBtn);
+    
+    // Remove any Shopify classes that might interfere
+    newBtn.classList.remove('btn--loading', 'loading', 'btn-loading');
+    
+    newBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      
+      // Don't proceed if already in a state
+      if (this.classList.contains('loading') || 
+          this.classList.contains('success') || 
+          this.disabled) {
+        return false;
+      }
+      
+      // Get variant ID
+      const variantId = this.dataset.variantId;
+      if (!variantId) {
+        console.error('No variant ID found');
+        return false;
+      }
+      
+      // Start loading state - show custom spinner
+      this.classList.add('loading');
+      this.disabled = true;
+      
+      console.log('Starting add to cart process...');
+      
+      // Add to cart via AJAX
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: 1
+        })
+      })
+      .then(response => {
+        console.log('Add to cart response:', response.status);
+        if (!response.ok) {
+          throw new Error('Failed to add to cart: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Product added successfully:', data);
+        
+        // Success state - show checkmark
+        this.classList.remove('loading');
+        this.classList.add('success');
+        
+        // Let cart-drawer.liquid handle all cart updates
+        // Just dispatch a custom event to notify cart-drawer
+        document.dispatchEvent(new CustomEvent('cart:updated', { 
+          detail: { 
+            action: 'add',
+            variantId: variantId,
+            quantity: 1
+          }
+        }));
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+          this.classList.remove('success');
+          this.disabled = false;
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        
+        // Reset button state on error
+        this.classList.remove('loading');
+        this.disabled = false;
+        
+        // Show error message
+        alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
+      });
+      
+      return false;
+    });
+  }
+  
+  // Function to update cart count immediately and accurately
+  function updateCartCountImmediate() {
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        console.log('Current cart:', cart);
+        
+        // Update all possible cart count selectors
+        const cartCountSelectors = [
+          '.cart-count', 
+          '[data-cart-count]', 
+          '.cart-item-count', 
+          '.header-cart-count', 
+          '.cart-counter', 
+          '.cart-badge',
+          '.cart-count-badge',
+          '.cart-bubble',
+          '.header__icon--cart .cart-count',
+          '.site-header__cart-count',
+          '.cart-link .cart-count'
+        ];
+        
+        cartCountSelectors.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(element => {
+            element.textContent = cart.item_count;
+            element.setAttribute('data-count', cart.item_count);
+            
+            // Show/hide badge based on count
+            if (cart.item_count > 0) {
+              element.style.display = 'block';
+              element.style.visibility = 'visible';
+              element.style.opacity = '1';
+            } else {
+              element.style.display = 'none';
+            }
+          });
+        });
+        
+        // Force update any hidden elements
+        const allElements = document.querySelectorAll('*');
+        allElements.forEach(el => {
+          if (el.textContent && el.textContent.match(/^\(\d+\)$/)) {
+            el.textContent = `(${cart.item_count})`;
+          }
+        });
+        
+        console.log('Cart count updated to:', cart.item_count);
+      })
+      .catch(error => {
+        console.error('Error updating cart count:', error);
+      });
+  }
+  
+  // Force refresh cart drawer with multiple methods - IMMEDIATE
+  function forceRefreshCartDrawer() {
+    console.log('Force refreshing cart drawer IMMEDIATELY...');
+    
+    // Method 1: Open drawer immediately without closing first
+    openCartDrawer();
+    
+    // Method 2: Refresh content in background while drawer is open
+    setTimeout(() => {
+      refreshAndOpenCartDrawer();
+    }, 10); // Very minimal delay just for content refresh
+  }
+  
+  // Function to refresh cart content and open drawer
+  function refreshAndOpenCartDrawer() {
+    // Get the latest cart data
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        console.log('Latest cart data:', cart);
+        
+        // Try multiple refresh methods
+        Promise.all([
+          refreshCartDrawerViaSection(),
+          refreshCartDrawerViaAjax(),
+          updateCartDrawerManually(cart)
+        ]).then(() => {
+          // Fix text wrapping after refresh
+          fixCartHeaderTextWrapping();
+          
+          // Drawer is already open, just ensure it stays open
+          console.log('Cart drawer content refreshed while open');
+        });
+      })
+      .catch(error => {
+        console.error('Error getting cart data:', error);
+        openCartDrawer();
+      });
+  }
+  
+  // Method 1: Refresh via section rendering
+  function refreshCartDrawerViaSection() {
+    return fetch('/cart?sections=cart-drawer,cart-notification-product,cart-notification-button,cart-icon-bubble')
+      .then(response => response.json())
+      .then(sections => {
+        console.log('Section data received:', sections);
+        
+        // Update cart drawer if section exists
+        if (sections['cart-drawer']) {
+          const drawer = document.querySelector('.cart-drawer, #cart-drawer');
+          if (drawer) {
+            drawer.innerHTML = sections['cart-drawer'];
+            console.log('Cart drawer updated via section');
+          }
+        }
+        
+        // Update cart icon bubble
+        if (sections['cart-icon-bubble']) {
+          const bubble = document.querySelector('.cart-count-bubble, .cart-bubble');
+          if (bubble) {
+            bubble.outerHTML = sections['cart-icon-bubble'];
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error refreshing via sections:', error);
+      });
+  }
+  
+  // Method 2: Refresh via AJAX cart HTML
+  function refreshCartDrawerViaAjax() {
+    return fetch('/cart')
+      .then(response => response.text())
+      .then(html => {
+        // Parse the full cart page HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Find cart items in the response
+        const cartItems = doc.querySelectorAll('.cart-item, .cart__item, [data-cart-item]');
+        const currentCartItems = document.querySelectorAll('.cart-drawer .cart-item, .cart-drawer .cart__item, .cart-drawer [data-cart-item]');
+        
+        // Update each cart item
+        cartItems.forEach((newItem, index) => {
+          if (currentCartItems[index]) {
+            currentCartItems[index].outerHTML = newItem.outerHTML;
+          }
+        });
+        
+        console.log('Cart drawer updated via AJAX');
+      })
+      .catch(error => {
+        console.error('Error refreshing via AJAX:', error);
+      });
+  }
+  
+  // Function to manually update cart drawer content
+  function updateCartDrawerManually(cart) {
+    // Update item counts in cart drawer
+    const itemQuantitySelectors = [
+      '.cart-item__quantity input',
+      '.cart-drawer__quantity input',
+      '.quantity-input',
+      '[data-quantity-input]',
+      '.cart-item-qty',
+      '.item-quantity'
+    ];
+    
+    itemQuantitySelectors.forEach(selector => {
+      const inputs = document.querySelectorAll(selector);
+      inputs.forEach((input, index) => {
+        if (cart.items[index]) {
+          input.value = cart.items[index].quantity;
+          input.setAttribute('value', cart.items[index].quantity);
+        }
+      });
+    });
+    
+    // Update total count in drawer header
+    const drawerCountSelectors = [
+      '.cart-drawer__header .cart-count',
+      '.drawer__header .cart-count',
+      '.cart-drawer-title .cart-count',
+      '.cart-header .cart-count'
+    ];
+    
+    drawerCountSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        element.textContent = cart.item_count;
+      });
+    });
+    
+    // Update subtotal
+    const subtotalSelectors = [
+      '.cart-drawer__footer .totals__subtotal-value',
+      '.cart-subtotal',
+      '.cart-total',
+      '[data-cart-subtotal]'
+    ];
+    
+    subtotalSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        element.textContent = Shopify.formatMoney(cart.total_price);
+      });
+    });
+    
+    console.log('Cart drawer manually updated');
+    
+    // Force fix text wrapping in header
+    fixCartHeaderTextWrapping();
+  }
+  
+  // Function to fix cart header text wrapping
+  function fixCartHeaderTextWrapping() {
+    setTimeout(() => {
+      // Fix cart header layout - keep on same line
+      const headerSelectors = [
+        '.cart-drawer__header',
+        '.drawer__header', 
+        '.cart-header'
+      ];
+      
+      headerSelectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+          // Set header as flex row (horizontal) - LEFT ALIGNED
+          element.style.display = 'flex';
+          element.style.flexDirection = 'row';
+          element.style.alignItems = 'center';
+          element.style.justifyContent = 'flex-start'; // Left align instead of space-between
+          element.style.position = 'relative';
+          element.style.padding = '15px 10px'; // Less padding - more left
+          element.style.gap = '0'; // Remove gap between elements
+          
+          // Find and position close button - close to title
+          const closeBtn = element.querySelector('button, .close, [aria-label*="Close"]');
+          if (closeBtn) {
+            closeBtn.style.position = 'static';
+            closeBtn.style.background = 'none';
+            closeBtn.style.border = 'none';
+            closeBtn.style.fontSize = '24px';
+            closeBtn.style.zIndex = '10';
+            closeBtn.style.order = '1';
+            closeBtn.style.margin = '0 5px 0 0'; // Smaller margin - closer to left
+            closeBtn.style.flexShrink = '0';
+          }
+          
+          // Find and style title - close to close button
+          const title = element.querySelector('h1, h2, h3, .title');
+          if (title) {
+            title.style.whiteSpace = 'nowrap';
+            title.style.display = 'block';
+            title.style.textAlign = 'left'; // Left align instead of center
+            title.style.fontSize = '16px';
+            title.style.margin = '0';
+            title.style.order = '2';
+            title.style.flexShrink = '0';
+            title.style.letterSpacing = 'normal';
+            title.style.wordSpacing = 'normal';
+          }
+        });
+      });
+      
+      // FORCE product titles to wrap - STRONGEST METHOD
+      const productTitleSelectors = [
+        '.cart-item__name',
+        '.cart-item__title', 
+        '.cart__item-name',
+        '.cart__item-title',
+        '.cart-drawer__item-name',
+        '.drawer__item-name',
+        '.mini-cart-item__name',
+        '.cart-item h3',
+        '.cart-item h4',
+        '.cart__item h3', 
+        '.cart__item h4',
+        '.cart-item a',
+        '.cart__item a',
+        '.cart-drawer__item a',
+        '.cart-drawer .cart-item__name',
+        '.cart-drawer .cart-item__title',
+        '.drawer .cart-item__name',
+        '.drawer .cart-item__title'
+      ];
+      
+      // Also find elements by content matching
+      const allElements = document.querySelectorAll('.cart-drawer *, .drawer *');
+      const productNameElements = [];
+      
+      allElements.forEach(el => {
+        if (el.textContent && el.textContent.includes('Electric Spin Scrubber')) {
+          productNameElements.push(el);
+        }
+      });
+      
+      // Combine both selector-based and content-based elements
+      const allProductElements = [
+        ...document.querySelectorAll(productTitleSelectors.join(', ')),
+        ...productNameElements
+      ];
+      
+      allProductElements.forEach(element => {
+        if (element && element.textContent && element.textContent.length > 20) {
+          // FORCE wrapping with multiple methods
+          element.style.setProperty('white-space', 'normal', 'important');
+          element.style.setProperty('word-wrap', 'break-word', 'important');
+          element.style.setProperty('word-break', 'break-word', 'important');
+          element.style.setProperty('overflow-wrap', 'break-word', 'important');
+          element.style.setProperty('line-height', '1.3', 'important');
+          element.style.setProperty('max-width', '160px', 'important');
+          element.style.setProperty('width', '160px', 'important');
+          element.style.setProperty('font-size', '13px', 'important');
+          element.style.setProperty('margin-bottom', '5px', 'important');
+          element.style.setProperty('hyphens', 'auto', 'important');
+          element.style.setProperty('display', 'block', 'important');
+          
+          // Remove any conflicting styles
+          element.style.removeProperty('text-overflow');
+          element.style.removeProperty('overflow');
+          
+          // Also apply to parent containers
+          if (element.parentElement) {
+            element.parentElement.style.setProperty('max-width', '160px', 'important');
+            element.parentElement.style.setProperty('overflow', 'visible', 'important');
+          }
+        }
+      });
+      
+      console.log('Cart header layout fixed and product titles FORCED to wrap');
+      
+      // Set up observer to watch for cart content changes
+      setupCartContentObserver();
+    }, 100);
+  }
+  
+  // Function to setup observer for cart content changes
+  function setupCartContentObserver() {
+    const cartDrawer = document.querySelector('.cart-drawer, .drawer, #cart-drawer');
+    if (cartDrawer) {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'childList' || mutation.type === 'subtree') {
+            // Re-apply product title wrapping when content changes
+            setTimeout(() => {
+              forceProductTitleWrapping();
+            }, 50);
+          }
+        });
+      });
+      
+      observer.observe(cartDrawer, {
+        childList: true,
+        subtree: true,
+        attributes: false
+      });
+      
+      console.log('Cart content observer setup');
+    }
+  }
+  
+  // Separate function to force product title wrapping
+  function forceProductTitleWrapping() {
+    // Find all possible product name elements
+    const allElements = document.querySelectorAll('.cart-drawer *, .drawer *, .cart-item *, .cart__item *');
+    
+    allElements.forEach(element => {
+      const text = element.textContent || '';
+      
+      // If element contains long product name, force wrapping
+      if (text.includes('Electric Spin Scrubber') || 
+          text.includes('Crevice Cleaning Brushes') ||
+          (text.length > 25 && element.tagName && 
+           ['A', 'H1', 'H2', 'H3', 'H4', 'SPAN', 'DIV'].includes(element.tagName))) {
+        
+        // Apply strongest possible wrapping styles
+        element.style.setProperty('white-space', 'normal', 'important');
+        element.style.setProperty('word-wrap', 'break-word', 'important');
+        element.style.setProperty('word-break', 'break-word', 'important');
+        element.style.setProperty('overflow-wrap', 'break-word', 'important');
+        element.style.setProperty('max-width', '160px', 'important');
+        element.style.setProperty('width', '160px', 'important');
+        element.style.setProperty('font-size', '13px', 'important');
+        element.style.setProperty('line-height', '1.3', 'important');
+        element.style.setProperty('display', 'block', 'important');
+        
+        console.log('Forced wrapping on:', text.substring(0, 30) + '...');
+      }
+    });
+  }
+  
+  // Function to open cart drawer
+  function openCartDrawer() {
+    // Method 1: Shopify theme cart drawer
+    if (window.theme && window.theme.CartDrawer && window.theme.CartDrawer.open) {
+      window.theme.CartDrawer.open();
+      return;
+    }
+    
+    // Method 2: Dawn theme cart drawer
+    if (window.CartDrawer && window.CartDrawer.open) {
+      window.CartDrawer.open();
+      return;
+    }
+    
+    // Method 3: Common cart drawer selectors - click to trigger
+    const cartDrawerTriggers = document.querySelectorAll(
+      '[data-cart-drawer], .cart-drawer-toggle, .js-drawer-open-cart, .cart-link, [href="#cart-drawer"], .header__icon--cart'
+    );
+    
+    if (cartDrawerTriggers.length > 0) {
+      cartDrawerTriggers[0].click();
+      return;
+    }
+    
+    // Method 4: Dispatch custom cart events
+    document.dispatchEvent(new CustomEvent('cart:open'));
+    window.dispatchEvent(new CustomEvent('cart:open'));
+    document.dispatchEvent(new CustomEvent('drawer:open', { detail: { drawer: 'cart' } }));
+    
+    // Method 5: Manually show cart drawer element
+    const cartDrawer = document.querySelector(
+      '.cart-drawer, .drawer, [data-drawer="cart"], #cart-drawer, .js-drawer, .mini-cart'
+    );
+    
+    if (cartDrawer) {
+      // Add open classes
+      cartDrawer.classList.add('is-open', 'active', 'open', 'drawer--is-open');
+      cartDrawer.setAttribute('aria-hidden', 'false');
+      cartDrawer.style.display = 'block';
+      cartDrawer.style.visibility = 'visible';
+      cartDrawer.style.opacity = '1';
+      cartDrawer.style.transform = 'translateX(0)';
+      
+      // Show overlay
+      const overlay = document.querySelector('.drawer-overlay, .cart-overlay, .overlay');
+      if (overlay) {
+        overlay.classList.add('is-open', 'active');
+        overlay.style.display = 'block';
+        overlay.style.visibility = 'visible';
+        overlay.style.opacity = '1';
+      }
+      
+      // Add body class to prevent scrolling
+      document.body.classList.add('drawer-open', 'cart-open', 'overflow-hidden');
+    }
+    
+    console.log('Cart drawer opened');
+  }
+});
+
+// Allow cart drawer functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Re-enable cart drawer links after page load
+  setTimeout(() => {
+    const cartLinks = document.querySelectorAll('a[href*="/cart"], [data-cart-drawer], .cart-drawer-toggle');
+    cartLinks.forEach(link => {
+      // Remove any blocking event listeners and allow normal cart drawer functionality
+      link.style.pointerEvents = 'auto';
+    });
+  }, 1000);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Product Information",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Payment Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_text",
+      "label": "Payment text",
+      "default": "We accept",
+      "info": "Optional text above payment icons. Leave empty to hide."
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_icon_1",
+      "label": "Payment Icon 1",
+      "info": "Upload payment method icon (recommended size: 60x40px)"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_icon_2",
+      "label": "Payment Icon 2",
+      "info": "Upload payment method icon (recommended size: 60x40px)"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_icon_3",
+      "label": "Payment Icon 3",
+      "info": "Upload payment method icon (recommended size: 60x40px)"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_icon_4",
+      "label": "Payment Icon 4",
+      "info": "Upload payment method icon (recommended size: 60x40px)"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_icon_5",
+      "label": "Payment Icon 5",
+      "info": "Upload payment method icon (recommended size: 60x40px)"
+    }
+  ]
+}
+{% endschema %}

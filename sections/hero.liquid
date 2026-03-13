@@ -1,0 +1,217 @@
+<section class="hero luxebeam-hero" data-section-id="{{ section.id }}">
+  <div class="hero__wrapper">
+    {%- if section.settings.image != blank -%}
+      <div class="hero__media">
+        <img
+          src="{{ section.settings.image | image_url: width: 1920 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="1920"
+          height="800"
+          class="hero__image"
+          loading="eager"
+        >
+      </div>
+    {%- endif -%}
+    
+    <div class="hero__content page-width">
+      <div class="hero__text">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              <div class="hero__text-block" {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+            {%- when 'button' -%}
+              <div class="hero__button-block" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link }}" class="button luxebeam-button {{ block.settings.style_class }}">
+                  {{ block.settings.label }}
+                </a>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    
+    {%- if section.settings.toggle_overlay -%}
+      <div class="hero__overlay" style="background: {{ section.settings.overlay_color }};"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .luxebeam-hero {
+    position: relative;
+    min-height: {{ section.settings.section_height }}vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .hero__wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .hero__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+  }
+  
+  .hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+  }
+  
+  .hero__text-block {
+    margin-bottom: 2rem;
+  }
+  
+  .hero__text-block h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+  
+  .hero__text-block p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .hero__button-block {
+    margin-top: 2rem;
+  }
+  
+  @media (max-width: 749px) {
+    .hero__text-block h1 {
+      font-size: 2.5rem;
+    }
+    
+    .hero__text-block p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "Show overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#0a0a0a80"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<h1>Light Up Your Life with LuxeBeam</h1><p>Discover our curated collection of galaxy lights, RGB lighting, and mood lamps.</p>"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "style_class",
+          "label": "Button style",
+          "options": [
+            {
+              "value": "button-primary",
+              "label": "Primary"
+            },
+            {
+              "value": "button-secondary",
+              "label": "Secondary"
+            }
+          ],
+          "default": "button-primary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

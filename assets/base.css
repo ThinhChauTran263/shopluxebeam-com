@@ -1,0 +1,187 @@
+/* LuxeBeam Theme Base Styles */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* LuxeBeam Brand Colors */
+  --luxebeam-primary: #ff6b35;
+  --luxebeam-secondary: #ff8c42;
+  --luxebeam-dark: #0a0a0a;
+  --luxebeam-light: #ffffff;
+  --luxebeam-gray: #e0e0e0;
+  
+  /* Animation & Transitions */
+  --hover-lift-amount: 4px;
+  --hover-scale-amount: 1.03;
+  --hover-subtle-zoom-amount: 1.015;
+  --hover-shadow-color: var(--color-shadow);
+  --hover-transition-duration: 0.25s;
+  --hover-transition-timing: ease-out;
+  --surface-transition-duration: 0.3s;
+  --surface-transition-timing: var(--ease-out-quad);
+  --submenu-animation-speed: 360ms;
+  --submenu-animation-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+  
+  /* Easing curves */
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+html {
+  /* Firefox scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
+  scroll-behavior: smooth;
+}
+
+html[scroll-lock] {
+  overflow: hidden;
+}
+
+body {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100svh;
+  font-variation-settings: 'slnt' 0;
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+}
+
+/* LuxeBeam Theme Specific */
+.luxebeam-theme {
+  --accent-color: var(--luxebeam-primary);
+  --accent-hover: var(--luxebeam-secondary);
+}
+
+.luxebeam-button {
+  background: var(--luxebeam-primary);
+  color: var(--luxebeam-light);
+  border: 1px solid var(--luxebeam-primary);
+  transition: all var(--hover-transition-duration) var(--hover-transition-timing);
+}
+
+.luxebeam-button:hover {
+  background: var(--luxebeam-secondary);
+  border-color: var(--luxebeam-secondary);
+  transform: translateY(-2px);
+}
+
+/* Media Elements */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+
+/* Focus Management */
+.focus-none {
+  outline: none;
+}
+
+.focus-visible:focus-visible {
+  outline: 2px solid var(--luxebeam-primary);
+  outline-offset: 2px;
+}
+
+/* Skip Links */
+.skip-to-content-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--luxebeam-primary);
+  color: var(--luxebeam-light);
+  padding: 8px;
+  text-decoration: none;
+  z-index: 999999;
+}
+
+.skip-to-content-link:focus {
+  top: 6px;
+}
+
+/* Utility Classes */
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  word-wrap: normal !important;
+}
+
+.button-unstyled {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Responsive Utilities */
+@media screen and (max-width: 749px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .desktop-hidden {
+    display: none !important;
+  }
+}
+
+/* LuxeBeam Lighting Effects */
+.luxebeam-glow {
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+}
+
+.luxebeam-glow:hover {
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+}
+
+/* Content Layout */
+.content-for-layout {
+  flex: 1;
+}
+
+/* Page Width Classes */
+.page-width-narrow {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.page-width-wide {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.page-width-full {
+  width: 100%;
+  padding: 0;
+}

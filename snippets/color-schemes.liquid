@@ -1,0 +1,31 @@
+<style>
+  /* LuxeBeam Color Schemes */
+  
+  /* Default Scheme */
+  .color-scheme-1 {
+    --color-background: {{ settings.color_schemes.scheme-1.settings.background | default: '#ffffff' }};
+    --color-foreground: {{ settings.color_schemes.scheme-1.settings.foreground | default: '#000000' }};
+    --color-foreground-heading: {{ settings.color_schemes.scheme-1.settings.foreground_heading | default: '#000000' }};
+    --color-primary: {{ settings.color_schemes.scheme-1.settings.primary | default: '#ff6b35' }};
+    --color-primary-hover: {{ settings.color_schemes.scheme-1.settings.primary_hover | default: '#ff8c42' }};
+    --color-border: {{ settings.color_schemes.scheme-1.settings.border | default: '#e0e0e0' }};
+    --color-shadow: {{ settings.color_schemes.scheme-1.settings.shadow | default: '#000000' }};
+  }
+  
+  /* LuxeBeam Dark Scheme */
+  .color-scheme-luxebeam {
+    --color-background: {{ settings.color_schemes.scheme-luxebeam.settings.background | default: '#0a0a0a' }};
+    --color-foreground: {{ settings.color_schemes.scheme-luxebeam.settings.foreground | default: '#e0e0e0' }};
+    --color-foreground-heading: {{ settings.color_schemes.scheme-luxebeam.settings.foreground_heading | default: '#ffffff' }};
+    --color-primary: {{ settings.color_schemes.scheme-luxebeam.settings.primary | default: '#ff6b35' }};
+    --color-primary-hover: {{ settings.color_schemes.scheme-luxebeam.settings.primary_hover | default: '#ff8c42' }};
+    --color-border: {{ settings.color_schemes.scheme-luxebeam.settings.border | default: '#333333' }};
+    --color-shadow: {{ settings.color_schemes.scheme-luxebeam.settings.shadow | default: '#000000' }};
+  }
+  
+  /* Apply color scheme to body */
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+</style>

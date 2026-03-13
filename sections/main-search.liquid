@@ -1,0 +1,166 @@
+{% comment %}
+  Main search section - displays search results
+{% endcomment %}
+
+<div class="search-section section-ptb">
+  <div class="container">
+    <!-- Search Form -->
+    <div class="search-form-wrapper">
+      <form action="{{ routes.search_url }}" method="get" class="search-form">
+        <div class="input-group">
+          <input type="search" 
+                 name="q" 
+                 value="{{ search.terms | escape }}"
+                 placeholder="{{ 'general.search.placeholder' | t }}"
+                 class="form-control search-input">
+          <button type="submit" class="btn btn-style search-button">
+            {{ 'general.search.submit' | t }}
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Search Results -->
+    {% if search.performed %}
+      <div class="search-results">
+        <h1 class="search-title">
+          {% if search.results_count == 0 %}
+            {{ 'general.search.no_results_html' | t: terms: search.terms }}
+          {% else %}
+            {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+          {% endif %}
+        </h1>
+        
+        {% if search.results_count > 0 %}
+          <div class="search-results-grid">
+            <div class="row">
+              {% paginate search.results by 12 %}
+                {% for item in search.results %}
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    {% case item.object_type %}
+                      {% when 'product' %}
+                        {% render 'product-card', product: item %}
+                      {% when 'article' %}
+                        {% render 'article-card', article: item %}
+                      {% when 'page' %}
+                        <div class="search-result-item">
+                          <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                          <p>{{ item.content | strip_html | truncate: 150 }}</p>
+                        </div>
+                    {% endcase %}
+                  </div>
+                {% endfor %}
+              {% endpaginate %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if paginate.pages > 1 %}
+              <div class="pagination-wrapper">
+                {% render 'pagination', paginate: paginate %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="no-results">
+            <p>{{ 'general.search.no_results_description' | t }}</p>
+            <a href="{{ routes.all_products_collection_url }}" class="btn btn-style">
+              {{ 'general.search.browse_all' | t }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="search-placeholder">
+        <h1>{{ 'general.search.title' | t }}</h1>
+        <p>{{ 'general.search.description' | t }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .search-form-wrapper {
+    margin-bottom: 3rem;
+  }
+  
+  .search-form .input-group {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .search-input {
+    border-radius: 25px 0 0 25px;
+    border-right: none;
+  }
+  
+  .search-button {
+    border-radius: 0 25px 25px 0;
+    border-left: none;
+  }
+  
+  .search-title {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .search-result-item {
+    padding: 1rem;
+    border: 1px solid var(--theme-border-color);
+    border-radius: 8px;
+    height: 100%;
+  }
+  
+  .search-result-item h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .search-result-item a {
+    color: var(--font-color-header);
+    text-decoration: none;
+  }
+  
+  .search-result-item a:hover {
+    color: var(--font-color-primary);
+  }
+  
+  .no-results,
+  .search-placeholder {
+    text-align: center;
+    padding: 3rem 0;
+  }
+  
+  @media (max-width: 767px) {
+    .search-input {
+      border-radius: 25px 25px 0 0;
+      border-right: var(--sti-border);
+      border-bottom: none;
+    }
+    
+    .search-button {
+      border-radius: 0 0 25px 25px;
+      border-left: var(--sti-border);
+      border-top: none;
+    }
+    
+    .input-group {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": [
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

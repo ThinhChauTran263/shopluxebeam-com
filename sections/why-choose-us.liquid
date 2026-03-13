@@ -1,0 +1,468 @@
+{% comment %}
+  Why Choose Us - Comparison Table
+{% endcomment %}
+
+<section class="why-choose-us-section">
+  <div class="container">
+    <h2 class="section-title">Why choose us</h2>
+    
+    <div class="comparison-table">
+      <div class="comparison-header">
+        <div class="header-cell empty"></div>
+        <div class="header-cell brand">
+          <div class="brand-logo">
+            {% if section.settings.brand_logo %}
+              <img src="{{ section.settings.brand_logo | image_url: width: 120 }}" alt="LUXEBEAM" width="120" height="auto">
+            {% else %}
+              <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="luxeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#9333EA;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+                <path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" fill="url(#luxeGradient)"/>
+              </svg>
+            {% endif %}
+            {% if section.settings.brand_text != blank %}
+              <span>{{ section.settings.brand_text }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="header-cell others">Others</div>
+      </div>
+      
+      {% for block in section.blocks %}
+        <div class="comparison-row">
+          <div class="feature-name">{{ block.settings.feature_name }}</div>
+          <div class="feature-value has">
+            <div class="icon-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="feature-value no">
+            <div class="icon-cross">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+/* Trust Badge */
+.trust-badge {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.trust-badge .shield-icon {
+    flex-shrink: 0;
+}
+
+.trust-badge .shield-icon svg {
+    color: #4caf50;
+    width: 50px;
+    height: 50px;
+}
+
+.trust-badge strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.trust-badge p {
+    margin: 0;
+    color: #888888;
+    font-size: 13px;
+}
+
+/* Accordion */
+.product-accordion {
+    margin-bottom: 25px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.accordion-item summary {
+    padding: 15px 0;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.accordion-item summary::after {
+    content: '▼';
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.accordion-item[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding-bottom: 15px;
+    color: #666666;
+    line-height: 1.6;
+}
+
+/* Payment Icons */
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.payment-text {
+    width: 100%;
+    margin: 0 0 5px 0;
+    color: #666666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.payment-icons img {
+    height: 40px;
+    width: auto;
+    opacity: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: #ffffff;
+}
+
+.why-choose-us-section {
+  padding: 80px 0;
+  background: #f8f8f8;
+}
+
+.why-choose-us-section .section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 900;
+  margin-bottom: 50px;
+  color: #000000;
+  text-transform: capitalize;
+}
+
+.comparison-table {
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.comparison-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr;
+  background: transparent;
+  color: #000000;
+}
+
+.header-cell {
+  padding: 25px 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.header-cell.empty {
+  background: transparent;
+}
+
+.header-cell.brand {
+  background: #202120;
+  color: #ffffff;
+  border-radius: 20px 20px 0 0;
+}
+
+.brand-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo span {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.header-cell.others {
+  background: transparent;
+  color: #000000;
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.comparison-row:last-child {
+  border-bottom: none;
+}
+
+.comparison-row:last-child .feature-value.has {
+  border-radius: 0 0 20px 20px;
+}
+
+.feature-name {
+  padding: 20px 25px;
+  font-size: 16px;
+  color: #666666;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.comparison-row:last-child .feature-name {
+  border-bottom: none;
+}
+
+.feature-value {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-value.has {
+  background: #202120;
+}
+
+.feature-value.no {
+  background: transparent;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.comparison-row:last-child .feature-value.no {
+  border-bottom: none;
+}
+
+.icon-check {
+  width: 35px;
+  height: 35px;
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-check svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-cross {
+  width: 35px;
+  height: 35px;
+  background: #d9534f;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-cross svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 30px 20px;
+    }
+    
+    .product-gallery {
+        position: static;
+    }
+    
+    .product-title {
+        font-size: 24px;
+    }
+    
+    .current-price {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-page {
+        padding: 20px 0;
+    }
+    
+    .product-layout {
+        padding: 20px 15px;
+    }
+    
+    .thumbnail-gallery {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    
+    .bundle-price .price {
+        font-size: 20px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 15px 30px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+  .why-choose-us-section {
+    padding: 60px 0;
+  }
+  
+  .why-choose-us-section .section-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+  
+  .comparison-table {
+    font-size: 14px;
+  }
+  
+  .comparison-header {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  
+  .comparison-row {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  
+  .header-cell {
+    padding: 15px 10px;
+    font-size: 14px;
+  }
+  
+  .brand-logo svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .brand-logo span {
+    font-size: 14px;
+  }
+  
+  .feature-name {
+    padding: 15px;
+    font-size: 14px;
+  }
+  
+  .feature-value svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Why Choose Us",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand Logo",
+      "info": "Upload your brand logo (recommended size: 120x120px)"
+    },
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Brand Text",
+      "default": "LUXEBEAM",
+      "info": "Text below the logo. Leave empty to hide."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_name",
+          "label": "Feature Name",
+          "default": "Powerful Motor"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Choose Us",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Powerful Motor"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Longer Battery Life"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Adjustable Long Handle"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_name": "8 Brush Attachments"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_name": "USB-C Charging"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

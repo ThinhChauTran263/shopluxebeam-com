@@ -1,0 +1,390 @@
+{% comment %}
+  Footer section - LUXEBEAM style
+{% endcomment %}
+
+<footer class="footer-luxe">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-grid">
+        <!-- Logo -->
+        <div class="footer-col footer-logo-col">
+          {% if section.settings.footer_logo %}
+            <img src="{{ section.settings.footer_logo | image_url: width: 150 }}" alt="{{ shop.name }}" class="footer-logo" width="150" height="auto">
+          {% else %}
+            <div class="footer-logo-default">
+              <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="luxeFooterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#D4A574;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#C89B5E;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+                <path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" fill="url(#luxeFooterGradient)"/>
+              </svg>
+              <span>LUXEBEAM</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div class="footer-col footer-description-col">
+          {% if section.settings.footer_description != blank %}
+            <p class="footer-description">{{ section.settings.footer_description }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Main Menu -->
+        <div class="footer-col footer-menu-col">
+          <h3 class="footer-heading">Main menu</h3>
+          <ul class="footer-links">
+            {% for block in section.blocks %}
+              {% if block.type == 'menu_link' %}
+                <li><a href="{{ block.settings.link }}">{{ block.settings.link_text }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-col footer-newsletter">
+          <h3 class="footer-heading">Subscribe newsletter</h3>
+          <p class="newsletter-text">{{ section.settings.newsletter_text }}</p>
+          
+          <form action="{{ routes.root_url }}contact#newsletter" method="post" class="newsletter-form">
+            <input type="email" name="contact[email]" placeholder="Enter your email.." required>
+            <button type="submit" aria-label="Subscribe">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<style>
+/* Footer Styles */
+.footer-luxe {
+  background: #000000;
+  color: #ffffff;
+  padding: 60px 0 40px;
+  margin-top: 80px;
+  position: relative;
+}
+
+.footer-main {
+  margin-bottom: 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: auto 2fr auto auto;
+  gap: 50px;
+  align-items: start;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo & Brand */
+.footer-logo-col {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  max-width: 150px;
+  height: auto;
+}
+
+.footer-logo-default {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-logo-default span {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+.footer-description-col {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-description {
+  color: #cccccc;
+  line-height: 1.6;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Footer Headings */
+.footer-heading {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+}
+
+/* Footer Links */
+.footer-menu-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-links li {
+  margin: 0;
+}
+
+.footer-links a {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+/* Newsletter */
+.footer-newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 300px;
+}
+
+.newsletter-text {
+  color: #cccccc;
+  font-size: 14px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.newsletter-form {
+  display: flex;
+  align-items: center;
+  background: #000000;
+  border: 2px solid #dc3545;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 4px;
+  width: 100%;
+}
+
+.newsletter-form input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: #000000;
+  color: #ffffff;
+}
+
+.newsletter-form input::placeholder {
+  color: #999999;
+}
+
+.newsletter-form button {
+  background: transparent;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  opacity: 0.7;
+}
+
+/* Scroll to Top Button */
+.scroll-top-btn {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  
+  .footer-logo-col {
+    grid-column: 1 / -1;
+  }
+  
+  .footer-description-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-luxe {
+    padding: 40px 0 30px;
+    margin-top: 60px;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .scroll-top-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo & Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Footer Logo",
+      "info": "Upload your logo (recommended size: 200x80px). Leave empty to show default LUXEBEAM logo."
+    },
+    {
+      "type": "textarea",
+      "id": "footer_description",
+      "label": "Description",
+      "default": "Our Galaxy & RGB lights are perfect for bedrooms, offices, or meditation spaces. With over 16 million color combinations, adjustable brightness, and remote control features, you can create any mood you desire — from calm starlight to vibrant party vibes.",
+      "info": "Brief description about your brand"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter Text",
+      "default": "Sign up and enjoy 10% off your first order."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_link",
+      "name": "Menu Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL",
+          "default": "/"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "menu_link",
+          "settings": {
+            "link_text": "Home",
+            "link": "/"
+          }
+        },
+        {
+          "type": "menu_link",
+          "settings": {
+            "link_text": "Lamps",
+            "link": "/collections/lamps"
+          }
+        },
+        {
+          "type": "menu_link",
+          "settings": {
+            "link_text": "LED Lights",
+            "link": "/collections/led-lights"
+          }
+        },
+        {
+          "type": "menu_link",
+          "settings": {
+            "link_text": "Galaxy Lights",
+            "link": "/collections/galaxy-lights"
+          }
+        },
+        {
+          "type": "menu_link",
+          "settings": {
+            "link_text": "Contact",
+            "link": "/pages/contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

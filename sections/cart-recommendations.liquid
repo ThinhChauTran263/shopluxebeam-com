@@ -1,0 +1,78 @@
+{% comment %}
+  Cart recommendations section - shows recommended products in cart
+{% endcomment %}
+
+{% if recommendations.performed and recommendations.products_count > 0 %}
+  <div class="cart-recommendations section-ptb">
+    <div class="container">
+      <div class="section-capture">
+        <div class="section-title">
+          <h2>{{ 'sections.cart.recommendations_heading' | t }}</h2>
+          <p class="desc">{{ 'sections.cart.recommendations_description' | t }}</p>
+        </div>
+      </div>
+      
+      <div class="recommendations-grid">
+        <div class="row">
+          {% for product in recommendations.products limit: 4 %}
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+              {% render 'product-card', product: product %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+  // Load cart recommendations
+  document.addEventListener('DOMContentLoaded', function() {
+    const cartItems = {{ cart.items | map: 'product_id' | json }};
+    
+    if (cartItems.length > 0) {
+      const url = `{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id=${cartItems[0]}&limit=4`;
+      
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newContent = doc.querySelector('.cart-recommendations');
+          
+          if (newContent) {
+            const currentSection = document.querySelector('.cart-recommendations');
+            if (currentSection) {
+              currentSection.innerHTML = newContent.innerHTML;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error loading recommendations:', error);
+        });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cart Recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

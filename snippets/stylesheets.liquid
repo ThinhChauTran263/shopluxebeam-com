@@ -1,0 +1,47 @@
+{{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
+
+<style>
+  /* LuxeBeam Theme Variables */
+  :root {
+    --color-background: {{ settings.color_schemes.scheme-1.settings.background | default: '#ffffff' }};
+    --color-foreground: {{ settings.color_schemes.scheme-1.settings.foreground | default: '#000000' }};
+    --color-foreground-heading: {{ settings.color_schemes.scheme-1.settings.foreground_heading | default: '#000000' }};
+    --color-primary: {{ settings.color_schemes.scheme-1.settings.primary | default: '#ff6b35' }};
+    --color-primary-hover: {{ settings.color_schemes.scheme-1.settings.primary_hover | default: '#ff8c42' }};
+    --color-border: {{ settings.color_schemes.scheme-1.settings.border | default: '#e0e0e0' }};
+    --color-shadow: {{ settings.color_schemes.scheme-1.settings.shadow | default: '#000000' }};
+    
+    /* Typography */
+    --font-body-family: {{ settings.type_body_font | font_face: font_display: 'swap' }};
+    --font-body-size: {{ settings.type_size_paragraph | default: '14' }}px;
+    --font-body-line-height: {{ settings.type_line_height_paragraph | default: '1.5' }};
+    
+    --font-heading-family: {{ settings.type_heading_font | font_face: font_display: 'swap' }};
+    --font-heading-h1-size: {{ settings.type_size_h1 | default: '56' }}px;
+    --font-heading-h2-size: {{ settings.type_size_h2 | default: '48' }}px;
+    --font-heading-h3-size: {{ settings.type_size_h3 | default: '32' }}px;
+    --font-heading-h4-size: {{ settings.type_size_h4 | default: '24' }}px;
+    
+    /* Layout */
+    --page-width: {{ settings.page_width | default: 'narrow' }};
+    --button-radius-primary: {{ settings.button_border_radius_primary | default: '14' }}px;
+    --button-radius-secondary: {{ settings.button_border_radius_secondary | default: '14' }}px;
+    --input-radius: {{ settings.inputs_border_radius | default: '4' }}px;
+    
+    /* LuxeBeam Specific */
+    --luxebeam-primary: #ff6b35;
+    --luxebeam-secondary: #ff8c42;
+    --luxebeam-dark: #0a0a0a;
+  }
+  
+  /* LuxeBeam Color Scheme Override */
+  {% if settings.color_schemes.scheme-luxebeam %}
+    .color-scheme-luxebeam {
+      --color-background: {{ settings.color_schemes.scheme-luxebeam.settings.background | default: '#0a0a0a' }};
+      --color-foreground: {{ settings.color_schemes.scheme-luxebeam.settings.foreground | default: '#e0e0e0' }};
+      --color-foreground-heading: {{ settings.color_schemes.scheme-luxebeam.settings.foreground_heading | default: '#ffffff' }};
+      --color-primary: {{ settings.color_schemes.scheme-luxebeam.settings.primary | default: '#ff6b35' }};
+      --color-primary-hover: {{ settings.color_schemes.scheme-luxebeam.settings.primary_hover | default: '#ff8c42' }};
+    }
+  {% endif %}
+</style>

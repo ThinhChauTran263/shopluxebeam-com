@@ -1,0 +1,146 @@
+/* Trust Badge */
+.trust-badge {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.trust-badge .shield-icon {
+    flex-shrink: 0;
+}
+
+.trust-badge .shield-icon svg {
+    color: #4caf50;
+    width: 50px;
+    height: 50px;
+}
+
+.trust-badge strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.trust-badge p {
+    margin: 0;
+    color: #888888;
+    font-size: 13px;
+}
+
+/* Accordion */
+.product-accordion {
+    margin-bottom: 25px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.accordion-item summary {
+    padding: 15px 0;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.accordion-item summary::after {
+    content: '▼';
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.accordion-item[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding-bottom: 15px;
+    color: #666666;
+    line-height: 1.6;
+}
+
+/* Payment Icons */
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.payment-text {
+    width: 100%;
+    margin: 0 0 5px 0;
+    color: #666666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.payment-icons img {
+    height: 40px;
+    width: auto;
+    opacity: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 30px 20px;
+    }
+    
+    .product-gallery {
+        position: static;
+    }
+    
+    .product-title {
+        font-size: 24px;
+    }
+    
+    .current-price {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-page {
+        padding: 20px 0;
+    }
+    
+    .product-layout {
+        padding: 20px 15px;
+    }
+    
+    .thumbnail-gallery {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    
+    .bundle-price .price {
+        font-size: 20px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 15px 30px;
+        font-size: 16px;
+    }
+}

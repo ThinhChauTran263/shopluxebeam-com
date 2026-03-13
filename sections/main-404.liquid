@@ -1,0 +1,142 @@
+{% comment %}
+  404 error page section
+{% endcomment %}
+
+<div class="error-404 section-ptb">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="error-content text-center">
+          <div class="error-number">
+            <h1>404</h1>
+          </div>
+          
+          <div class="error-message">
+            <h2>{{ 'general.404.title' | t }}</h2>
+            <p>{{ 'general.404.subtext_html' | t }}</p>
+          </div>
+          
+          <div class="error-actions">
+            <a href="{{ routes.root_url }}" class="btn btn-style">
+              {{ 'general.404.link' | t }}
+            </a>
+            
+            <!-- Search Form -->
+            <div class="search-form-404">
+              <form action="{{ routes.search_url }}" method="get" class="search-form">
+                <div class="input-group">
+                  <input type="search" 
+                         name="q" 
+                         placeholder="{{ 'general.search.placeholder' | t }}"
+                         class="form-control">
+                  <button type="submit" class="btn btn-style2">
+                    {{ 'general.search.submit' | t }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .error-404 {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+  
+  .error-number h1 {
+    font-size: 8rem;
+    font-weight: bold;
+    color: var(--font-color-primary);
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  
+  .error-message h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--font-color-header);
+  }
+  
+  .error-message p {
+    font-size: 1.2rem;
+    color: var(--font-color-paragraph);
+    margin-bottom: 2rem;
+  }
+  
+  .error-actions {
+    margin-top: 2rem;
+  }
+  
+  .search-form-404 {
+    margin-top: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .search-form-404 .input-group {
+    display: flex;
+    gap: 0;
+  }
+  
+  .search-form-404 input {
+    border-radius: 25px 0 0 25px;
+    border-right: none;
+  }
+  
+  .search-form-404 button {
+    border-radius: 0 25px 25px 0;
+    border-left: none;
+  }
+  
+  @media (max-width: 767px) {
+    .error-number h1 {
+      font-size: 5rem;
+    }
+    
+    .error-message h2 {
+      font-size: 2rem;
+    }
+    
+    .error-message p {
+      font-size: 1rem;
+    }
+    
+    .search-form-404 .input-group {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .search-form-404 input,
+    .search-form-404 button {
+      border-radius: 25px;
+      border: var(--sti-border);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sorry, we can't find that page."
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>You may want to return to the <a href=\"/\">homepage</a> or try searching for the content you were looking for.</p>"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,190 @@
+{% comment %}
+  Main list collections section - displays all collections
+{% endcomment %}
+
+<div class="collections-list section-ptb">
+  <div class="container">
+    <div class="section-capture">
+      <div class="section-title">
+        <h1>{{ 'collections.general.title' | t }}</h1>
+        <p class="desc">{{ 'collections.general.description' | t }}</p>
+      </div>
+    </div>
+    
+    <div class="collections-grid">
+      <div class="row">
+        {% for collection in collections %}
+          {% unless collection.handle == 'frontpage' %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div class="collection-card">
+                <div class="collection-image">
+                  {% if collection.featured_image %}
+                    <a href="{{ collection.url }}">
+                      <img src="{{ collection.featured_image | image_url: width: 400 }}" 
+                           alt="{{ collection.title | escape }}"
+                           class="img-fluid">
+                    </a>
+                  {% else %}
+                    <a href="{{ collection.url }}" class="placeholder-image">
+                      <div class="placeholder-content">
+                        <i class="fa fa-image"></i>
+                      </div>
+                    </a>
+                  {% endif %}
+                </div>
+                
+                <div class="collection-info">
+                  <h3 class="collection-title">
+                    <a href="{{ collection.url }}">{{ collection.title }}</a>
+                  </h3>
+                  
+                  {% if collection.description != blank %}
+                    <p class="collection-description">
+                      {{ collection.description | strip_html | truncate: 100 }}
+                    </p>
+                  {% endif %}
+                  
+                  <div class="collection-meta">
+                    <span class="product-count">
+                      {{ collection.products_count }} 
+                      {% if collection.products_count == 1 %}
+                        {{ 'collections.general.item' | t }}
+                      {% else %}
+                        {{ 'collections.general.items' | t }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  
+                  <a href="{{ collection.url }}" class="btn btn-style3 collection-link">
+                    {{ 'collections.general.view_all' | t }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .collection-card {
+    border: 1px solid var(--theme-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .collection-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+  }
+  
+  .collection-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .collection-card:hover .collection-image img {
+    transform: scale(1.05);
+  }
+  
+  .placeholder-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--theme-border-color);
+    color: var(--font-color-paragraph);
+    text-decoration: none;
+  }
+  
+  .placeholder-content i {
+    font-size: 3rem;
+    opacity: 0.5;
+  }
+  
+  .collection-info {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .collection-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+  
+  .collection-title a {
+    color: var(--font-color-header);
+    text-decoration: none;
+  }
+  
+  .collection-title a:hover {
+    color: var(--font-color-primary);
+  }
+  
+  .collection-description {
+    color: var(--font-color-paragraph);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  
+  .collection-meta {
+    margin-bottom: 1rem;
+  }
+  
+  .product-count {
+    color: var(--font-color-paragraph);
+    font-size: 0.9rem;
+  }
+  
+  .collection-link {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+  
+  @media (max-width: 767px) {
+    .collection-image {
+      height: 200px;
+    }
+    
+    .collection-info {
+      padding: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collections List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Browse our curated collections of products"
+    }
+  ]
+}
+{% endschema %}

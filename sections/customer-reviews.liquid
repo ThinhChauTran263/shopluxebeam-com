@@ -1,0 +1,440 @@
+{% comment %}
+  Customer Reviews Section
+{% endcomment %}
+
+<section class="customer-reviews-section">
+  <div class="container">
+    <h2 class="section-title">Customer Reviews</h2>
+    
+    <div class="reviews-summary">
+      <div class="rating-overview">
+        <div class="average-rating">
+          <span class="rating-number">4.97</span>
+          <span class="rating-text">out of 5</span>
+        </div>
+        <div class="stars-large">
+          ★★★★★
+        </div>
+        <p class="review-count">Based on 98 reviews</p>
+        <a href="#" class="verified-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Verified Reviews
+        </a>
+      </div>
+      
+      <div class="rating-breakdown">
+        <div class="rating-bar">
+          <span class="stars-small">★★★★★</span>
+          <div class="bar-container">
+            <div class="bar-fill" style="width: 95%"></div>
+          </div>
+          <span class="count">93</span>
+        </div>
+        <div class="rating-bar">
+          <span class="stars-small">★★★★☆</span>
+          <div class="bar-container">
+            <div class="bar-fill" style="width: 3%"></div>
+          </div>
+          <span class="count">3</span>
+        </div>
+        <div class="rating-bar">
+          <span class="stars-small">★★★☆☆</span>
+          <div class="bar-container">
+            <div class="bar-fill" style="width: 1%"></div>
+          </div>
+          <span class="count">1</span>
+        </div>
+        <div class="rating-bar">
+          <span class="stars-small">★★☆☆☆</span>
+          <div class="bar-container">
+            <div class="bar-fill" style="width: 1%"></div>
+          </div>
+          <span class="count">1</span>
+        </div>
+        <div class="rating-bar">
+          <span class="stars-small">★☆☆☆☆</span>
+          <div class="bar-container">
+            <div class="bar-fill" style="width: 0%"></div>
+          </div>
+          <span class="count">0</span>
+        </div>
+      </div>
+      
+      <div class="write-review-cta">
+        <button class="write-review-btn">Write a review</button>
+      </div>
+    </div>
+    
+    <div class="reviews-filter">
+      <button class="filter-btn active">Most Recent</button>
+      <button class="filter-btn">Highest Rating</button>
+      <button class="filter-btn">Lowest Rating</button>
+    </div>
+    
+    <div class="reviews-list">
+      {% for block in section.blocks %}
+        <div class="review-card">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">{{ block.settings.reviewer_name | slice: 0 }}</div>
+              <div>
+                <div class="reviewer-name">{{ block.settings.reviewer_name }}</div>
+                <div class="review-stars">★★★★★</div>
+              </div>
+            </div>
+            <div class="review-date">{{ block.settings.review_date }}</div>
+          </div>
+          <div class="review-content">
+            <h4 class="review-title">{{ block.settings.review_title }}</h4>
+            <p class="review-text">{{ block.settings.review_text }}</p>
+          </div>
+          {% if block.settings.verified %}
+            <div class="verified-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Verified Purchase
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.customer-reviews-section {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+.customer-reviews-section .section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #000000;
+}
+
+.reviews-summary {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding: 40px;
+  background: #f8f8f8;
+  border-radius: 12px;
+}
+
+.rating-overview {
+  text-align: center;
+}
+
+.average-rating {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.rating-number {
+  font-size: 48px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1;
+}
+
+.rating-text {
+  font-size: 14px;
+  color: #666666;
+}
+
+.stars-large {
+  font-size: 24px;
+  color: #ffa500;
+  margin-bottom: 10px;
+}
+
+.review-count {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+.verified-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #4caf50;
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.rating-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rating-bar {
+  display: grid;
+  grid-template-columns: 80px 1fr 40px;
+  gap: 15px;
+  align-items: center;
+}
+
+.stars-small {
+  font-size: 14px;
+  color: #ffa500;
+}
+
+.bar-container {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #ffa500;
+  transition: width 0.3s ease;
+}
+
+.rating-bar .count {
+  text-align: right;
+  font-size: 14px;
+  color: #666666;
+}
+
+.write-review-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.write-review-btn {
+  background: #ffd700;
+  color: #000000;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.write-review-btn:hover {
+  background: #ffed4e;
+  transform: translateY(-2px);
+}
+
+.reviews-filter {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.filter-btn {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666666;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.reviews-list {
+  display: grid;
+  gap: 20px;
+}
+
+.review-card {
+  background: #f8f8f8;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.reviewer-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.reviewer-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.reviewer-name {
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 5px;
+}
+
+.review-stars {
+  color: #ffa500;
+  font-size: 14px;
+}
+
+.review-date {
+  font-size: 13px;
+  color: #999999;
+}
+
+.review-content {
+  margin-bottom: 15px;
+}
+
+.review-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666666;
+  margin: 0;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #e8f5e9;
+  color: #4caf50;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .reviews-summary {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .reviews-filter {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .customer-reviews-section {
+    padding: 60px 0;
+  }
+  
+  .customer-reviews-section .section-title {
+    font-size: 28px;
+  }
+  
+  .reviews-summary {
+    padding: 25px;
+  }
+  
+  .review-card {
+    padding: 20px;
+  }
+  
+  .reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Customer Reviews",
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer Name",
+          "default": "John D."
+        },
+        {
+          "type": "text",
+          "id": "review_date",
+          "label": "Review Date",
+          "default": "2 days ago"
+        },
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "Review Title",
+          "default": "Amazing product!"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "This product exceeded my expectations. Highly recommend!"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Purchase",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Reviews",
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

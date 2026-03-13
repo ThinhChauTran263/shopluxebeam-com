@@ -1,0 +1,83 @@
+{% comment %}
+  Image with text section
+{% endcomment %}
+
+<section class="image-with-text section-ptb">
+  <div class="container">
+    <div class="row align-items-center">
+      {% if section.settings.layout == 'image_first' %}
+        <div class="col-lg-6 col-md-6">
+          {% render 'image-with-text-media' %}
+        </div>
+        <div class="col-lg-6 col-md-6">
+          {% render 'image-with-text-content' %}
+        </div>
+      {% else %}
+        <div class="col-lg-6 col-md-6">
+          {% render 'image-with-text-content' %}
+        </div>
+        <div class="col-lg-6 col-md-6">
+          {% render 'image-with-text-media' %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "Image first"
+        },
+        {
+          "value": "text_first",
+          "label": "Text first"
+        }
+      ],
+      "default": "image_first",
+      "label": "Desktop layout"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Image with text",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}

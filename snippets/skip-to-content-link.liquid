@@ -1,0 +1,14 @@
+{%- comment -%}
+  Renders a skip to content link for accessibility
+  
+  Accepts:
+  - href: {String} The href attribute for the link
+  - text: {String} The text to display (translation key)
+  
+  Usage:
+  {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
+{%- endcomment -%}
+
+<a class="skip-to-content-link button visually-hidden" href="{{ href }}">
+  {{ text | t }}
+</a>

@@ -1,0 +1,223 @@
+{% comment %}
+  Product FAQ Section
+{% endcomment %}
+
+<section class="product-faq-section">
+  <div class="container">
+    <h2 class="section-title">Frequently asked questions</h2>
+    
+    <div class="faq-list">
+      {% for block in section.blocks %}
+        <details class="faq-item" ontoggle="this.querySelector('.faq-icon').textContent = this.open ? '−' : '+'">
+          <summary>
+            {{ block.settings.question }}
+            <span class="faq-icon">+</span>
+          </summary>
+          <div class="faq-answer">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.product-faq-section {
+  padding: 80px 0;
+  background: #f8f8f8;
+}
+
+.product-faq-section .section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #000000;
+}
+
+.faq-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.faq-item summary {
+  padding: 20px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s ease;
+  user-select: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary:hover {
+  background: #f8f8f8;
+}
+
+.faq-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 300;
+  color: #666666;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.faq-answer {
+  padding: 0 25px 20px 25px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666666;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-faq-section {
+    padding: 60px 0;
+  }
+  
+  .product-faq-section .section-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+  
+  .faq-item summary {
+    padding: 15px 20px;
+    font-size: 15px;
+  }
+  
+  .faq-answer {
+    padding: 0 20px 15px 20px;
+    font-size: 14px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const icon = item.querySelector('.faq-icon');
+    
+    // Set initial icon
+    if (icon) {
+      icon.textContent = '+';
+    }
+    
+    // Use toggle event - removed auto-close logic
+    item.addEventListener('toggle', function() {
+      if (!icon) return;
+      
+      if (item.open) {
+        // Item is now open - change to minus
+        icon.textContent = '−';
+      } else {
+        // Item is now closed - change to plus
+        icon.textContent = '+';
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Product FAQ",
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How does the ScrubJet work?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "ScrubJet uses a high-torque motor that spins the brush heads up to 350 RPM, breaking down soap scum, mildew, and grime without scrubbing by hand."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How does the ScrubJet work?",
+            "answer": "ScrubJet uses a high-torque motor that spins the brush heads up to 350 RPM, breaking down soap scum, mildew, and grime without scrubbing by hand. Just apply your cleaner, press a button, and let the motor do the heavy lifting."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use it on tile or glass?",
+            "answer": "Yes! The ScrubJet is safe for tile, glass, porcelain, and most hard surfaces. Different brush heads are included for various cleaning tasks."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How do I clean the attachments?",
+            "answer": "Simply rinse the brush heads under warm water after each use. For deeper cleaning, you can remove them and wash with soap and water."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Does it stop under pressure?",
+            "answer": "No, the motor is designed to maintain consistent power even when applying pressure, ensuring effective cleaning on tough stains."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does the battery last?",
+            "answer": "On a full charge, the battery lasts approximately 90 minutes of continuous use. Charging time is about 3-4 hours."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

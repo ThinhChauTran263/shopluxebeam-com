@@ -1,0 +1,133 @@
+{%- liquid
+  assign text_class = 'text-block'
+  if block.settings.text_style
+    assign text_class = text_class | append: ' text-block--' | append: block.settings.text_style
+  endif
+  
+  assign alignment_class = ''
+  if block.settings.alignment
+    assign alignment_class = 'text-align-' | append: block.settings.alignment
+  endif
+-%}
+
+<div class="{{ text_class }} {{ alignment_class }}" {{ block.shopify_attributes }}>
+  {%- if block.settings.text != blank -%}
+    <div class="text-block__content">
+      {{ block.settings.text }}
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .text-block {
+    margin-bottom: 1rem;
+  }
+  
+  .text-block__content h1,
+  .text-block__content h2,
+  .text-block__content h3,
+  .text-block__content h4,
+  .text-block__content h5,
+  .text-block__content h6 {
+    color: var(--color-foreground-heading);
+    font-family: var(--font-heading-family);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  
+  .text-block__content h1 {
+    font-size: var(--font-heading-h1-size);
+  }
+  
+  .text-block__content h2 {
+    font-size: var(--font-heading-h2-size);
+  }
+  
+  .text-block__content h3 {
+    font-size: var(--font-heading-h3-size);
+  }
+  
+  .text-block__content h4 {
+    font-size: var(--font-heading-h4-size);
+  }
+  
+  .text-block__content p {
+    color: var(--color-foreground);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .text-align-left {
+    text-align: left;
+  }
+  
+  .text-align-center {
+    text-align: center;
+  }
+  
+  .text-align-right {
+    text-align: right;
+  }
+  
+  .text-block--large {
+    font-size: 1.25rem;
+  }
+  
+  .text-block--small {
+    font-size: 0.875rem;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Text style",
+      "options": [
+        {
+          "value": "body",
+          "label": "Body"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    }
+  ]
+}
+{% endschema %}

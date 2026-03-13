@@ -1,0 +1,169 @@
+{% comment %}
+  Newsletter section
+{% endcomment %}
+
+<section class="newsletter section-ptb">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="newsletter-content text-center">
+          {% if section.settings.title != blank %}
+            <h2>{{ section.settings.title }}</h2>
+          {% endif %}
+          
+          {% if section.settings.text != blank %}
+            <p>{{ section.settings.text }}</p>
+          {% endif %}
+          
+          {% form 'customer', class: 'newsletter-form' %}
+            {% if form.posted_successfully? %}
+              <div class="newsletter-success">
+                {{ 'newsletter.success' | t | default: 'Thanks for subscribing!' }}
+              </div>
+            {% endif %}
+            
+            {% if form.errors %}
+              <div class="newsletter-error">
+                {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+              </div>
+            {% endif %}
+            
+            <div class="newsletter-input-group">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email" 
+                     name="contact[email]" 
+                     id="newsletter-email" 
+                     placeholder="{{ 'newsletter.email_placeholder' | t | default: 'Enter your email address' }}" 
+                     aria-label="{{ 'newsletter.email_placeholder' | t | default: 'Enter your email address' }}"
+                     required>
+              <button type="submit" class="btn btn-style">
+                {{ section.settings.button_label | default: 'Subscribe' }}
+              </button>
+            </div>
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .newsletter {
+    background-color: {{ section.settings.background_color | default: '#f8f9fa' }};
+  }
+  
+  .newsletter-content h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: {{ section.settings.heading_color | default: 'var(--font-color-header)' }};
+  }
+  
+  .newsletter-content p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: {{ section.settings.text_color | default: 'var(--font-color-paragraph)' }};
+  }
+  
+  .newsletter-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .newsletter-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .newsletter-input-group input[type="email"] {
+    flex: 1;
+    padding: 15px 20px;
+    border: var(--sti-border);
+    border-radius: var(--sti-border-radius);
+    font-size: 16px;
+  }
+  
+  .newsletter-input-group button {
+    white-space: nowrap;
+    padding: 15px 30px;
+  }
+  
+  .newsletter-success {
+    color: #28a745;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .newsletter-error {
+    color: #dc3545;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 767px) {
+    .newsletter-content h2 {
+      font-size: 28px;
+    }
+    
+    .newsletter-content p {
+      font-size: 16px;
+    }
+    
+    .newsletter-input-group {
+      flex-direction: column;
+    }
+    
+    .newsletter-input-group button {
+      width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Subscribe to our newsletter",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "default": "Be the first to know about new collections and exclusive offers.",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Subscribe",
+      "label": "Button label"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

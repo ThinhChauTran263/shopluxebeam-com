@@ -1,0 +1,130 @@
+{%- liquid
+  assign image_class = 'image-block'
+  if block.settings.image_style
+    assign image_class = image_class | append: ' image-block--' | append: block.settings.image_style
+  endif
+-%}
+
+<div class="{{ image_class }}" {{ block.shopify_attributes }}>
+  {%- if block.settings.image != blank -%}
+    <div class="image-block__media">
+      {%- if block.settings.link != blank -%}
+        <a href="{{ block.settings.link }}" class="image-block__link">
+      {%- endif -%}
+      
+      <img
+        src="{{ block.settings.image | image_url: width: 800 }}"
+        alt="{{ block.settings.image.alt | escape }}"
+        width="{{ block.settings.image.width }}"
+        height="{{ block.settings.image.height }}"
+        class="image-block__image"
+        loading="lazy"
+      >
+      
+      {%- if block.settings.link != blank -%}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  
+  {%- if block.settings.caption != blank -%}
+    <div class="image-block__caption">
+      {{ block.settings.caption }}
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .image-block {
+    margin-bottom: 2rem;
+  }
+  
+  .image-block__media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .image-block__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  .image-block__link:hover .image-block__image {
+    transform: scale(1.05);
+  }
+  
+  .image-block__caption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-foreground);
+    opacity: 0.8;
+    text-align: center;
+  }
+  
+  .image-block--rounded .image-block__media {
+    border-radius: 50%;
+    aspect-ratio: 1;
+  }
+  
+  .image-block--rounded .image-block__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .image-block--square .image-block__media {
+    aspect-ratio: 1;
+  }
+  
+  .image-block--square .image-block__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Image caption"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Image link"
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "Image style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "rounded",
+          "label": "Rounded"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "default"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,195 @@
+<!doctype html>
+<html class="no-js supports-no-cookies" lang="{{ request.locale.iso_code }}" dir="ltr">
+<head>
+  <!-- Basic and Helper page needs -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="var(--font-color-primary)">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  
+  <!-- CSS -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png">
+  {%- else -%}
+    <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}" type="image/png">
+  {%- endif -%}
+
+  <!-- Title and description -->
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+    {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Helpers -->
+  {% render 'social-meta-tags' %}
+
+  <!-- CSS -->
+  <style>
+    @font-face {
+      font-family: "Francois One";
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url("{{ 'francoisone_n4.woff2' | asset_url }}") format("woff2"),
+           url("{{ 'francoisone_n4.woff' | asset_url }}") format("woff");
+    }
+  </style>
+
+  {{ 'fonts.css' | asset_url | stylesheet_tag }}
+
+  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+  {{ 'style.css' | asset_url | stylesheet_tag }}
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'shopify_v2.css' | asset_url | stylesheet_tag }}
+
+  <style data-shopify>
+    /*=====================================
+      body css
+    ======================================*/
+    body {
+      color: var(--font-color-body);
+      font-size: var(--font-size-body);
+      background-color: var(--background-color-body);
+      
+      font-family: var(--font-custom-stack-body);
+      font-weight: var(--font-custom-weight-body);
+      font-style: var(--font-custom-style-body);
+      
+      line-height: normal;
+      letter-spacing: var(--font-letter-spacing-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: antialiased;
+      text-size-adjust: 100%;
+    }
+
+    /*=====================================
+      Headings css
+    ======================================*/
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--font-color-header);
+      margin: 0;
+      padding: 0;
+      
+      font-family: var(--font-stack-header);
+      font-weight: var(--font-weight-header);
+      font-style: var(--font-style-header);
+      
+      line-height: normal;
+    }
+
+    :root {
+      --font-weight-body--bold: 700;
+      --font-weight-body--bolder: 700;
+    
+      --font-color-body: #0b101f;
+      --font-size-body: 16px;
+      --background-color-body: #ffffff;
+      --extra-color-body: #0b101f;
+      
+      --font-custom-stack-body: 'Inter', sans-serif;
+      --font-custom-weight-body: 400;
+      --font-custom-style-body: normal;
+
+      --font-size-subtitle-body: 18px;
+      --font-subtitle-weight-body: 600;
+      --font-letter-spacing-body: 0px;
+    
+      --font-color-header: #000000;
+      
+      --font-stack-header: "Francois One", sans-serif;
+      --font-weight-header: 400;
+      --font-style-header: normal;
+    
+      --font-color-section-header: #000000;
+      
+      --font-custom-stack-section-header: 'Figtree', sans-serif;
+      --font-custom-weight-section-header: 600;
+      --font-custom-style-section-header: normal;
+      
+      --font-text-section-header: none;
+    
+      --font-color-paragraph: #0b101f;
+      
+      --font-custom-stack-paragraph: 'Inter', sans-serif;
+      --font-custom-weight-paragraph: 400;
+      --font-custom-style-paragraph: normal;
+      
+      --font-line-height-paragraph: 27px;
+    
+      --font-custom-stack-other: 'Figtree', sans-serif;
+    
+      --font-color-primary: #000000;
+      --font-color-secondary: #000000;
+      --theme-gradient-color: -webkit-linear-gradient(180deg,var(--font-color-primary) 0,var(--font-color-secondary) 100%);
+      --theme-gradient-color-hvr: -webkit-linear-gradient(180deg,var(--font-color-secondary) 0,var(--font-color-primary) 100%);
+      --theme-border-color: rgba(11, 16, 31, 0.2);
+    
+      --sti-color: #6F6F6F;
+      --sti-font-size: 16px;
+      --sti-bgcolor: #0b101f;
+      --sti-text: none;
+      --sti-font-weight: 400;
+      --sti-border: 1px solid rgba(255, 255, 255, 0.2);
+      --sti-border-radius: 0px;
+    
+      --box-body-bgcolor: ;
+    }
+  </style>
+
+  {{ content_for_header }}
+
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  <script type="text/javascript" src="{{ 'plugins.js' | asset_url }}" defer></script>
+  <script type="text/javascript" src="{{ 'main.js' | asset_url }}" defer></script>
+  <script type="text/javascript" src="{{ 'theme.js' | asset_url }}" defer></script>
+  
+  <script src="{{ 'localization-form.js' | asset_url }}" defer></script>
+</head>
+
+<body id="{{ page_title | handle }}" class="template-{{ template.name }}">
+  <div class="slow-window" style="display: none;"></div>
+
+  {% section 'header' %}
+
+  <main role="main">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  {% render 'cart-drawer' %}
+
+  <script>
+    window.shopUrl = '{{ request.origin }}';
+    window.routes = {
+      cart_add_url: '{{ routes.cart_add_url }}',
+      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_update_url: '{{ routes.cart_update_url }}',
+      cart_url: '{{ routes.cart_url }}',
+      predictive_search_url: '{{ routes.predictive_search_url }}'
+    };
+
+    window.cartStrings = {
+      error: `{{ 'sections.cart.cart_error' | t }}`,
+      quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
+    }
+
+    window.variantStrings = {
+      addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+      soldOut: `{{ 'products.product.sold_out' | t }}`,
+      unavailable: `{{ 'products.product.unavailable' | t }}`,
+      unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
+    }
+  </script>
+</body>
+</html>

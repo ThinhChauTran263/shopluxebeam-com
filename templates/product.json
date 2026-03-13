@@ -1,0 +1,158 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product"
+    },
+    "product-features": {
+      "type": "product-features",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "title": "Turns Hours of Scrubbing into Minutes",
+            "description": "High-torque motor that spins the brush heads up to 350 RPM, breaking down soap scum, mildew, and grime without scrubbing by hand. Just apply your cleaner, press a button, and let the motor do the heavy lifting."
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "title": "Deep Clean. Zero Effort.",
+            "description": "Reaches into grout lines, corners, and tight spaces where dirt hides. The rotating action lifts stubborn stains that manual scrubbing can't touch, leaving surfaces spotless with minimal effort."
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "title": "The Last Scrubby You'll Ever Need",
+            "description": "Designed for all-around home use with 8 interchangeable brush heads. From bathroom tiles to kitchen counters, this one tool handles every cleaning task. Rechargeable battery means no cords to limit your reach."
+          }
+        }
+      },
+      "block_order": ["feature-1", "feature-2", "feature-3"]
+    },
+    "why-choose-us": {
+      "type": "why-choose-us",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Powerful Motor"
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Longer Battery Life"
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "feature_name": "Adjustable Long Handle"
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "feature_name": "8 Brush Attachments"
+          }
+        },
+        "feature-5": {
+          "type": "feature",
+          "settings": {
+            "feature_name": "USB-C Charging"
+          }
+        }
+      },
+      "block_order": ["feature-1", "feature-2", "feature-3", "feature-4", "feature-5"]
+    },
+    "customer-reviews": {
+      "type": "customer-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Sarah M.",
+            "review_date": "2 days ago",
+            "review_title": "Game changer for cleaning!",
+            "review_text": "This scrubber has completely changed how I clean my bathroom. What used to take me an hour now takes 15 minutes. The motor is powerful and the different brush heads work perfectly for different surfaces.",
+            "verified": true
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Mike R.",
+            "review_date": "1 week ago",
+            "review_title": "Worth every penny",
+            "review_text": "I was skeptical at first but this thing really works. The long handle means I don't have to bend down and my back thanks me. Battery lasts a long time too.",
+            "verified": true
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Jennifer L.",
+            "review_date": "2 weeks ago",
+            "review_title": "Best cleaning tool ever!",
+            "review_text": "I've tried other electric scrubbers but this one is by far the best. The power, the attachments, the battery life - everything is perfect. Highly recommend!",
+            "verified": true
+          }
+        }
+      },
+      "block_order": ["review-1", "review-2", "review-3"]
+    },
+    "product-faq": {
+      "type": "product-faq",
+      "blocks": {
+        "faq-1": {
+          "type": "faq",
+          "settings": {
+            "question": "How does the 9 in 1 Electric Spin Scrubber work?",
+            "answer": "The 9 in 1 Electric Spin Scrubber uses a high-torque motor that spins the brush heads up to 350 RPM, breaking down soap scum, mildew, and grime without scrubbing by hand. Just apply your cleaner, press a button, and let the motor do the heavy lifting."
+          }
+        },
+        "faq-2": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use it on tile or glass?",
+            "answer": "Yes! The 9 in 1 Electric Spin Scrubber is safe for tile, glass, porcelain, and most hard surfaces. Different brush heads are included for various cleaning tasks."
+          }
+        },
+        "faq-3": {
+          "type": "faq",
+          "settings": {
+            "question": "How do I clean the attachments?",
+            "answer": "Simply rinse the brush heads under warm water after each use. For deeper cleaning, you can remove them and wash with soap and water."
+          }
+        },
+        "faq-4": {
+          "type": "faq",
+          "settings": {
+            "question": "Does it stop under pressure?",
+            "answer": "No, the motor is designed to maintain consistent power even when applying pressure, ensuring effective cleaning on tough stains."
+          }
+        },
+        "faq-5": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does the battery last?",
+            "answer": "On a full charge, the battery lasts approximately 90 minutes of continuous use. Charging time is about 3-4 hours."
+          }
+        }
+      },
+      "block_order": ["faq-1", "faq-2", "faq-3", "faq-4", "faq-5"]
+    },
+    "related-products": {
+      "type": "related-products"
+    }
+  },
+  "order": [
+    "main",
+    "product-features",
+    "why-choose-us",
+    "customer-reviews",
+    "product-faq",
+    "related-products"
+  ]
+}

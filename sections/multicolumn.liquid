@@ -1,0 +1,201 @@
+{% comment %}
+  Multicolumn section
+{% endcomment %}
+
+<section class="multicolumn section-ptb">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <div class="section-capture">
+        <div class="section-title">
+          <h2>{{ section.settings.title }}</h2>
+          {% if section.settings.description != blank %}
+            <p class="desc">{{ section.settings.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      {% for block in section.blocks %}
+        <div class="col-lg-{{ 12 | divided_by: section.blocks.size }} col-md-6 col-sm-6" {{ block.shopify_attributes }}>
+          <div class="multicolumn-item">
+            {% if block.settings.image != blank %}
+              <div class="multicolumn-image">
+                <img src="{{ block.settings.image | image_url: width: 300 }}" 
+                     alt="{{ block.settings.image.alt | default: block.settings.title | escape }}" 
+                     width="300" 
+                     height="auto" 
+                     loading="lazy" 
+                     class="img-fluid">
+              </div>
+            {% endif %}
+            
+            <div class="multicolumn-content">
+              {% if block.settings.title != blank %}
+                <h3>{{ block.settings.title }}</h3>
+              {% endif %}
+              
+              {% if block.settings.text != blank %}
+                <div class="multicolumn-text">{{ block.settings.text }}</div>
+              {% endif %}
+              
+              {% if block.settings.link_label != blank and block.settings.link_url != blank %}
+                <a href="{{ block.settings.link_url }}" class="btn btn-style3">
+                  {{ block.settings.link_label }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .multicolumn {
+    background-color: {{ section.settings.background_color | default: 'transparent' }};
+  }
+  
+  .multicolumn-item {
+    text-align: {{ section.settings.text_alignment | default: 'center' }};
+    padding: 30px 15px;
+  }
+  
+  .multicolumn-image {
+    margin-bottom: 20px;
+  }
+  
+  .multicolumn-image img {
+    max-width: 100px;
+    height: auto;
+  }
+  
+  .multicolumn-content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: {{ section.settings.heading_color | default: 'var(--font-color-header)' }};
+  }
+  
+  .multicolumn-text {
+    color: {{ section.settings.text_color | default: 'var(--font-color-paragraph)' }};
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 767px) {
+    .multicolumn-item {
+      padding: 20px 10px;
+    }
+    
+    .multicolumn-content h3 {
+      font-size: 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Multicolumn",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center",
+      "label": "Text alignment"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Column",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multicolumn",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

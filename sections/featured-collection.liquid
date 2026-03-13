@@ -1,0 +1,97 @@
+{% comment %}
+  Featured collection section
+{% endcomment %}
+
+<section class="featured-collection section-ptb">
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <div class="section-capture">
+        <div class="section-title">
+          {% if section.settings.subheading != blank %}
+            <span>{{ section.settings.subheading }}</span>
+          {% endif %}
+          <h2>{{ section.settings.heading }}</h2>
+          {% if section.settings.description != blank %}
+            <p class="desc">{{ section.settings.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.collection != blank %}
+      <div class="row">
+        {% assign collection = collections[section.settings.collection] %}
+        {% for product in collection.products limit: section.settings.products_to_show %}
+          <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+            {% render 'product-card', product: product %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_view_all %}
+        <div class="text-center" style="margin-top: 50px;">
+          <a href="{{ collections[section.settings.collection].url }}" class="btn btn-style">
+            {{ section.settings.button_label | default: 'View All Products' }}
+          </a>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Featured Products",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 2,
+      "default": 8,
+      "label": "Number of products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "Show 'View all' button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "View All Products",
+      "label": "Button label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection"
+    }
+  ]
+}
+{% endschema %}

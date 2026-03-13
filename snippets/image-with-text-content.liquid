@@ -1,0 +1,48 @@
+{% comment %}
+  Image with text content snippet
+{% endcomment %}
+
+<div class="image-with-text-content">
+  {% if section.settings.title != blank %}
+    <h2>{{ section.settings.title }}</h2>
+  {% endif %}
+  
+  {% if section.settings.text != blank %}
+    <div class="image-with-text-text">{{ section.settings.text }}</div>
+  {% endif %}
+  
+  {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+    <a href="{{ section.settings.button_link }}" class="btn btn-style">
+      {{ section.settings.button_label }}
+    </a>
+  {% endif %}
+</div>
+
+<style>
+  .image-with-text-content {
+    padding: 30px 0;
+  }
+  
+  .image-with-text-content h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--font-color-header);
+  }
+  
+  .image-with-text-text {
+    margin-bottom: 30px;
+    color: var(--font-color-paragraph);
+    line-height: var(--font-line-height-paragraph);
+  }
+  
+  @media (max-width: 767px) {
+    .image-with-text-content {
+      padding: 20px 0;
+      text-align: center;
+    }
+    
+    .image-with-text-content h2 {
+      font-size: 28px;
+    }
+  }
+</style>

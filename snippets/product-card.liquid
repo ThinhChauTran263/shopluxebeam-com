@@ -1,0 +1,261 @@
+{% comment %}
+  Product card snippet - converted from existing product structure
+{% endcomment %}
+
+<div class="single-product-wrap">
+  <div class="product-image">
+    <a href="{{ product.url }}">
+      {% if product.featured_media %}
+        <img src="{{ product.featured_media | image_url: width: 300 }}" 
+             alt="{{ product.featured_media.alt | default: product.title | escape }}" 
+             width="300" 
+             height="300" 
+             loading="lazy" 
+             class="img-fluid">
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+      {% endif %}
+    </a>
+    
+    <div class="product-label">
+      {% if product.compare_at_price > product.price %}
+        <span class="percent-count">
+          {% assign discount = product.compare_at_price | minus: product.price %}
+          {% assign discount_percentage = discount | times: 100 | divided_by: product.compare_at_price %}
+          -{{ discount_percentage | round }}%
+        </span>
+      {% endif %}
+      
+      {% unless product.available %}
+        <span class="soldout-title">{{ 'products.product.sold_out' | t | default: 'Sold Out' }}</span>
+      {% endunless %}
+      
+      {% if product.tags contains 'new' %}
+        <span class="new-sale-title">{{ 'products.product.new' | t | default: 'New' }}</span>
+      {% endif %}
+    </div>
+    
+    <div class="product-action">
+      <ul class="product-action-list">
+        <li>
+          <a href="{{ product.url }}" class="quick-view" title="{{ 'products.product.quick_view' | t | default: 'Quick View' }}">
+            <i class="feather-eye"></i>
+          </a>
+        </li>
+        <li>
+          <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form">
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button type="submit" name="add" class="add-to-cart" 
+                    {% unless product.available %}disabled{% endunless %}
+                    title="{% if product.available %}{{ 'products.product.add_to_cart' | t | default: 'Add to Cart' }}{% else %}{{ 'products.product.sold_out' | t | default: 'Sold Out' }}{% endif %}">
+              <i class="feather-shopping-cart"></i>
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="product-content">
+    <h3 class="product-title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+    
+    {% if product.vendor != blank %}
+      <p class="product-vendor">{{ product.vendor }}</p>
+    {% endif %}
+    
+    <div class="product-price">
+      {% if product.compare_at_price > product.price %}
+        <span class="old-price">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+      <span class="new-price">{{ product.price | money }}</span>
+    </div>
+    
+    {% if product.available %}
+      <div class="product-rating">
+        {% comment %} Add rating display here if using a review app {% endcomment %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .single-product-wrap {
+    position: relative;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+  }
+  
+  .single-product-wrap:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  
+  .product-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--sti-border-radius);
+  }
+  
+  .product-image img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+  .single-product-wrap:hover .product-image img {
+    transform: scale(1.05);
+  }
+  
+  .product-label {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+  
+  .product-label span {
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 15px;
+    line-height: 1;
+    padding: 5px 10px;
+    color: #ffffff;
+  }
+  
+  .product-label span.new-sale-title {
+    left: 15px;
+    background-color: #28a745;
+  }
+  
+  .product-label span.percent-count {
+    right: 15px;
+    background-color: #dc3545;
+  }
+  
+  .product-label span.soldout-title {
+    left: 15px;
+    background-color: #6c757d;
+    z-index: 1;
+  }
+  
+  .product-action {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .single-product-wrap:hover .product-action {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .product-action-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+  }
+  
+  .product-action-list li a,
+  .product-action-list li button {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--font-color-primary);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .product-action-list li a:hover,
+  .product-action-list li button:hover {
+    background-color: var(--font-color-primary);
+    color: #ffffff;
+  }
+  
+  .product-content {
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .product-title a {
+    color: var(--font-color-header);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .product-title a:hover {
+    color: var(--font-color-primary);
+  }
+  
+  .product-vendor {
+    font-size: 14px;
+    color: var(--font-color-paragraph);
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  
+  .product-price {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .product-price .old-price {
+    color: #999;
+    text-decoration: line-through;
+    margin-right: 10px;
+  }
+  
+  .product-price .new-price {
+    color: var(--font-color-primary);
+  }
+  
+  @media (max-width: 767px) {
+    .product-action {
+      opacity: 1;
+      visibility: visible;
+      top: 15px;
+      right: 15px;
+      left: auto;
+      transform: none;
+    }
+    
+    .product-action-list {
+      flex-direction: column;
+    }
+    
+    .product-action-list li a,
+    .product-action-list li button {
+      width: 35px;
+      height: 35px;
+      font-size: 14px;
+    }
+  }
+</style>
