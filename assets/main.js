@@ -120,6 +120,11 @@
         // Update cart count on page load
         updateCartCount();
         
+        // Listen for cart:updated event from add to cart
+        document.addEventListener('cart:updated', function() {
+            updateCartCount();
+        });
+        
         // Cart quantity update
         $('.cart-quantity-input').on('change', function() {
             var $input = $(this);
@@ -165,9 +170,22 @@
 
     // Update cart count
     function updateCartCount() {
-        $.get('/cart.js', function(cart) {
-            $('.cart-count').text(cart.item_count);
-        });
+        fetch('/cart.js')
+            .then(r => r.json())
+            .then(cart => {
+                console.log('Cart data:', cart);
+                
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(el => {
+                    el.textContent = cart.item_count;
+                });
+                
+                const cartCountLuxe = document.querySelector('.cart-count-luxe');
+                if (cartCountLuxe) {
+                    cartCountLuxe.textContent = '(' + cart.item_count + ')';
+                }
+            })
+            .catch(err => console.error('Error updating cart count:', err));
     }
 
     // Update cart item
