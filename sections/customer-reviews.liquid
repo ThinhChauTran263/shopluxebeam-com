@@ -4,73 +4,103 @@
 
 <section class="customer-reviews-section">
   <div class="container">
-    <h2 class="section-title">Customer Reviews</h2>
+    <h2 class="section-title">{{ section.settings.section_title }}</h2>
     
     <div class="reviews-summary">
       <div class="rating-overview">
         <div class="average-rating">
-          <span class="rating-number">4.97</span>
+          <span class="rating-number">{{ section.settings.average_rating }}</span>
           <span class="rating-text">out of 5</span>
         </div>
         <div class="stars-large">
-          ★★★★★
+          {% assign rating_value = section.settings.average_rating | times: 10 | divided_by: 10.0 %}
+          {% assign full_stars = rating_value | floor %}
+          {% assign decimal = rating_value | minus: full_stars %}
+          {% assign has_half_star = false %}
+          {% if decimal >= 0.25 and decimal < 0.75 %}
+            {% assign has_half_star = true %}
+          {% elsif decimal >= 0.75 %}
+            {% assign full_stars = full_stars | plus: 1 %}
+          {% endif %}
+          
+          {% for i in (1..full_stars) %}
+            <span class="star-full">★</span>
+          {% endfor %}
+          
+          {% if has_half_star %}
+            <span class="star-half">
+              <span class="star-half-fill">★</span>
+              <span class="star-half-empty">★</span>
+            </span>
+          {% endif %}
+          
+          {% assign empty_stars = 5 | minus: full_stars %}
+          {% if has_half_star %}
+            {% assign empty_stars = empty_stars | minus: 1 %}
+          {% endif %}
+          
+          {% for i in (1..empty_stars) %}
+            <span class="star-empty">☆</span>
+          {% endfor %}
         </div>
-        <p class="review-count">Based on 98 reviews</p>
+        <p class="review-count">Based on {{ section.settings.total_reviews }} reviews</p>
+        {% if section.settings.show_verified_link %}
         <a href="#" class="verified-link">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           Verified Reviews
         </a>
+        {% endif %}
       </div>
       
       <div class="rating-breakdown">
         <div class="rating-bar">
           <span class="stars-small">★★★★★</span>
           <div class="bar-container">
-            <div class="bar-fill" style="width: 95%"></div>
+            <div class="bar-fill" style="width: {{ section.settings.rating_5_percent }}%"></div>
           </div>
-          <span class="count">93</span>
+          <span class="count">{{ section.settings.rating_5_count }}</span>
         </div>
         <div class="rating-bar">
           <span class="stars-small">★★★★☆</span>
           <div class="bar-container">
-            <div class="bar-fill" style="width: 3%"></div>
+            <div class="bar-fill" style="width: {{ section.settings.rating_4_percent }}%"></div>
           </div>
-          <span class="count">3</span>
+          <span class="count">{{ section.settings.rating_4_count }}</span>
         </div>
         <div class="rating-bar">
           <span class="stars-small">★★★☆☆</span>
           <div class="bar-container">
-            <div class="bar-fill" style="width: 1%"></div>
+            <div class="bar-fill" style="width: {{ section.settings.rating_3_percent }}%"></div>
           </div>
-          <span class="count">1</span>
+          <span class="count">{{ section.settings.rating_3_count }}</span>
         </div>
         <div class="rating-bar">
           <span class="stars-small">★★☆☆☆</span>
           <div class="bar-container">
-            <div class="bar-fill" style="width: 1%"></div>
+            <div class="bar-fill" style="width: {{ section.settings.rating_2_percent }}%"></div>
           </div>
-          <span class="count">1</span>
+          <span class="count">{{ section.settings.rating_2_count }}</span>
         </div>
         <div class="rating-bar">
           <span class="stars-small">★☆☆☆☆</span>
           <div class="bar-container">
-            <div class="bar-fill" style="width: 0%"></div>
+            <div class="bar-fill" style="width: {{ section.settings.rating_1_percent }}%"></div>
           </div>
-          <span class="count">0</span>
+          <span class="count">{{ section.settings.rating_1_count }}</span>
         </div>
       </div>
       
       <div class="write-review-cta">
-        <button class="write-review-btn">Write a review</button>
+        <button class="write-review-btn" style="background: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }};">{{ section.settings.button_text }}</button>
       </div>
     </div>
     
     <div class="reviews-filter">
-      <button class="filter-btn active">Most Recent</button>
-      <button class="filter-btn">Highest Rating</button>
-      <button class="filter-btn">Lowest Rating</button>
+      <button class="filter-btn active">{{ section.settings.filter_1_text }}</button>
+      <button class="filter-btn">{{ section.settings.filter_2_text }}</button>
+      <button class="filter-btn">{{ section.settings.filter_3_text }}</button>
     </div>
     
     <div class="reviews-list">
@@ -154,6 +184,36 @@
   font-size: 24px;
   color: #ffa500;
   margin-bottom: 10px;
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.star-full {
+  color: #ffa500;
+}
+
+.star-half {
+  position: relative;
+  display: inline-block;
+  color: #ffa500;
+}
+
+.star-half-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffa500;
+}
+
+.star-half-empty {
+  color: #e0e0e0;
+}
+
+.star-empty {
+  color: #e0e0e0;
 }
 
 .review-count {
@@ -382,6 +442,172 @@
 {% schema %}
 {
   "name": "Customer Reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "header",
+      "content": "Rating Summary"
+    },
+    {
+      "type": "range",
+      "id": "average_rating",
+      "label": "Average rating",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.9,
+      "info": "Drag to set rating (supports half stars: 4.5 shows 4 full stars + 1 half star)"
+    },
+    {
+      "type": "number",
+      "id": "total_reviews",
+      "label": "Total number of reviews",
+      "default": 98
+    },
+    {
+      "type": "checkbox",
+      "id": "show_verified_link",
+      "label": "Show verified reviews link",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Rating Breakdown"
+    },
+    {
+      "type": "number",
+      "id": "rating_5_count",
+      "label": "5-star count",
+      "default": 93
+    },
+    {
+      "type": "range",
+      "id": "rating_5_percent",
+      "label": "5-star percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 95,
+      "unit": "%"
+    },
+    {
+      "type": "number",
+      "id": "rating_4_count",
+      "label": "4-star count",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "rating_4_percent",
+      "label": "4-star percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 3,
+      "unit": "%"
+    },
+    {
+      "type": "number",
+      "id": "rating_3_count",
+      "label": "3-star count",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "rating_3_percent",
+      "label": "3-star percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 1,
+      "unit": "%"
+    },
+    {
+      "type": "number",
+      "id": "rating_2_count",
+      "label": "2-star count",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "rating_2_percent",
+      "label": "2-star percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 1,
+      "unit": "%"
+    },
+    {
+      "type": "number",
+      "id": "rating_1_count",
+      "label": "1-star count",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "rating_1_percent",
+      "label": "1-star percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Write Review Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Write a review"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background color",
+      "default": "#ffd700"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Filter Buttons"
+    },
+    {
+      "type": "text",
+      "id": "filter_1_text",
+      "label": "Filter 1 text",
+      "default": "Most Recent"
+    },
+    {
+      "type": "text",
+      "id": "filter_2_text",
+      "label": "Filter 2 text",
+      "default": "Highest Rating"
+    },
+    {
+      "type": "text",
+      "id": "filter_3_text",
+      "label": "Filter 3 text",
+      "default": "Lowest Rating"
+    }
+  ],
   "blocks": [
     {
       "type": "review",

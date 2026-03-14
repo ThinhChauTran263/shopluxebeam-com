@@ -42,10 +42,42 @@
         <!-- Title & Reviews -->
         <h1 class="product-title">{{ product.title }}</h1>
         
+        {% if section.settings.show_reviews %}
         <div class="product-reviews">
-          <span class="stars">★★★★★</span>
-          <span class="review-count">98 reviews</span>
+          <span class="stars">
+            {% assign rating_value = section.settings.review_stars %}
+            {% assign full_stars = rating_value | floor %}
+            {% assign decimal = rating_value | minus: full_stars %}
+            {% assign has_half_star = false %}
+            {% if decimal >= 0.25 and decimal < 0.75 %}
+              {% assign has_half_star = true %}
+            {% elsif decimal >= 0.75 %}
+              {% assign full_stars = full_stars | plus: 1 %}
+            {% endif %}
+            
+            {% for i in (1..full_stars) %}
+              <span class="star-full">★</span>
+            {% endfor %}
+            
+            {% if has_half_star %}
+              <span class="star-half">
+                <span class="star-half-fill">★</span>
+                <span class="star-half-empty">★</span>
+              </span>
+            {% endif %}
+            
+            {% assign empty_stars = 5 | minus: full_stars %}
+            {% if has_half_star %}
+              {% assign empty_stars = empty_stars | minus: 1 %}
+            {% endif %}
+            
+            {% for i in (1..empty_stars) %}
+              <span class="star-empty">☆</span>
+            {% endfor %}
+          </span>
+          <span class="review-count">{{ section.settings.review_count }} reviews</span>
         </div>
+        {% endif %}
 
         <!-- Price -->
         <div class="product-price">
@@ -57,33 +89,49 @@
         </div>
 
         <!-- Features -->
+        {% if section.settings.show_features %}
         <div class="product-features">
+          {% if section.settings.feature_1 != blank %}
           <div class="feature-item">
             <span class="checkmark">✓</span>
-            <span>Strong Powerful Motor</span>
+            <span>{{ section.settings.feature_1 }}</span>
           </div>
+          {% endif %}
+          {% if section.settings.feature_2 != blank %}
           <div class="feature-item">
             <span class="checkmark">✓</span>
-            <span>Long Adjustable Handle</span>
+            <span>{{ section.settings.feature_2 }}</span>
           </div>
+          {% endif %}
+          {% if section.settings.feature_3 != blank %}
           <div class="feature-item">
             <span class="checkmark">✓</span>
-            <span>8 Different Brush Heads</span>
+            <span>{{ section.settings.feature_3 }}</span>
           </div>
+          {% endif %}
+          {% if section.settings.feature_4 != blank %}
+          <div class="feature-item">
+            <span class="checkmark">✓</span>
+            <span>{{ section.settings.feature_4 }}</span>
+          </div>
+          {% endif %}
         </div>
+        {% endif %}
 
         <!-- Urgency Alert -->
+        {% if section.settings.show_urgency_alert %}
         <div class="urgency-alert">
           <span class="alert-icon">⚠</span>
           <div>
-            <strong>Update: This product is SELLING OUT faster than expected!</strong>
-            <p>Secure yours today while stock lasts.</p>
+            <strong>{{ section.settings.urgency_title }}</strong>
+            <p>{{ section.settings.urgency_text }}</p>
           </div>
         </div>
+        {% endif %}
 
         <!-- Bundle Options -->
         <div class="bundle-section">
-          <h3 class="bundle-title">SAVE MORE WITH BUNDLES</h3>
+          <h3 class="bundle-title">{{ section.settings.bundle_title }}</h3>
           
           <div class="bundle-options">
             <!-- Single -->
@@ -94,14 +142,14 @@
                 <div class="bundle-info">
                   <div class="bundle-left">
                     <div class="bundle-header">
-                      <span class="bundle-name">Single</span>
-                      <span class="bundle-badge">Free Shipping</span>
+                      <span class="bundle-name">{{ section.settings.bundle1_name }}</span>
+                      <span class="bundle-badge">{{ section.settings.bundle1_badge }}</span>
                     </div>
-                    <div class="bundle-subtitle">Standard Sale</div>
+                    <div class="bundle-subtitle">{{ section.settings.bundle1_subtitle }}</div>
                   </div>
                   <div class="bundle-price">
-                    <span class="price">$59.99</span>
-                    <span class="original">$179.99</span>
+                    <span class="price">{{ section.settings.bundle1_price }}</span>
+                    <span class="original">{{ section.settings.bundle1_original }}</span>
                   </div>
                 </div>
               </div>
@@ -115,17 +163,17 @@
                 <div class="bundle-info">
                   <div class="bundle-left">
                     <div class="bundle-header">
-                      <span class="bundle-name">Buy 2 Get 10% Off</span>
-                      <span class="bundle-badge">FREE SHIPPING</span>
+                      <span class="bundle-name">{{ section.settings.bundle2_name }}</span>
+                      <span class="bundle-badge">{{ section.settings.bundle2_badge }}</span>
                     </div>
-                    <div class="bundle-subtitle">Most Commonly Purchased</div>
+                    <div class="bundle-subtitle">{{ section.settings.bundle2_subtitle }}</div>
                   </div>
                   <div class="bundle-price">
-                    <span class="price">$108.00</span>
-                    <span class="original">$359.98</span>
+                    <span class="price">{{ section.settings.bundle2_price }}</span>
+                    <span class="original">{{ section.settings.bundle2_original }}</span>
                   </div>
                 </div>
-                <span class="popular-badge">Most Popular</span>
+                <span class="popular-badge">{{ section.settings.popular_badge }}</span>
               </div>
             </label>
 
@@ -137,14 +185,14 @@
                 <div class="bundle-info">
                   <div class="bundle-left">
                     <div class="bundle-header">
-                      <span class="bundle-name">Buy 3 Get 15% Off</span>
-                      <span class="bundle-badge">FREE SHIPPING</span>
+                      <span class="bundle-name">{{ section.settings.bundle3_name }}</span>
+                      <span class="bundle-badge">{{ section.settings.bundle3_badge }}</span>
                     </div>
-                    <div class="bundle-subtitle">Best value</div>
+                    <div class="bundle-subtitle">{{ section.settings.bundle3_subtitle }}</div>
                   </div>
                   <div class="bundle-price">
-                    <span class="price">$153.00</span>
-                    <span class="original">$539.97</span>
+                    <span class="price">{{ section.settings.bundle3_price }}</span>
+                    <span class="original">{{ section.settings.bundle3_original }}</span>
                   </div>
                 </div>
               </div>
@@ -174,6 +222,7 @@
         </form>
 
         <!-- Trust Badge -->
+        {% if section.settings.show_trust_badge %}
         <div class="trust-badge">
           <div class="shield-icon">
             <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -182,33 +231,40 @@
             </svg>
           </div>
           <div>
-            <strong>30 Days Risk-Free Trial</strong>
-            <p>Not what you expected? We'll give your money back!</p>
+            <strong>{{ section.settings.trust_badge_title }}</strong>
+            <p>{{ section.settings.trust_badge_text }}</p>
           </div>
         </div>
+        {% endif %}
 
         <!-- Collapsible Sections -->
         <div class="product-accordion">
+          {% if section.settings.show_accordion_1 %}
           <details class="accordion-item">
-            <summary>What's Included</summary>
+            <summary>{{ section.settings.accordion_1_title }}</summary>
             <div class="accordion-content">
-              {{ product.description }}
+              {{ section.settings.accordion_1_content }}
             </div>
           </details>
+          {% endif %}
 
+          {% if section.settings.show_accordion_2 %}
           <details class="accordion-item">
-            <summary>Shipping & Delivery Time</summary>
+            <summary>{{ section.settings.accordion_2_title }}</summary>
             <div class="accordion-content">
-              <p>Free shipping on all orders. Delivery within 5-7 business days.</p>
+              {{ section.settings.accordion_2_content }}
             </div>
           </details>
+          {% endif %}
 
+          {% if section.settings.show_accordion_3 %}
           <details class="accordion-item">
-            <summary>30 Days Risk Free</summary>
+            <summary>{{ section.settings.accordion_3_title }}</summary>
             <div class="accordion-content">
-              <p>Try it risk-free for 30 days. If you're not satisfied, return it for a full refund.</p>
+              {{ section.settings.accordion_3_content }}
             </div>
           </details>
+          {% endif %}
         </div>
 
         <!-- Payment Icons -->
@@ -240,67 +296,85 @@
 </div>
 
 <!-- Scrolling Announcement Bar -->
-<div class="product-scrolling-bar">
+{% if section.settings.show_scrolling_bar %}
+<div class="product-scrolling-bar" style="background: {{ section.settings.scrolling_bar_bg }}; color: {{ section.settings.scrolling_bar_text_color }};">
   <div class="scrolling-content-bar">
+    {% if section.settings.scrolling_item_1 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M12 6v6l4 2"></path>
       </svg>
-      FREE SHIPPING OVER $50
+      {{ section.settings.scrolling_item_1 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      OVER 10,000+ HAPPY CUSTOMERS
+      {{ section.settings.scrolling_item_2 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_1 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M12 6v6l4 2"></path>
       </svg>
-      FREE SHIPPING OVER $50
+      {{ section.settings.scrolling_item_1 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      OVER 10,000+ HAPPY CUSTOMERS
+      {{ section.settings.scrolling_item_2 }}
     </span>
+    {% endif %}
     <!-- Duplicate for seamless loop -->
+    {% if section.settings.scrolling_item_1 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M12 6v6l4 2"></path>
       </svg>
-      FREE SHIPPING OVER $50
+      {{ section.settings.scrolling_item_1 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      OVER 10,000+ HAPPY CUSTOMERS
+      {{ section.settings.scrolling_item_2 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_1 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <path d="M12 6v6l4 2"></path>
       </svg>
-      FREE SHIPPING OVER $50
+      {{ section.settings.scrolling_item_1 }}
     </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
     <span class="scroll-item-bar">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
-      OVER 10,000+ HAPPY CUSTOMERS
+      {{ section.settings.scrolling_item_2 }}
     </span>
+    {% endif %}
   </div>
 </div>
+{% endif %}
 
 <style>
 /* Scrolling Announcement Bar */
@@ -442,6 +516,35 @@
   font-size: 20px;
   line-height: 1;
   letter-spacing: 2px;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star-full {
+  color: #ffa500;
+}
+
+.star-half {
+  position: relative;
+  display: inline-block;
+  color: #ffa500;
+}
+
+.star-half-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffa500;
+}
+
+.star-half-empty {
+  color: #e0e0e0;
+}
+
+.star-empty {
+  color: #e0e0e0;
 }
 
 .review-count {
@@ -2005,6 +2108,316 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_vendor",
       "label": "Show vendor",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Show reviews",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "review_stars",
+      "label": "Number of stars",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "default": 5,
+      "info": "Drag to set rating (supports half stars: 4.5 shows 4 full stars + 1 half star)"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Number of reviews",
+      "default": "1,234"
+    },
+    {
+      "type": "header",
+      "content": "Product Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_features",
+      "label": "Show features",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Feature 1",
+      "default": "High-quality materials"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Feature 2",
+      "default": "Fast shipping"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Feature 3",
+      "default": "30-day money back guarantee"
+    },
+    {
+      "type": "text",
+      "id": "feature_4",
+      "label": "Feature 4",
+      "default": "24/7 customer support"
+    },
+    {
+      "type": "header",
+      "content": "Urgency Alert"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_urgency_alert",
+      "label": "Show urgency alert",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "urgency_title",
+      "label": "Alert title",
+      "default": "Limited Time Offer!"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Alert text",
+      "default": "Order now and get 20% off your purchase"
+    },
+    {
+      "type": "header",
+      "content": "Bundle Options"
+    },
+    {
+      "type": "text",
+      "id": "bundle_title",
+      "label": "Bundle section title",
+      "default": "CHOOSE YOUR BUNDLE"
+    },
+    {
+      "type": "text",
+      "id": "bundle1_name",
+      "label": "Bundle 1 - Name",
+      "default": "Buy 1"
+    },
+    {
+      "type": "text",
+      "id": "bundle1_badge",
+      "label": "Bundle 1 - Badge",
+      "default": "SAVE 10%"
+    },
+    {
+      "type": "text",
+      "id": "bundle1_subtitle",
+      "label": "Bundle 1 - Subtitle",
+      "default": "Single unit"
+    },
+    {
+      "type": "text",
+      "id": "bundle1_price",
+      "label": "Bundle 1 - Price",
+      "default": "$39.99"
+    },
+    {
+      "type": "text",
+      "id": "bundle1_original",
+      "label": "Bundle 1 - Original price",
+      "default": "$49.99"
+    },
+    {
+      "type": "text",
+      "id": "bundle2_name",
+      "label": "Bundle 2 - Name",
+      "default": "Buy 2"
+    },
+    {
+      "type": "text",
+      "id": "bundle2_badge",
+      "label": "Bundle 2 - Badge",
+      "default": "SAVE 20%"
+    },
+    {
+      "type": "text",
+      "id": "bundle2_subtitle",
+      "label": "Bundle 2 - Subtitle",
+      "default": "Most popular choice"
+    },
+    {
+      "type": "text",
+      "id": "bundle2_price",
+      "label": "Bundle 2 - Price",
+      "default": "$69.99"
+    },
+    {
+      "type": "text",
+      "id": "bundle2_original",
+      "label": "Bundle 2 - Original price",
+      "default": "$99.98"
+    },
+    {
+      "type": "text",
+      "id": "popular_badge",
+      "label": "Popular badge text",
+      "default": "MOST POPULAR"
+    },
+    {
+      "type": "text",
+      "id": "bundle3_name",
+      "label": "Bundle 3 - Name",
+      "default": "Buy 3"
+    },
+    {
+      "type": "text",
+      "id": "bundle3_badge",
+      "label": "Bundle 3 - Badge",
+      "default": "SAVE 30%"
+    },
+    {
+      "type": "text",
+      "id": "bundle3_subtitle",
+      "label": "Bundle 3 - Subtitle",
+      "default": "Best value"
+    },
+    {
+      "type": "text",
+      "id": "bundle3_price",
+      "label": "Bundle 3 - Price",
+      "default": "$99.99"
+    },
+    {
+      "type": "text",
+      "id": "bundle3_original",
+      "label": "Bundle 3 - Original price",
+      "default": "$149.97"
+    },
+    {
+      "type": "header",
+      "content": "Trust Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badge",
+      "label": "Show trust badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_title",
+      "label": "Trust badge title",
+      "default": "30-Day Money Back Guarantee"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_text",
+      "label": "Trust badge text",
+      "default": "Try it risk-free. If you're not satisfied, return it for a full refund."
+    },
+    {
+      "type": "header",
+      "content": "Accordion Section 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordion_1",
+      "label": "Show accordion 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_1_title",
+      "label": "Accordion 1 - Title",
+      "default": "What's Included"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_1_content",
+      "label": "Accordion 1 - Content",
+      "default": "<p>1x Electric Spin Scrubber<br>3x Brush Heads<br>1x USB Charging Cable<br>1x User Manual</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Section 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordion_2",
+      "label": "Show accordion 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_2_title",
+      "label": "Accordion 2 - Title",
+      "default": "Shipping & Delivery Time"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_2_content",
+      "label": "Accordion 2 - Content",
+      "default": "<p>Free shipping on all orders. Delivery within 5-7 business days.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Section 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordion_3",
+      "label": "Show accordion 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "accordion_3_title",
+      "label": "Accordion 3 - Title",
+      "default": "30 Days Risk Free"
+    },
+    {
+      "type": "richtext",
+      "id": "accordion_3_content",
+      "label": "Accordion 3 - Content",
+      "default": "<p>Try it risk-free for 30 days. If you're not satisfied, return it for a full refund.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Scrolling Announcement Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scrolling_bar",
+      "label": "Show scrolling bar",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "scrolling_bar_bg",
+      "label": "Background color",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "color",
+      "id": "scrolling_bar_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "scrolling_item_1",
+      "label": "Scrolling item 1",
+      "default": "FREE SHIPPING OVER $50"
+    },
+    {
+      "type": "text",
+      "id": "scrolling_item_2",
+      "label": "Scrolling item 2",
+      "default": "OVER 10,000+ HAPPY CUSTOMERS"
     },
     {
       "type": "header",
