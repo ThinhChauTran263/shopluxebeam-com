@@ -1,0 +1,22 @@
+{% comment %}
+  Test product section
+{% endcomment %}
+
+<div class="test-product">
+  <h1>{{ product.title }}</h1>
+  <p>{{ section.settings.test_text }}</p>
+</div>
+
+{% schema %}
+{
+  "name": "Test Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "test_text",
+      "label": "Test Text",
+      "default": "Hello World"
+    }
+  ]
+}
+{% endschema %}
