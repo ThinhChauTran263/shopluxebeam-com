@@ -115,49 +115,8 @@
   </div>
 </div>
 
-<style>
-  @media (max-width: 768px) {
-    .cart-item-row {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-    }
-    
-    .item-image {
-      width: 100% !important;
-      max-width: 200px;
-    }
-    
-    .cart-footer {
-      flex-direction: column !important;
-    }
-    
-    .cart-actions {
-      width: 100%;
-      margin-bottom: 30px;
-    }
-    
-    .cart-actions button,
-    .cart-actions a {
-      display: block !important;
-      width: 100%;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    
-    .cart-summary {
-      width: 100% !important;
-    }
-  }
-</style>
-
-<script>
-  // Auto-submit form when quantity changes
-  document.querySelectorAll('input[name="updates[]"]').forEach(input => {
-    input.addEventListener('change', function() {
-      this.closest('form').submit();
-    });
-  });
-</script>
+{{ 'main-cart-responsive.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-quantity-auto-submit.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

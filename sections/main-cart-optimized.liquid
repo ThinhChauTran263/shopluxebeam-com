@@ -1,0 +1,117 @@
+{% comment %}
+  Main cart page - Optimized version (inline styles extracted)
+{% endcomment %}
+
+<div class="cart-page-wrapper">
+  <div class="container">
+    {% if cart.item_count > 0 %}
+      <div class="cart-header">
+        <h1>Shopping Cart</h1>
+        <p>You have {{ cart.item_count }} item(s) in your cart</p>
+      </div>
+      
+      <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
+        <div class="cart-items-wrapper">
+          {% for item in cart.items %}
+            <div class="cart-item-row">
+              <div class="item-image">
+                {% if item.image %}
+                  <img src="{{ item.image | image_url: width: 150 }}" 
+                       alt="{{ item.product.title | escape }}"
+                       width="150"
+                       height="150"
+                       loading="lazy">
+                {% endif %}
+              </div>
+              
+              <div class="item-info">
+                <h3>
+                  <a href="{{ item.product.url }}">
+                    {{ item.product.title }}
+                  </a>
+                </h3>
+                
+                {% if item.variant.title != 'Default Title' %}
+                  <p>{{ item.variant.title }}</p>
+                {% endif %}
+                
+                <p>{{ item.final_price | money }}</p>
+              </div>
+              
+              <div class="item-quantity">
+                <label for="updates_{{ item.key }}">Quantity:</label>
+                <input type="number" 
+                       name="updates[]" 
+                       id="updates_{{ item.key }}"
+                       value="{{ item.quantity }}"
+                       min="0">
+              </div>
+              
+              <div class="item-total">
+                <p>Total:</p>
+                <p>{{ item.final_line_price | money }}</p>
+              </div>
+              
+              <div class="item-remove">
+                <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" 
+                   title="Remove">
+                  ×
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <div class="cart-footer">
+          <div class="cart-actions">
+            <button type="submit" name="update">
+              Update Cart
+            </button>
+            <a href="{{ routes.all_products_collection_url }}">
+              Continue Shopping
+            </a>
+          </div>
+          
+          <div class="cart-summary">
+            <div>
+              <span>Subtotal:</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+            
+            <p>Taxes and shipping calculated at checkout</p>
+            
+            <button type="submit" name="checkout">
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <div class="empty-cart">
+        <div>
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </div>
+        <h1>Your cart is empty</h1>
+        <p>Add some products to get started!</p>
+        <a href="{{ routes.all_products_collection_url }}">
+          Start Shopping
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{{ 'main-cart.css' | asset_url | stylesheet_tag }}
+{{ 'main-cart-responsive.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-quantity-auto-submit.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

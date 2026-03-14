@@ -1,0 +1,33 @@
+/* Main Cart Responsive Styles */
+@media (max-width: 768px) {
+  .cart-item-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  
+  .item-image {
+    width: 100% !important;
+    max-width: 200px;
+  }
+  
+  .cart-footer {
+    flex-direction: column !important;
+  }
+  
+  .cart-actions {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  .cart-actions button,
+  .cart-actions a {
+    display: block !important;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .cart-summary {
+    width: 100% !important;
+  }
+}

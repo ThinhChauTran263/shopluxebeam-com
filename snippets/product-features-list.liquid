@@ -1,0 +1,33 @@
+{% comment %}
+  Product features list snippet
+  Usage: {% render 'product-features-list', section: section %}
+{% endcomment %}
+
+{% if section.settings.show_features %}
+<div class="product-features">
+  {% if section.settings.feature_1 != blank %}
+  <div class="feature-item">
+    <span class="checkmark">✓</span>
+    <span>{{ section.settings.feature_1 }}</span>
+  </div>
+  {% endif %}
+  {% if section.settings.feature_2 != blank %}
+  <div class="feature-item">
+    <span class="checkmark">✓</span>
+    <span>{{ section.settings.feature_2 }}</span>
+  </div>
+  {% endif %}
+  {% if section.settings.feature_3 != blank %}
+  <div class="feature-item">
+    <span class="checkmark">✓</span>
+    <span>{{ section.settings.feature_3 }}</span>
+  </div>
+  {% endif %}
+  {% if section.settings.feature_4 != blank %}
+  <div class="feature-item">
+    <span class="checkmark">✓</span>
+    <span>{{ section.settings.feature_4 }}</span>
+  </div>
+  {% endif %}
+</div>
+{% endif %}

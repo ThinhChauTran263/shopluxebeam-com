@@ -1,0 +1,81 @@
+/* Homepage Hero and Sections Styles */
+.hero-section {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000000;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #6c757d;
+}
+
+.featured-products {
+  background: #ffffff;
+}
+
+.section-title h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.section-title p {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 3rem;
+}
+
+.about-section {
+  padding: 100px 0;
+  background: #f8f9fa;
+}
+
+.about-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: #000000;
+}
+
+.about-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.about-content li {
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.about-content li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #ff8200;
+  font-weight: bold;
+}
+
+.newsletter-section {
+  background: #0b101f;
+  color: #ffffff;
+}
+
+.newsletter-section h2 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.newsletter-section p {
+  color: #cccccc;
+  margin-bottom: 2rem;
+}

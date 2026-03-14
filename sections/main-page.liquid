@@ -20,45 +20,7 @@
   </div>
 </div>
 
-<style>
-  .page-section {
-    min-height: 400px;
-  }
-  
-  .page-title {
-    margin-bottom: 2rem;
-    color: var(--font-color-header);
-  }
-  
-  .page-body {
-    color: var(--font-color-paragraph);
-    line-height: var(--font-line-height-paragraph);
-  }
-  
-  .page-body h2,
-  .page-body h3,
-  .page-body h4 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: var(--font-color-header);
-  }
-  
-  .page-body p {
-    margin-bottom: 1rem;
-  }
-  
-  .page-body ul,
-  .page-body ol {
-    margin-bottom: 1rem;
-    padding-left: 2rem;
-  }
-  
-  .page-body img {
-    max-width: 100%;
-    height: auto;
-    margin: 1rem 0;
-  }
-</style>
+{{ 'main-page.css' | asset_url | stylesheet_tag }}
 
 {% schema %}
 {

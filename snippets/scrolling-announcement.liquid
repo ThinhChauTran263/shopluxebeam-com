@@ -1,0 +1,84 @@
+{% comment %}
+  Scrolling announcement snippet
+  Usage: {% render 'scrolling-announcement', section: section %}
+{% endcomment %}
+
+{% if section.settings.show_scrolling_bar %}
+<div class="product-scrolling-bar" style="background: {{ section.settings.scrolling_bar_bg }}; color: {{ section.settings.scrolling_bar_text_color }};">
+  <div class="scrolling-content-bar">
+    {% if section.settings.scrolling_item_1 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      {{ section.settings.scrolling_item_1 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      {{ section.settings.scrolling_item_2 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_1 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      {{ section.settings.scrolling_item_1 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      {{ section.settings.scrolling_item_2 }}
+    </span>
+    {% endif %}
+    <!-- Duplicate for seamless loop -->
+    {% if section.settings.scrolling_item_1 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      {{ section.settings.scrolling_item_1 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      {{ section.settings.scrolling_item_2 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_1 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+      </svg>
+      {{ section.settings.scrolling_item_1 }}
+    </span>
+    {% endif %}
+    {% if section.settings.scrolling_item_2 != blank %}
+    <span class="scroll-item-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      {{ section.settings.scrolling_item_2 }}
+    </span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

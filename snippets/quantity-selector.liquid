@@ -1,0 +1,10 @@
+{% comment %}
+  Quantity selector snippet
+  Usage: {% render 'quantity-selector', item_key: item.key, quantity: item.quantity, line: forloop.index %}
+{% endcomment %}
+
+<div class="quantity-selector">
+  <button class="qty-btn qty-minus" data-line="{{ line }}" aria-label="Decrease quantity">−</button>
+  <input type="number" class="qty-input" value="{{ quantity }}" min="0" data-line="{{ line }}" data-key="{{ item_key }}">
+  <button class="qty-btn qty-plus" data-line="{{ line }}" aria-label="Increase quantity">+</button>
+</div>

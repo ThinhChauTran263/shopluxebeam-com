@@ -1,0 +1,14 @@
+{% comment %}
+  Urgency alert snippet
+  Usage: {% render 'urgency-alert', title: 'Limited Time!', text: 'Order now' %}
+{% endcomment %}
+
+{% if title and text %}
+<div class="urgency-alert">
+  <span class="alert-icon">⚠</span>
+  <div>
+    <strong>{{ title }}</strong>
+    <p>{{ text }}</p>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,40 @@
+/* Image Block Styles */
+.image-block {
+  margin-bottom: 2rem;
+}
+
+.image-block__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.image-block__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.image-block__link:hover .image-block__image {
+  transform: scale(1.05);
+}
+
+.image-block__caption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  opacity: 0.8;
+  text-align: center;
+}
+
+.image-block--rounded .image-block__media {
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+.image-block--rounded .image-block__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
