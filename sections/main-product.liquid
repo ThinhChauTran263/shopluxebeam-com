@@ -156,7 +156,7 @@
         <form action="{{ routes.cart_add_url }}" method="post" class="product-form" data-ajax-cart="false" novalidate>
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           
-          <button type="button" class="add-to-cart-btn custom-add-to-cart" data-variant-id="{{ product.selected_or_first_available_variant.id }}" {% unless product.available %}disabled{% endunless %}>
+          <button type="button" class="add-to-cart-btn custom-add-to-cart" data-variant-id="{{ product.selected_or_first_available_variant.id }}" data-inventory="{{ product.selected_or_first_available_variant.inventory_quantity }}" {% unless product.available %}disabled{% endunless %}>
             <span class="btn-text">ADD TO CART</span>
             <span class="btn-spinner" style="display: none;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1244,6 +1244,82 @@ form[action*="cart/add"] {
 form[action*="cart/add"] button {
   pointer-events: all;
 }
+
+/* Toast Notification Styles */
+.custom-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 320px;
+  max-width: 500px;
+  z-index: 999999;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.custom-toast-show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.custom-toast-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-toast-message {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #333;
+  font-weight: 500;
+}
+
+.custom-toast-error {
+  border-left: 4px solid #ef4444;
+}
+
+.custom-toast-error .custom-toast-icon {
+  color: #ef4444;
+}
+
+.custom-toast-success {
+  border-left: 4px solid #10b981;
+}
+
+.custom-toast-success .custom-toast-icon {
+  color: #10b981;
+}
+
+.custom-toast-info {
+  border-left: 4px solid #3b82f6;
+}
+
+.custom-toast-info .custom-toast-icon {
+  color: #3b82f6;
+}
+
+@media (max-width: 576px) {
+  .custom-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+}
 </style>
 
 <script>
@@ -1339,25 +1415,49 @@ document.addEventListener('DOMContentLoaded', function() {
       
       console.log('Starting add to cart process...');
       
-      // Add to cart via AJAX
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          id: variantId,
-          quantity: 1
+      // First, check current cart to see if we can add more
+      fetch('/cart.js')
+        .then(r => r.json())
+        .then(cartData => {
+          console.log('Current cart:', cartData);
+          
+          // Find if this variant is already in cart
+          const existingItem = cartData.items.find(item => item.variant_id == variantId);
+          const currentQty = existingItem ? existingItem.quantity : 0;
+          
+          console.log('Current quantity in cart:', currentQty);
+          
+          // Get inventory from product data
+          const inventoryQty = parseInt(this.dataset.inventory) || 999;
+          console.log('Available inventory:', inventoryQty);
+          
+          // Check if we can add more
+          if (currentQty >= inventoryQty) {
+            throw new Error('Maximum available quantity reached');
+          }
+          
+          // Add to cart via AJAX
+          return fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: 1
+            })
+          });
         })
-      })
-      .then(response => {
-        console.log('Add to cart response:', response.status);
-        if (!response.ok) {
-          throw new Error('Failed to add to cart: ' + response.status);
-        }
-        return response.json();
-      })
+        .then(response => {
+          console.log('Add to cart response:', response.status);
+          if (!response.ok) {
+            return response.json().then(err => {
+              throw new Error(err.description || err.message || 'Failed to add to cart');
+            });
+          }
+          return response.json();
+        })
       .then(data => {
         console.log('Product added successfully:', data);
         
@@ -1388,12 +1488,53 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.remove('loading');
         this.disabled = false;
         
-        // Show error message
-        alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
+        // Show generic toast notification
+        showToast('Maximum available quantity reached', 'error');
       });
       
       return false;
     });
+  }
+  
+  // Beautiful Toast Notification Function
+  function showToast(message, type = 'info') {
+    // Remove existing toast if any
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) {
+      existingToast.remove();
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast custom-toast-' + type;
+    
+    // Icon based on type
+    let icon = '';
+    if (type === 'error') {
+      icon = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+    } else if (type === 'success') {
+      icon = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+    } else {
+      icon = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+    }
+    
+    toast.innerHTML = '<div class="custom-toast-icon">' + icon + '</div><div class="custom-toast-message">' + message + '</div>';
+    
+    // Add to body
+    document.body.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => {
+      toast.classList.add('custom-toast-show');
+    }, 10);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      toast.classList.remove('custom-toast-show');
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 4000);
   }
   
   // Function to update cart count immediately and accurately
