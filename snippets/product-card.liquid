@@ -46,7 +46,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
   }
   
   .product-card__image {
@@ -55,20 +55,18 @@
     background: #ffffff;
     margin-bottom: 8px;
     width: 100%;
-    aspect-ratio: 1;
   }
   
   .product-card__image a {
     display: block;
     width: 100%;
-    height: 100%;
   }
   
   .product-card__img,
   .product-card__placeholder {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     object-position: center;
     display: block;
   }
