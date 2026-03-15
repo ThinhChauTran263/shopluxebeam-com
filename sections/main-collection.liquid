@@ -3,7 +3,7 @@
   Displays products with filtering and sorting
 {% endcomment %}
 
-{% paginate collection.products by section.settings.products_per_page %}
+{% comment %} Paginate disabled - show all products {% endcomment %}
   <div class="main-collection">
     <div class="container">
       <!-- Filters and Sorting Bar -->
@@ -64,7 +64,7 @@
         </div>
         
         <div class="collection-toolbar__right">
-          <span class="collection-toolbar__count">{{ paginate.items }} items</span>
+          <span class="collection-toolbar__count">{{ collection.products_count }} items</span>
           
           <!-- Sort Dropdown -->
           {% if section.settings.enable_sorting %}
@@ -148,7 +148,7 @@
           
           <!-- Grid Density Toggle -->
           <div class="collection-view-toggle">
-            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="4" aria-label="4 columns">
+            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="3" aria-label="4 columns">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <rect x="2" y="2" width="7" height="7"></rect>
                 <rect x="11" y="2" width="7" height="7"></rect>
@@ -156,24 +156,33 @@
                 <rect x="2" y="11" width="7" height="7"></rect>
               </svg>
             </button>
-            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="3" aria-label="3 columns">
+            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="5" aria-label="5 columns">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <rect x="1" y="1" width="4" height="4"></rect>
-                <rect x="6" y="1" width="4" height="4"></rect>
-                <rect x="11" y="1" width="4" height="4"></rect>
-                <rect x="16" y="1" width="3" height="4"></rect>
-                <rect x="1" y="6" width="4" height="4"></rect>
-                <rect x="6" y="6" width="4" height="4"></rect>
-                <rect x="11" y="6" width="4" height="4"></rect>
-                <rect x="16" y="6" width="3" height="4"></rect>
-                <rect x="1" y="11" width="4" height="4"></rect>
-                <rect x="6" y="11" width="4" height="4"></rect>
-                <rect x="11" y="11" width="4" height="4"></rect>
-                <rect x="16" y="11" width="3" height="4"></rect>
-                <rect x="1" y="16" width="4" height="3"></rect>
-                <rect x="6" y="16" width="4" height="3"></rect>
-                <rect x="11" y="16" width="4" height="3"></rect>
-                <rect x="16" y="16" width="3" height="3"></rect>
+                <rect x="1" y="1" width="3" height="3"></rect>
+                <rect x="5" y="1" width="3" height="3"></rect>
+                <rect x="9" y="1" width="3" height="3"></rect>
+                <rect x="13" y="1" width="3" height="3"></rect>
+                <rect x="17" y="1" width="2" height="3"></rect>
+                <rect x="1" y="5" width="3" height="3"></rect>
+                <rect x="5" y="5" width="3" height="3"></rect>
+                <rect x="9" y="5" width="3" height="3"></rect>
+                <rect x="13" y="5" width="3" height="3"></rect>
+                <rect x="17" y="5" width="2" height="3"></rect>
+                <rect x="1" y="9" width="3" height="3"></rect>
+                <rect x="5" y="9" width="3" height="3"></rect>
+                <rect x="9" y="9" width="3" height="3"></rect>
+                <rect x="13" y="9" width="3" height="3"></rect>
+                <rect x="17" y="9" width="2" height="3"></rect>
+                <rect x="1" y="13" width="3" height="3"></rect>
+                <rect x="5" y="13" width="3" height="3"></rect>
+                <rect x="9" y="13" width="3" height="3"></rect>
+                <rect x="13" y="13" width="3" height="3"></rect>
+                <rect x="17" y="13" width="2" height="3"></rect>
+                <rect x="1" y="17" width="3" height="2"></rect>
+                <rect x="5" y="17" width="3" height="2"></rect>
+                <rect x="9" y="17" width="3" height="2"></rect>
+                <rect x="13" y="17" width="3" height="2"></rect>
+                <rect x="17" y="17" width="2" height="2"></rect>
               </svg>
             </button>
           </div>
@@ -182,7 +191,7 @@
       
       <!-- Products Grid -->
       <div class="collection-products">
-        <div class="products-grid" data-columns="{{ section.settings.columns }}">
+        <div class="products-grid" data-columns="3">
           {% for product in collection.products %}
             <div class="product-grid-item">
               {% render 'product-card', product: product %}
@@ -194,7 +203,8 @@
           {% endfor %}
         </div>
         
-        <!-- Pagination -->
+        <!-- Pagination - Hidden to show all products -->
+        {% comment %}
         {% if paginate.pages > 1 %}
           <div class="collection-pagination">
             {% if paginate.previous %}
@@ -220,10 +230,11 @@
             {% endif %}
           </div>
         {% endif %}
+        {% endcomment %}
       </div>
     </div>
   </div>
-{% endpaginate %}
+{% comment %} End paginate disabled {% endcomment %}
 
 <style>
   .main-collection {
@@ -471,15 +482,32 @@
   
   .products-grid {
     display: grid;
-    gap: 24px 16px;
-  }
-  
-  .products-grid[data-columns="4"] {
-    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
   
   .products-grid[data-columns="3"] {
     grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .products-grid[data-columns="5"] {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  /* Adjust product card heights based on grid density */
+  .products-grid[data-columns="3"] .product-card {
+    height: 450px;
+  }
+  
+  .products-grid[data-columns="3"] .product-card__image {
+    height: 280px;
+  }
+  
+  .products-grid[data-columns="5"] .product-card {
+    height: 380px;
+  }
+  
+  .products-grid[data-columns="5"] .product-card__image {
+    height: 220px;
   }
   
   /* Pagination */
@@ -524,9 +552,19 @@
   
   /* Responsive */
   @media (max-width: 989px) {
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="3"] {
+    .products-grid[data-columns="3"],
+    .products-grid[data-columns="5"] {
       grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .products-grid[data-columns="3"] .product-card,
+    .products-grid[data-columns="5"] .product-card {
+      height: 420px;
+    }
+    
+    .products-grid[data-columns="3"] .product-card__image,
+    .products-grid[data-columns="5"] .product-card__image {
+      height: 250px;
     }
   }
   
@@ -554,9 +592,19 @@
       width: 100%;
     }
     
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="3"] {
+    .products-grid[data-columns="3"],
+    .products-grid[data-columns="5"] {
       grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .products-grid[data-columns="3"] .product-card,
+    .products-grid[data-columns="5"] .product-card {
+      height: 380px;
+    }
+    
+    .products-grid[data-columns="3"] .product-card__image,
+    .products-grid[data-columns="5"] .product-card__image {
+      height: 220px;
     }
     
     .collection-pagination {
