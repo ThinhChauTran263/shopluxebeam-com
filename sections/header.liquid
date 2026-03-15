@@ -1,19 +1,6 @@
 {% comment %}
-  Header section - Exact copy from shopluxebeam.com.vn
+  Header section
 {% endcomment %}
-
-<!-- Announcement Bar -->
-<div class="announcement-bar-luxe">
-  <div class="container">
-    <div class="announcement-content-luxe">
-      {% if section.settings.announcement_text != blank %}
-        {{ section.settings.announcement_text }}
-      {% else %}
-        ❤️ Spring Sale Now Live! ❤️
-      {% endif %}
-    </div>
-  </div>
-</div>
 
 <!-- Main Header -->
 <header class="main-header-luxe">
@@ -35,18 +22,7 @@
       <nav class="main-navigation-luxe">
         <ul class="nav-menu-luxe">
           <li><a href="{{ routes.root_url }}">HOME</a></li>
-          <li class="has-dropdown-luxe">
-            <a href="{{ collections.all.url }}">LAMPS <span class="dropdown-arrow-luxe">▾</span></a>
-            <ul class="dropdown-menu-luxe">
-              {% for collection in collections limit: 5 %}
-                {% unless collection.handle == 'frontpage' %}
-                  <li><a href="{{ collection.url }}">{{ collection.title }}</a></li>
-                {% endunless %}
-              {% endfor %}
-            </ul>
-          </li>
-          <li><a href="{{ collections['led-lights'].url | default: collections.all.url }}">LED LIGHTS</a></li>
-          <li><a href="{{ collections['galaxy-lights'].url | default: collections.all.url }}">GALAXY LIGHTS</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}">CATALOG</a></li>
           <li><a href="{{ pages.contact.url | default: '/pages/contact' }}">CONTACT</a></li>
         </ul>
       </nav>
@@ -84,7 +60,7 @@
     <div class="mobile-menu-luxe">
       <ul class="mobile-nav-luxe">
         <li><a href="{{ routes.root_url }}">Home</a></li>
-        <li><a href="{{ collections.all.url }}">Catalog</a></li>
+        <li><a href="{{ routes.all_products_collection_url }}">Catalog</a></li>
         <li><a href="{{ pages.contact.url | default: '/pages/contact' }}">Contact</a></li>
       </ul>
       
@@ -100,23 +76,7 @@
 </header>
 
 <style>
-/* Announcement Bar */
-.announcement-bar-luxe {
-  background: #a77049;
-  color: #000000;
-  text-align: center;
-  padding: 8px 0;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.announcement-content-luxe {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Main Header - Exact copy from shopluxebeam.com.vn */
+/* Main Header */
 .main-header-luxe {
   background: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -188,63 +148,6 @@
 
 .nav-menu-luxe > li > a:hover {
   color: #666666;
-}
-
-/* Dropdown */
-.dropdown-arrow-luxe {
-  margin-left: 5px;
-  font-size: 11px;
-  font-weight: 700;
-  transition: transform 0.3s ease;
-  display: inline-block;
-  line-height: 1;
-}
-
-.has-dropdown-luxe:hover .dropdown-arrow-luxe {
-  transform: translateY(2px);
-}
-
-.dropdown-menu-luxe {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-  z-index: 1000;
-  list-style: none;
-  padding: 10px 0;
-  margin: 0;
-}
-
-.has-dropdown-luxe:hover .dropdown-menu-luxe {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-menu-luxe li {
-  padding: 0;
-}
-
-.dropdown-menu-luxe a {
-  display: block;
-  padding: 8px 20px;
-  color: #333333;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-menu-luxe a:hover {
-  background-color: #f5f5f5;
-  color: #000000;
 }
 
 /* Header Actions */
@@ -404,18 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "logo",
       "label": "Logo image",
       "info": "Upload your logo (SVG or PNG recommended)"
-    },
-    {
-      "type": "text",
-      "id": "announcement_text",
-      "label": "Announcement text",
-      "default": "❤️ Spring Sale Now Live! ❤️"
-    },
-    {
-      "type": "color",
-      "id": "announcement_bg_color",
-      "label": "Announcement background color",
-      "default": "#a77049"
     }
   ]
 }

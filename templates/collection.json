@@ -1,14 +1,23 @@
 {
   "sections": {
-    "banner": {
-      "type": "collection-banner"
+    "collection-heading": {
+      "type": "collection-heading",
+      "settings": {
+      }
     },
-    "product-grid": {
-      "type": "main-collection-product-grid"
+    "main-collection": {
+      "type": "main-collection",
+      "settings": {
+        "products_per_page": 12,
+        "columns": 4,
+        "enable_filtering": true,
+        "enable_sorting": true,
+        "show_product_count": true
+      }
     }
   },
   "order": [
-    "banner",
-    "product-grid"
+    "collection-heading",
+    "main-collection"
   ]
 }
