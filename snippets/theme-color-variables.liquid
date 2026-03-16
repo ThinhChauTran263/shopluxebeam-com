@@ -20,6 +20,11 @@
     background: {{ settings.checkout_btn_bg_hover | default: '#a67550' }} !important;
   }
   
+  /* Force show checkout button for testing */
+  .cart-drawer-footer {
+    display: block !important;
+  }
+  
   /* Add to Cart Button Colors - Global */
   .add-to-cart-btn,
   .custom-add-to-cart,
