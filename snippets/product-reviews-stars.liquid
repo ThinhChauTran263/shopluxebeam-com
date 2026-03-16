@@ -1,0 +1,43 @@
+{% comment %}
+  Product reviews stars snippet
+  Usage: {% render 'product-reviews-stars', rating: 4.5, review_count: '1,234' %}
+{% endcomment %}
+
+{% if rating %}
+<div class="product-reviews">
+  <span class="stars">
+    {% assign rating_value = rating %}
+    {% assign full_stars = rating_value | floor %}
+    {% assign decimal = rating_value | minus: full_stars %}
+    {% assign has_half_star = false %}
+    {% if decimal >= 0.25 and decimal < 0.75 %}
+      {% assign has_half_star = true %}
+    {% elsif decimal >= 0.75 %}
+      {% assign full_stars = full_stars | plus: 1 %}
+    {% endif %}
+    
+    {% for i in (1..full_stars) %}
+      <span class="star-full">★</span>
+    {% endfor %}
+    
+    {% if has_half_star %}
+      <span class="star-half">
+        <span class="star-half-fill">★</span>
+        <span class="star-half-empty">★</span>
+      </span>
+    {% endif %}
+    
+    {% assign empty_stars = 5 | minus: full_stars %}
+    {% if has_half_star %}
+      {% assign empty_stars = empty_stars | minus: 1 %}
+    {% endif %}
+    
+    {% for i in (1..empty_stars) %}
+      <span class="star-empty">☆</span>
+    {% endfor %}
+  </span>
+  {% if review_count %}
+    <span class="review-count">{{ review_count }} reviews</span>
+  {% endif %}
+</div>
+{% endif %}

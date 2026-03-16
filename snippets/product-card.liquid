@@ -1,261 +1,302 @@
 {% comment %}
-  Product card snippet - converted from existing product structure
+  Product card snippet - Simplified for grid display
+  Handles price display with compare_at_price logic
 {% endcomment %}
 
-<div class="single-product-wrap">
-  <div class="product-image">
-    <a href="{{ product.url }}">
+<div class="product-card">
+  <div class="product-card__image">
+    <a href="{{ product.url | default: '#' }}">
       {% if product.featured_media %}
-        <img src="{{ product.featured_media | image_url: width: 300 }}" 
+        <img src="{{ product.featured_media | image_url: width: 400 }}" 
              alt="{{ product.featured_media.alt | default: product.title | escape }}" 
-             width="300" 
-             height="300" 
+             width="400" 
+             height="400" 
              loading="lazy" 
-             class="img-fluid">
+             class="product-card__img">
       {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
       {% endif %}
     </a>
     
-    <div class="product-label">
-      {% if product.compare_at_price > product.price %}
-        <span class="percent-count">
-          {% assign discount = product.compare_at_price | minus: product.price %}
-          {% assign discount_percentage = discount | times: 100 | divided_by: product.compare_at_price %}
-          -{{ discount_percentage | round }}%
-        </span>
-      {% endif %}
-      
-      {% unless product.available %}
-        <span class="soldout-title">{{ 'products.product.sold_out' | t | default: 'Sold Out' }}</span>
-      {% endunless %}
-      
-      {% if product.tags contains 'new' %}
-        <span class="new-sale-title">{{ 'products.product.new' | t | default: 'New' }}</span>
-      {% endif %}
-    </div>
-    
-    <div class="product-action">
-      <ul class="product-action-list">
-        <li>
-          <a href="{{ product.url }}" class="quick-view" title="{{ 'products.product.quick_view' | t | default: 'Quick View' }}">
-            <i class="feather-eye"></i>
-          </a>
-        </li>
-        <li>
-          <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form">
-            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-            <button type="submit" name="add" class="add-to-cart" 
-                    {% unless product.available %}disabled{% endunless %}
-                    title="{% if product.available %}{{ 'products.product.add_to_cart' | t | default: 'Add to Cart' }}{% else %}{{ 'products.product.sold_out' | t | default: 'Sold Out' }}{% endif %}">
-              <i class="feather-shopping-cart"></i>
-            </button>
-          </form>
-        </li>
-      </ul>
-    </div>
+    {% if product.compare_at_price > product.price %}
+      <div class="product-card__badge">
+        <span class="badge-sale">Sale</span>
+      </div>
+    {% endif %}
   </div>
   
-  <div class="product-content">
-    <h3 class="product-title">
-      <a href="{{ product.url }}">{{ product.title }}</a>
+  <div class="product-card__info">
+    <h3 class="product-card__title">
+      <a href="{{ product.url | default: '#' }}">{{ product.title | default: 'Product title' }}</a>
     </h3>
     
-    {% if product.vendor != blank %}
-      <p class="product-vendor">{{ product.vendor }}</p>
-    {% endif %}
-    
-    <div class="product-price">
+    <div class="product-card__price">
       {% if product.compare_at_price > product.price %}
-        <span class="old-price">{{ product.compare_at_price | money }}</span>
+        <span class="price price--sale">{{ product.price | money }}</span>
+        <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+      {% else %}
+        <span class="price">{{ product.price | default: '$0.00' | money }}</span>
       {% endif %}
-      <span class="new-price">{{ product.price | money }}</span>
     </div>
     
-    {% if product.available %}
-      <div class="product-rating">
-        {% comment %} Add rating display here if using a review app {% endcomment %}
+    <!-- Add to Cart Button -->
+    {% if product %}
+      <div class="product-card__actions">
+        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-card__form">
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button type="submit" class="product-card__add-to-cart" 
+                  {% unless product.available %}disabled{% endunless %}>
+            {% if product.available %}
+              Add to cart
+            {% else %}
+              Sold out
+            {% endif %}
+          </button>
+        </form>
       </div>
     {% endif %}
   </div>
 </div>
 
 <style>
-  .single-product-wrap {
+  .product-card {
     position: relative;
-    margin-bottom: 30px;
-    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    transition: all 0.7s ease;
   }
   
-  .single-product-wrap:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  }
-  
-  .product-image {
+  .product-card__image {
     position: relative;
     overflow: hidden;
-    border-radius: var(--sti-border-radius);
-  }
-  
-  .product-image img {
+    background: #ffffff;
+    margin-bottom: 8px;
     width: 100%;
-    height: auto;
-    transition: transform 0.3s ease;
+    height: 250px;
+    flex-shrink: 0;
   }
   
-  .single-product-wrap:hover .product-image img {
+  .product-card__image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .product-card__img,
+  .product-card__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+  
+  .product-card:hover .product-card__img {
     transform: scale(1.05);
+    transition: transform 0.7s ease;
   }
   
-  .product-label {
+  .product-card__badge {
     position: absolute;
-    top: 15px;
-    left: 0;
-    right: 0;
-    z-index: 2;
-  }
-  
-  .product-label span {
-    font-size: 12px;
-    position: absolute;
-    top: 0;
-    width: auto;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-radius: 15px;
-    line-height: 1;
-    padding: 5px 10px;
-    color: #ffffff;
-  }
-  
-  .product-label span.new-sale-title {
-    left: 15px;
-    background-color: #28a745;
-  }
-  
-  .product-label span.percent-count {
-    right: 15px;
-    background-color: #dc3545;
-  }
-  
-  .product-label span.soldout-title {
-    left: 15px;
-    background-color: #6c757d;
+    top: 8px;
+    right: 8px;
     z-index: 1;
   }
   
-  .product-action {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+  .badge-sale {
+    background: #000000;
+    color: white;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
-  .single-product-wrap:hover .product-action {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .product-action-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
+  .product-card__info {
     padding: 0;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    justify-content: space-between;
   }
   
-  .product-action-list li a,
-  .product-action-list li button {
-    width: 45px;
-    height: 45px;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: var(--font-color-primary);
-    border: none;
-    border-radius: 50%;
+  .product-card__title {
+    font-size: 1.3125rem;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.4;
+    text-align: center;
+    transition: all 0.7s ease;
+  }
+  
+  .product-card__title a {
+    color: #000;
+    text-decoration: none;
+    transition: all 0.7s ease;
+  }
+  
+  .product-card:hover .product-card__title {
+    font-weight: 700;
+    transition: all 0.7s ease;
+  }
+  
+  .product-card:hover .product-card__title a {
+    text-decoration: underline;
+    transition: all 0.7s ease;
+  }
+  
+  .product-card__price {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    gap: 8px;
+    font-size: 1.3125rem;
+    padding-left: 15px;
   }
   
-  .product-action-list li a:hover,
-  .product-action-list li button:hover {
-    background-color: var(--font-color-primary);
-    color: #ffffff;
-  }
-  
-  .product-content {
-    padding: 20px 0;
-    text-align: center;
-  }
-  
-  .product-title {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .product-title a {
-    color: var(--font-color-header);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .product-title a:hover {
-    color: var(--font-color-primary);
-  }
-  
-  .product-vendor {
-    font-size: 14px;
-    color: var(--font-color-paragraph);
-    margin-bottom: 10px;
-    opacity: 0.7;
-  }
-  
-  .product-price {
-    font-size: 18px;
+  .price {
     font-weight: 600;
   }
   
-  .product-price .old-price {
+  .price--sale {
+    color: #000000;
+  }
+  
+  .price--compare {
     color: #999;
     text-decoration: line-through;
-    margin-right: 10px;
+    font-weight: 400;
+    font-size: 1.21875rem;
   }
   
-  .product-price .new-price {
-    color: var(--font-color-primary);
+  /* Add to Cart Button */
+  .product-card__actions {
+    margin-top: 12px;
   }
   
-  @media (max-width: 767px) {
-    .product-action {
-      opacity: 1;
-      visibility: visible;
-      top: 15px;
-      right: 15px;
-      left: auto;
-      transform: none;
+  .product-card__form {
+    margin: 0;
+  }
+  
+  .product-card__add-to-cart {
+    width: 100%;
+    padding: 10px 16px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .product-card__add-to-cart:hover:not(:disabled) {
+    background: #333;
+    transform: translateY(-1px);
+  }
+  
+  .product-card__add-to-cart:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  @media (max-width: 749px) {
+    .product-card {
+      height: 380px;
     }
     
-    .product-action-list {
-      flex-direction: column;
+    .product-card__image {
+      height: 220px;
     }
     
-    .product-action-list li a,
-    .product-action-list li button {
-      width: 35px;
-      height: 35px;
-      font-size: 14px;
+    .product-card__title {
+      font-size: 1.21875rem;
+    }
+    
+    .product-card__price {
+      font-size: 1.21875rem;
+      padding-left: 10px;
+    }
+    
+    .price--compare {
+      font-size: 1.125rem;
+    }
+    
+    .product-card__add-to-cart {
+      padding: 8px 12px;
+      font-size: 0.8125rem;
     }
   }
 </style>
+
+<script>
+  // Add to Cart functionality for product cards
+  document.addEventListener('DOMContentLoaded', function() {
+    const addToCartForms = document.querySelectorAll('.product-card__form');
+    
+    addToCartForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = this.querySelector('.product-card__add-to-cart');
+        const originalText = button.textContent;
+        
+        // Show loading state
+        button.textContent = 'Adding...';
+        button.disabled = true;
+        
+        // Submit form data
+        fetch(window.routes.cart_add_url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: new FormData(this)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Success feedback
+          button.textContent = 'Added!';
+          button.style.background = '#007bff';
+          
+          // Update cart count if element exists
+          const cartCount = document.querySelector('.cart-count-luxe');
+          if (cartCount) {
+            fetch('/cart.js')
+              .then(response => response.json())
+              .then(cart => {
+                cartCount.textContent = `(${cart.item_count})`;
+              });
+          }
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+            button.disabled = false;
+          }, 2000);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          button.textContent = 'Error';
+          button.style.background = '#007bff';
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '';
+            button.disabled = false;
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>

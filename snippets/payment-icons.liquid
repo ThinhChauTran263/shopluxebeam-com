@@ -1,0 +1,27 @@
+{% comment %}
+  Payment icons snippet
+  Usage: {% render 'payment-icons', section: section %}
+{% endcomment %}
+
+{% if section.settings.show_payment_icons %}
+  <div class="payment-icons">
+    {% if section.settings.payment_text != blank %}
+      <p class="payment-text">{{ section.settings.payment_text }}</p>
+    {% endif %}
+    {% if section.settings.payment_icon_1 %}
+      <img src="{{ section.settings.payment_icon_1 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+    {% endif %}
+    {% if section.settings.payment_icon_2 %}
+      <img src="{{ section.settings.payment_icon_2 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+    {% endif %}
+    {% if section.settings.payment_icon_3 %}
+      <img src="{{ section.settings.payment_icon_3 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+    {% endif %}
+    {% if section.settings.payment_icon_4 %}
+      <img src="{{ section.settings.payment_icon_4 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+    {% endif %}
+    {% if section.settings.payment_icon_5 %}
+      <img src="{{ section.settings.payment_icon_5 | image_url: width: 60 }}" alt="Payment method" width="60" height="auto">
+    {% endif %}
+  </div>
+{% endif %}

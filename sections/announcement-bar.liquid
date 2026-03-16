@@ -1,0 +1,104 @@
+{% comment %}
+  Announcement Bar Section
+{% endcomment %}
+
+<div class="announcement-bar" style="background: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};">
+  <div class="announcement-bar__container">
+    <div class="announcement-bar__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'announcement' -%}
+            <div class="announcement-bar__message" {{ block.shopify_attributes }}>
+              {{ block.settings.text }}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .announcement-bar {
+    text-align: center;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    position: relative;
+    z-index: 999;
+  }
+  
+  .announcement-bar__container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .announcement-bar__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .announcement-bar__message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media (max-width: 749px) {
+    .announcement-bar {
+      font-size: 12px;
+      padding: 6px 15px;
+    }
+    
+    .announcement-bar__content {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>❤️ Spring Sale Now Live! ❤️</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

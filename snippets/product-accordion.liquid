@@ -1,0 +1,33 @@
+{% comment %}
+  Product accordion snippet
+  Usage: {% render 'product-accordion', section: section %}
+{% endcomment %}
+
+<div class="product-accordion">
+  {% if section.settings.show_accordion_1 %}
+  <details class="accordion-item">
+    <summary>{{ section.settings.accordion_1_title }}</summary>
+    <div class="accordion-content">
+      {{ section.settings.accordion_1_content }}
+    </div>
+  </details>
+  {% endif %}
+
+  {% if section.settings.show_accordion_2 %}
+  <details class="accordion-item">
+    <summary>{{ section.settings.accordion_2_title }}</summary>
+    <div class="accordion-content">
+      {{ section.settings.accordion_2_content }}
+    </div>
+  </details>
+  {% endif %}
+
+  {% if section.settings.show_accordion_3 %}
+  <details class="accordion-item">
+    <summary>{{ section.settings.accordion_3_title }}</summary>
+    <div class="accordion-content">
+      {{ section.settings.accordion_3_content }}
+    </div>
+  </details>
+  {% endif %}
+</div>

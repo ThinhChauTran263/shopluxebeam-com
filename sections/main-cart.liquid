@@ -89,7 +89,7 @@
             </p>
             
             <button type="submit" name="checkout" 
-                    style="width: 100%; padding: 16px; background: #b8865f; color: #fff; border: none; border-radius: 35px; font-size: 18px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+                    style="width: 100%; padding: 16px; background: #007bff; color: #fff; border: none; border-radius: 35px; font-size: 18px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
               Proceed to Checkout
             </button>
           </div>
@@ -107,7 +107,7 @@
         <h1 style="font-size: 32px; margin-bottom: 15px;">Your cart is empty</h1>
         <p style="color: #666; font-size: 16px; margin-bottom: 30px;">Add some products to get started!</p>
         <a href="{{ routes.all_products_collection_url }}" 
-           style="display: inline-block; padding: 16px 40px; background: #b8865f; color: #fff; text-decoration: none; border-radius: 35px; font-size: 16px; font-weight: 700; text-transform: uppercase;">
+           style="display: inline-block; padding: 16px 40px; background: #007bff; color: #fff; text-decoration: none; border-radius: 35px; font-size: 16px; font-weight: 700; text-transform: uppercase;">
           Start Shopping
         </a>
       </div>
@@ -115,49 +115,8 @@
   </div>
 </div>
 
-<style>
-  @media (max-width: 768px) {
-    .cart-item-row {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-    }
-    
-    .item-image {
-      width: 100% !important;
-      max-width: 200px;
-    }
-    
-    .cart-footer {
-      flex-direction: column !important;
-    }
-    
-    .cart-actions {
-      width: 100%;
-      margin-bottom: 30px;
-    }
-    
-    .cart-actions button,
-    .cart-actions a {
-      display: block !important;
-      width: 100%;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    
-    .cart-summary {
-      width: 100% !important;
-    }
-  }
-</style>
-
-<script>
-  // Auto-submit form when quantity changes
-  document.querySelectorAll('input[name="updates[]"]').forEach(input => {
-    input.addEventListener('change', function() {
-      this.closest('form').submit();
-    });
-  });
-</script>
+{{ 'main-cart-responsive.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-quantity-auto-submit.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

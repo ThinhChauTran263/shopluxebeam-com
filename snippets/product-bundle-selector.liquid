@@ -1,0 +1,74 @@
+{% comment %}
+  Product bundle selector snippet
+  Usage: {% render 'product-bundle-selector', section: section %}
+{% endcomment %}
+
+<div class="bundle-section">
+  <h3 class="bundle-title">{{ section.settings.bundle_title }}</h3>
+  
+  <div class="bundle-options">
+    <!-- Single -->
+    <label class="bundle-option">
+      <input type="radio" name="bundle" value="single" checked>
+      <div class="bundle-content">
+        <div class="radio-circle"></div>
+        <div class="bundle-info">
+          <div class="bundle-left">
+            <div class="bundle-header">
+              <span class="bundle-name">{{ section.settings.bundle1_name }}</span>
+              <span class="bundle-badge">{{ section.settings.bundle1_badge }}</span>
+            </div>
+            <div class="bundle-subtitle">{{ section.settings.bundle1_subtitle }}</div>
+          </div>
+          <div class="bundle-price">
+            <span class="price">{{ section.settings.bundle1_price }}</span>
+            <span class="original">{{ section.settings.bundle1_original }}</span>
+          </div>
+        </div>
+      </div>
+    </label>
+
+    <!-- Buy 2 -->
+    <label class="bundle-option popular">
+      <input type="radio" name="bundle" value="buy2">
+      <div class="bundle-content">
+        <div class="radio-circle"></div>
+        <div class="bundle-info">
+          <div class="bundle-left">
+            <div class="bundle-header">
+              <span class="bundle-name">{{ section.settings.bundle2_name }}</span>
+              <span class="bundle-badge">{{ section.settings.bundle2_badge }}</span>
+            </div>
+            <div class="bundle-subtitle">{{ section.settings.bundle2_subtitle }}</div>
+          </div>
+          <div class="bundle-price">
+            <span class="price">{{ section.settings.bundle2_price }}</span>
+            <span class="original">{{ section.settings.bundle2_original }}</span>
+          </div>
+        </div>
+        <span class="popular-badge">{{ section.settings.popular_badge }}</span>
+      </div>
+    </label>
+
+    <!-- Buy 3 -->
+    <label class="bundle-option">
+      <input type="radio" name="bundle" value="buy3">
+      <div class="bundle-content">
+        <div class="radio-circle"></div>
+        <div class="bundle-info">
+          <div class="bundle-left">
+            <div class="bundle-header">
+              <span class="bundle-name">{{ section.settings.bundle3_name }}</span>
+              <span class="bundle-badge">{{ section.settings.bundle3_badge }}</span>
+            </div>
+            <div class="bundle-subtitle">{{ section.settings.bundle3_subtitle }}</div>
+          </div>
+          <div class="bundle-price">
+            <span class="price">{{ section.settings.bundle3_price }}</span>
+            <span class="original">{{ section.settings.bundle3_original }}</span>
+          </div>
+        </div>
+      </div>
+    </label>
+  </div>
+</div>

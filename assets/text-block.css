@@ -1,0 +1,54 @@
+/* Text Block Styles */
+.text-block {
+  margin-bottom: 1rem;
+}
+
+.text-block__content h1,
+.text-block__content h2,
+.text-block__content h3,
+.text-block__content h4,
+.text-block__content h5,
+.text-block__content h6 {
+  color: var(--color-foreground-heading);
+  font-family: var(--font-heading-family);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.text-block__content h1 {
+  font-size: var(--font-heading-h1-size);
+}
+
+.text-block__content h2 {
+  font-size: var(--font-heading-h2-size);
+}
+
+.text-block__content h3 {
+  font-size: var(--font-heading-h3-size);
+}
+
+.text-block__content h4 {
+  font-size: var(--font-heading-h4-size);
+}
+
+.text-block__content p {
+  color: var(--color-foreground);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-block--large {
+  font-size: 1.25rem;
+}
