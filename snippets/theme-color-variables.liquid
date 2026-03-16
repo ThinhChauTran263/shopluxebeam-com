@@ -1,0 +1,38 @@
+{% comment %}
+  Theme color variables - Apply global color settings
+  Include this in layout/theme.liquid
+{% endcomment %}
+
+<style>
+  /* Checkout Button Colors - Global */
+  .cart-checkout-btn,
+  button[name="checkout"],
+  .checkout-button,
+  .btn-checkout {
+    background: {{ settings.checkout_btn_bg | default: '#b8865f' }} !important;
+    color: {{ settings.checkout_btn_text | default: '#ffffff' }} !important;
+  }
+  
+  .cart-checkout-btn:hover,
+  button[name="checkout"]:hover,
+  .checkout-button:hover,
+  .btn-checkout:hover {
+    background: {{ settings.checkout_btn_bg_hover | default: '#a67550' }} !important;
+  }
+  
+  /* Add to Cart Button Colors - Global */
+  .add-to-cart-btn,
+  .custom-add-to-cart,
+  button[name="add"],
+  .btn-add-to-cart {
+    background: {{ settings.add_to_cart_bg | default: '#000000' }} !important;
+    color: {{ settings.add_to_cart_text | default: '#ffffff' }} !important;
+  }
+  
+  .add-to-cart-btn:hover,
+  .custom-add-to-cart:hover,
+  button[name="add"]:hover,
+  .btn-add-to-cart:hover {
+    background: {{ settings.add_to_cart_bg_hover | default: '#333333' }} !important;
+  }
+</style>

@@ -3,6 +3,26 @@
   Usage: {% render 'product-bundle-selector', section: section %}
 {% endcomment %}
 
+<style>
+  /* Dynamic bundle colors from theme settings */
+  .bundle-option input[type="radio"]:checked + .bundle-content {
+    background: {{ section.settings.bundle_selected_bg | default: '#d4a574' }} !important;
+    border-color: {{ section.settings.bundle_border_color | default: '#d4a574' }} !important;
+  }
+  
+  .bundle-option:not(:has(input:checked)) .bundle-content {
+    background: {{ section.settings.bundle_unselected_bg | default: '#e8f4f8' }} !important;
+  }
+  
+  .bundle-option input[type="radio"]:checked + .bundle-content .radio-circle {
+    border-color: {{ section.settings.bundle_border_color | default: '#d4a574' }} !important;
+  }
+  
+  .bundle-option input[type="radio"]:checked + .bundle-content .radio-circle::after {
+    background: {{ section.settings.bundle_border_color | default: '#d4a574' }} !important;
+  }
+</style>
+
 <div class="bundle-section">
   <h3 class="bundle-title">{{ section.settings.bundle_title }}</h3>
   
