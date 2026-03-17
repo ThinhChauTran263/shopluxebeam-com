@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "product_features": {
+      "type": "product-features",
+      "blocks": {},
+      "settings": {}
+    },
+    "why_choose_us": {
+      "type": "why-choose-us",
+      "settings": {}
+    },
+    "customer_reviews": {
+      "type": "customer-reviews",
+      "settings": {}
+    },
+    "product_faq": {
+      "type": "product-faq",
+      "settings": {}
+    },
+    "related_products": {
+      "type": "related-products",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "product_features",
+    "why_choose_us",
+    "customer_reviews",
+    "product_faq",
+    "related_products"
+  ]
+}

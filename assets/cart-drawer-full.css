@@ -413,7 +413,7 @@ html body .cart-drawer-footer .cart-subtotal {
   max-width: 320px;
   margin: 0 auto;
   padding: 16px 24px;
-  background: #b8865f;
+  background: #000000;
   color: #ffffff;
   text-align: center;
   text-decoration: none;
@@ -421,13 +421,13 @@ html body .cart-drawer-footer .cart-subtotal {
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
 .cart-checkout-btn:hover {
-  background: #a67550;
+  background: #333333;
   transform: translateY(-1px);
 }
 

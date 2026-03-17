@@ -148,7 +148,7 @@
           
           <!-- Grid Density Toggle -->
           <div class="collection-view-toggle">
-            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="3" aria-label="4 columns">
+            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="4" aria-label="4 columns">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <rect x="2" y="2" width="7" height="7"></rect>
                 <rect x="11" y="2" width="7" height="7"></rect>
@@ -156,7 +156,7 @@
                 <rect x="2" y="11" width="7" height="7"></rect>
               </svg>
             </button>
-            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="5" aria-label="5 columns">
+            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="6" aria-label="6 columns">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <rect x="1" y="1" width="3" height="3"></rect>
                 <rect x="5" y="1" width="3" height="3"></rect>
@@ -191,7 +191,7 @@
       
       <!-- Products Grid -->
       <div class="collection-products">
-        <div class="products-grid" data-columns="3">
+        <div class="products-grid" data-columns="4">
           {% for product in collection.products %}
             <div class="product-grid-item">
               {% render 'product-card', product: product %}
@@ -485,28 +485,28 @@
     gap: 24px;
   }
   
-  .products-grid[data-columns="3"] {
-    grid-template-columns: repeat(3, 1fr);
+  .products-grid[data-columns="4"] {
+    grid-template-columns: repeat(4, 1fr);
   }
   
-  .products-grid[data-columns="5"] {
-    grid-template-columns: repeat(5, 1fr);
+  .products-grid[data-columns="6"] {
+    grid-template-columns: repeat(6, 1fr);
   }
   
   /* Adjust product card heights based on grid density */
-  .products-grid[data-columns="3"] .product-card {
+  .products-grid[data-columns="4"] .product-card {
     height: 450px;
   }
   
-  .products-grid[data-columns="3"] .product-card__image {
+  .products-grid[data-columns="4"] .product-card__image {
     height: 280px;
   }
   
-  .products-grid[data-columns="5"] .product-card {
+  .products-grid[data-columns="6"] .product-card {
     height: 380px;
   }
   
-  .products-grid[data-columns="5"] .product-card__image {
+  .products-grid[data-columns="6"] .product-card__image {
     height: 220px;
   }
   
@@ -552,18 +552,18 @@
   
   /* Responsive */
   @media (max-width: 989px) {
-    .products-grid[data-columns="3"],
-    .products-grid[data-columns="5"] {
+    .products-grid[data-columns="4"],
+    .products-grid[data-columns="6"] {
       grid-template-columns: repeat(3, 1fr);
     }
     
-    .products-grid[data-columns="3"] .product-card,
-    .products-grid[data-columns="5"] .product-card {
+    .products-grid[data-columns="4"] .product-card,
+    .products-grid[data-columns="6"] .product-card {
       height: 420px;
     }
     
-    .products-grid[data-columns="3"] .product-card__image,
-    .products-grid[data-columns="5"] .product-card__image {
+    .products-grid[data-columns="4"] .product-card__image,
+    .products-grid[data-columns="6"] .product-card__image {
       height: 250px;
     }
   }
@@ -592,18 +592,18 @@
       width: 100%;
     }
     
-    .products-grid[data-columns="3"],
-    .products-grid[data-columns="5"] {
+    .products-grid[data-columns="4"],
+    .products-grid[data-columns="6"] {
       grid-template-columns: repeat(2, 1fr);
     }
     
-    .products-grid[data-columns="3"] .product-card,
-    .products-grid[data-columns="5"] .product-card {
+    .products-grid[data-columns="4"] .product-card,
+    .products-grid[data-columns="6"] .product-card {
       height: 380px;
     }
     
-    .products-grid[data-columns="3"] .product-card__image,
-    .products-grid[data-columns="5"] .product-card__image {
+    .products-grid[data-columns="4"] .product-card__image,
+    .products-grid[data-columns="6"] .product-card__image {
       height: 220px;
     }
     

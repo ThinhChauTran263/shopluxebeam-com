@@ -87,6 +87,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
       }
       
+      // Get quantity from selected bundle radio button
+      const selectedBundle = document.querySelector('.bundle-option input[type="radio"]:checked');
+      let bundleQuantity = 1;
+      
+      if (selectedBundle) {
+        const bundleValue = selectedBundle.value;
+        // Map bundle values to quantities
+        const quantityMap = {
+          'single': 1,
+          'buy2': 2,
+          'buy3': 3
+        };
+        bundleQuantity = quantityMap[bundleValue] || 1;
+      }
+      
+      console.log('Selected bundle:', selectedBundle ? selectedBundle.value : 'none');
+      console.log('Adding quantity:', bundleQuantity);
+      
       // Start loading state - show custom spinner
       this.classList.add('loading');
       this.disabled = true;
@@ -110,11 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('Available inventory:', inventoryQty);
           
           // Check if we can add more
-          if (currentQty >= inventoryQty) {
+          if (currentQty + bundleQuantity > inventoryQty) {
             throw new Error('Maximum available quantity reached');
           }
           
-          // Add to cart via AJAX
+          // Add to cart via AJAX with bundle quantity
           return fetch('/cart/add.js', {
             method: 'POST',
             headers: {
@@ -123,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({
               id: variantId,
-              quantity: 1
+              quantity: bundleQuantity
             })
           });
         })
@@ -149,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
           detail: { 
             action: 'add',
             variantId: variantId,
-            quantity: 1
+            quantity: bundleQuantity
           }
         }));
         

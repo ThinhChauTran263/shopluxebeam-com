@@ -1,0 +1,448 @@
+{% liquid
+  assign is_drawer = false
+  if drawer_context == 'drawer'
+    assign is_drawer = true
+  endif
+%}
+
+<div class="cart-totals{% if is_drawer %} cart-totals--drawer{% endif %}">
+  <div class="cart-totals__original-container">
+    {%- if cart.cart_level_discount_applications.size > 0 -%}
+      <span class="cart-totals__item cart-totals__original">
+        <span class="cart-totals__original-label">Subtotal</span>
+        <span class="cart-totals__original-value">
+          {{ cart.items_subtotal_price | money }}
+        </span>
+      </span>
+      <ul class="cart-discounts">
+        {%- for discount in cart.cart_level_discount_applications -%}
+          <li class="cart-discounts__item">
+            <span class="cart-discounts__label">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              {{ discount.title | escape }}
+            </span>
+            <span class="cart-discounts__value">-{{ discount.total_allocated_amount | money }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  <div class="cart-discount">
+    <details class="cart-discount__details">
+      <summary class="cart-discount__summary">
+        <span class="cart-discount__label">Discount</span>
+        <span class="cart-discount__icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 4v8M4 8h8" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="cart-discount__content">
+        <form class="cart-discount__form" action="{{ routes.cart_url }}" method="post">
+          <input type="text" 
+                 name="discount" 
+                 class="cart-discount__input" 
+                 placeholder="Discount code"
+                 value="">
+          <button type="submit" class="cart-discount__button">Apply</button>
+        </form>
+      </div>
+    </details>
+  </div>
+
+  <div class="cart-totals__container">
+    <span class="cart-totals__item cart-totals__total">
+      <span class="cart-totals__total-label">Estimated total</span>
+      <span class="cart-totals__total-value">
+        {{ cart.total_price | money }}
+      </span>
+    </span>
+    <div class="cart-totals__item cart-totals__tax-note">
+      <small>Taxes and shipping calculated at checkout.</small>
+    </div>
+  </div>
+
+  <div class="cart__ctas">
+    <button
+      type="submit"
+      id="checkout"
+      class="cart__checkout-button button"
+      name="checkout"
+      {% if cart == empty %}
+        disabled
+      {% endif %}
+      form="cart-form"
+      style="background: #000 !important; background-color: #000 !important; color: #fff !important; border-radius: 12px !important; padding: 18px 40px !important; border: none !important; font-size: 16px !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 1px !important; width: 100% !important; min-height: 56px !important;"
+    >
+      <span class="button-text">Check out</span>
+    </button>
+
+    {% if additional_checkout_buttons %}
+      <div class="additional-checkout-buttons">
+        {{ content_for_additional_checkout_buttons }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .cart-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 24px;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  /* Drawer specific styling */
+  .cart-totals--drawer {
+    padding: 16px;
+    background: #fff;
+    border-radius: 0;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .cart-totals--drawer .cart-totals__total-value {
+    font-size: 24px;
+  }
+
+  .cart-totals--drawer .cart__ctas {
+    margin-top: 16px;
+  }
+
+  .cart-totals--drawer .cart__checkout-button {
+    min-height: 48px !important;
+    font-size: 14px !important;
+    padding: 14px 32px !important;
+  }
+
+  .cart-totals__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cart-totals__tax-note {
+    color: #666;
+  }
+
+  .cart-totals__tax-note small {
+    font-size: 12px;
+  }
+
+  .cart-discounts {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+  }
+
+  .cart-discounts__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    color: #28a745;
+  }
+
+  .cart-discounts__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cart-discounts__label svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cart-totals__original-container,
+  .cart-totals__container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-totals__original-container {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .cart-totals__container {
+    row-gap: 8px;
+    padding-top: 16px;
+    padding-bottom: 24px;
+  }
+
+  .cart-totals__original-container:empty {
+    display: none;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cart-totals__original-container,
+  .cart-totals__original-container * {
+    font-size: 14px;
+  }
+
+  .cart-totals__total {
+    align-items: baseline;
+    font-weight: 700;
+  }
+
+  .cart-totals__total-label {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .cart-totals__total-value {
+    font-size: 28px;
+  }
+
+  /* Discount Section */
+  .cart-discount {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin: 16px 0;
+  }
+
+  .cart-discount__details {
+    width: 100%;
+  }
+
+  .cart-discount__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .cart-discount__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .cart-discount__label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .cart-discount__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .cart-discount__details[open] .cart-discount__icon {
+    transform: rotate(45deg);
+  }
+
+  .cart-discount__content {
+    padding-bottom: 16px;
+  }
+
+  .cart-discount__form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .cart-discount__input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+  }
+
+  .cart-discount__input::placeholder {
+    color: #999;
+  }
+
+  .cart-discount__input:focus {
+    outline: none;
+    border-color: #000;
+  }
+
+  .cart-discount__button {
+    padding: 12px 32px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+
+  .cart-discount__button:hover {
+    background: #333;
+  }
+
+  .cart__ctas {
+    width: 100%;
+    display: grid;
+    gap: 12px;
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .cart__checkout-button,
+  .cart__checkout-button.button,
+  button.cart__checkout-button {
+    width: 100% !important;
+    padding: 18px 40px !important;
+    background: #000 !important;
+    background-color: #000 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    text-transform: uppercase !important;
+    transition: background 0.3s !important;
+    letter-spacing: 1px !important;
+    height: auto !important;
+    min-height: 56px !important;
+  }
+
+  .cart__checkout-button:hover:not(:disabled),
+  .cart__checkout-button.button:hover:not(:disabled),
+  button.cart__checkout-button:hover:not(:disabled) {
+    background: #333 !important;
+    background-color: #333 !important;
+  }
+
+  .cart__checkout-button:disabled {
+    background: #ccc !important;
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+  }
+
+  .additional-checkout-buttons {
+    width: 100%;
+  }
+
+  /* GPay button styling - multiple selectors to ensure override */
+  .additional-checkout-buttons button,
+  .additional-checkout-buttons .shopify-payment-button__button,
+  .additional-checkout-buttons .shopify-payment-button__button--unbranded,
+  .additional-checkout-buttons .shopify-payment-button__button--google-pay,
+  .additional-checkout-buttons [data-testid="Checkout-button"],
+  .additional-checkout-buttons shopify-accelerated-checkout-cart button,
+  .additional-checkout-buttons shopify-accelerated-checkout-cart .shopify-payment-button__button {
+    width: 100% !important;
+    padding: 18px 40px !important;
+    background: #000 !important;
+    background-color: #000 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: background 0.3s !important;
+    letter-spacing: 1px !important;
+    height: auto !important;
+    min-height: 56px !important;
+    box-shadow: none !important;
+    text-transform: none !important;
+  }
+
+  .additional-checkout-buttons button:hover,
+  .additional-checkout-buttons .shopify-payment-button__button:hover,
+  .additional-checkout-buttons .shopify-payment-button__button--unbranded:hover,
+  .additional-checkout-buttons .shopify-payment-button__button--google-pay:hover,
+  .additional-checkout-buttons [data-testid="Checkout-button"]:hover,
+  .additional-checkout-buttons shopify-accelerated-checkout-cart button:hover,
+  .additional-checkout-buttons shopify-accelerated-checkout-cart .shopify-payment-button__button:hover {
+    background: #333 !important;
+    background-color: #333 !important;
+  }
+
+  /* Force override any Google Pay specific styling */
+  .additional-checkout-buttons * {
+    border-radius: 12px !important;
+    background: #000 !important;
+    background-color: #000 !important;
+  }
+
+  /* Target the actual GPay button container */
+  shopify-accelerated-checkout-cart {
+    --shopify-accelerated-checkout-button-border-radius: 12px !important;
+    --shopify-accelerated-checkout-button-background: #000 !important;
+  }
+
+  /* Additional override for web components */
+  .additional-checkout-buttons shopify-accelerated-checkout-cart,
+  .additional-checkout-buttons shopify-accelerated-checkout-cart * {
+    border-radius: 12px !important;
+    background: #000 !important;
+    background-color: #000 !important;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cart-totals {
+      padding: 32px;
+    }
+
+    .cart-totals__total-value {
+      font-size: 32px;
+    }
+  }
+</style>
+
+<script>
+  // Force styling for GPay button
+  function styleGPayButton() {
+    const gPayButtons = document.querySelectorAll('.additional-checkout-buttons button, .additional-checkout-buttons .shopify-payment-button__button, shopify-accelerated-checkout-cart button, [data-testid="Checkout-button"]');
+    
+    gPayButtons.forEach(button => {
+      if (button) {
+        button.style.cssText = `
+          width: 100% !important;
+          padding: 18px 40px !important;
+          background: #000 !important;
+          background-color: #000 !important;
+          color: #fff !important;
+          border: none !important;
+          border-radius: 12px !important;
+          font-size: 16px !important;
+          font-weight: 600 !important;
+          cursor: pointer !important;
+          transition: background 0.3s !important;
+          letter-spacing: 1px !important;
+          height: auto !important;
+          min-height: 56px !important;
+          box-shadow: none !important;
+        `;
+      }
+    });
+  }
+
+  // Run on page load
+  document.addEventListener('DOMContentLoaded', styleGPayButton);
+  
+  // Run after a delay to catch dynamically loaded buttons
+  setTimeout(styleGPayButton, 1000);
+  setTimeout(styleGPayButton, 2000);
+  
+  // Watch for changes in the checkout buttons area
+  const observer = new MutationObserver(styleGPayButton);
+  const checkoutArea = document.querySelector('.additional-checkout-buttons');
+  if (checkoutArea) {
+    observer.observe(checkoutArea, { childList: true, subtree: true });
+  }
+</script>

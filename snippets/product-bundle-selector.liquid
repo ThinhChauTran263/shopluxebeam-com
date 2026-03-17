@@ -92,3 +92,65 @@
     </label>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const bundleOptions = document.querySelectorAll('.bundle-option input[type="radio"]');
+  const addToCartBtn = document.querySelector('.custom-add-to-cart');
+  const quantityInput = document.querySelector('input[name="quantity"]');
+  
+  // Bundle quantity mapping
+  const bundleQuantities = {
+    'single': 1,
+    'buy2': 2,
+    'buy3': 3
+  };
+  
+  bundleOptions.forEach(option => {
+    option.addEventListener('change', function() {
+      const selectedBundle = this.value;
+      const quantity = bundleQuantities[selectedBundle] || 1;
+      
+      // Update quantity input if exists
+      if (quantityInput) {
+        quantityInput.value = quantity;
+      }
+      
+      // Store quantity in add to cart button data attribute
+      if (addToCartBtn) {
+        addToCartBtn.setAttribute('data-bundle-quantity', quantity);
+      }
+      
+      console.log(`Bundle selected: ${selectedBundle}, Quantity: ${quantity}`);
+    });
+  });
+  
+  // Override add to cart to use bundle quantity
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener('click', function(e) {
+      const bundleQuantity = parseInt(this.getAttribute('data-bundle-quantity')) || 1;
+      
+      // Update form quantity before submission
+      const form = this.closest('form');
+      if (form) {
+        let qtyInput = form.querySelector('input[name="quantity"]');
+        if (!qtyInput) {
+          // Create hidden quantity input if doesn't exist
+          qtyInput = document.createElement('input');
+          qtyInput.type = 'hidden';
+          qtyInput.name = 'quantity';
+          form.appendChild(qtyInput);
+        }
+        qtyInput.value = bundleQuantity;
+      }
+      
+      console.log(`Adding ${bundleQuantity} items to cart`);
+    });
+  }
+  
+  // Set initial quantity to 1 (single bundle is checked by default)
+  if (addToCartBtn) {
+    addToCartBtn.setAttribute('data-bundle-quantity', '1');
+  }
+});
+</script>

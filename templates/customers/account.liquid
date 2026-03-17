@@ -1,0 +1,268 @@
+{% comment %}
+  Customer Account Template
+{% endcomment %}
+
+<div class="customer-account-page">
+  <div class="container">
+    <div class="account-wrapper">
+      <div class="account-header">
+        <h1>My Account</h1>
+        <p>Welcome back, {{ customer.first_name }}!</p>
+      </div>
+
+      <div class="account-content">
+        <div class="account-info">
+          <div class="info-section">
+            <h2>Account Details</h2>
+            <div class="info-item">
+              <strong>Name:</strong> {{ customer.first_name }} {{ customer.last_name }}
+            </div>
+            <div class="info-item">
+              <strong>Email:</strong> {{ customer.email }}
+            </div>
+            <div class="info-item">
+              <strong>Member since:</strong> {{ customer.created_at | date: "%B %d, %Y" }}
+            </div>
+            <a href="{{ routes.account_addresses_url }}" class="btn-secondary">Manage Addresses</a>
+          </div>
+
+          {% if customer.orders.size > 0 %}
+            <div class="orders-section">
+              <h2>Recent Orders</h2>
+              <div class="orders-list">
+                {% for order in customer.orders limit: 5 %}
+                  <div class="order-item">
+                    <div class="order-info">
+                      <div class="order-number">
+                        <strong>Order #{{ order.name }}</strong>
+                      </div>
+                      <div class="order-date">
+                        {{ order.created_at | date: "%B %d, %Y" }}
+                      </div>
+                      <div class="order-status">
+                        Status: {{ order.fulfillment_status | default: 'Unfulfilled' }}
+                      </div>
+                      <div class="order-total">
+                        Total: {{ order.total_price | money }}
+                      </div>
+                    </div>
+                    <a href="{{ order.customer_url }}" class="view-order">View Order</a>
+                  </div>
+                {% endfor %}
+              </div>
+              <a href="{{ routes.account_orders_url }}" class="btn-secondary">View All Orders</a>
+            </div>
+          {% else %}
+            <div class="no-orders">
+              <h2>No Orders Yet</h2>
+              <p>You haven't placed any orders yet.</p>
+              <a href="{{ routes.all_products_collection_url }}" class="btn-primary">Start Shopping</a>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="account-actions">
+          <a href="{{ routes.account_logout_url }}" class="btn-logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.customer-account-page {
+  padding: 60px 0;
+  min-height: 60vh;
+}
+
+.account-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.account-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.account-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.account-header p {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+}
+
+.account-content {
+  display: grid;
+  gap: 40px;
+}
+
+.info-section,
+.orders-section,
+.no-orders {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h2,
+.orders-section h2,
+.no-orders h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.info-item strong {
+  color: #000;
+}
+
+.orders-list {
+  margin-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-number {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.order-date,
+.order-status,
+.order-total {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 3px;
+}
+
+.view-order {
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.view-order:hover {
+  background: #000;
+  color: #fff;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-logout {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #333333;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+.btn-secondary:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.btn-logout {
+  background: #dc3545;
+  color: #ffffff;
+  width: 100%;
+}
+
+.btn-logout:hover {
+  background: #c82333;
+}
+
+.account-actions {
+  text-align: center;
+}
+
+.no-orders {
+  text-align: center;
+}
+
+.no-orders p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .customer-account-page {
+    padding: 40px 0;
+  }
+  
+  .account-wrapper {
+    margin: 0 20px;
+  }
+  
+  .account-header h1 {
+    font-size: 28px;
+  }
+  
+  .info-section,
+  .orders-section,
+  .no-orders {
+    padding: 20px;
+  }
+  
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .view-order {
+    align-self: stretch;
+    text-align: center;
+  }
+}
+</style>

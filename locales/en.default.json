@@ -13,7 +13,8 @@
     "remove": "Remove",
     "search_results_count": "{{ count }} search results found for \"{{ query }}\"",
     "search_results_no_results": "No results found for \"{{ query }}\"",
-    "skip_to_text": "Skip to content"
+    "skip_to_text": "Skip to content",
+    "localization_region_and_language": "Country/Region and language"
   },
   "actions": {
     "add": "Add",
@@ -129,6 +130,11 @@
       "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
       "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout"
     }
+  },
+  "content": {
+    "cart_title": "Cart",
+    "account_title": "Account",
+    "your_cart_is_empty": "Your cart is empty"
   },
   "customer": {
     "account": {

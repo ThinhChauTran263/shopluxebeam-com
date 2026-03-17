@@ -108,29 +108,6 @@
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
 {{ 'main-product.js' | asset_url | script_tag }}
 
-<style>
-  /* Product page button colors */
-  .cart-checkout-btn,
-  button[name="checkout"] {
-    background: {{ section.settings.checkout_btn_bg | default: '#b8865f' }} !important;
-  }
-  
-  .cart-checkout-btn:hover,
-  button[name="checkout"]:hover {
-    background: {{ section.settings.checkout_btn_bg_hover | default: '#a67550' }} !important;
-  }
-  
-  .add-to-cart-btn,
-  .custom-add-to-cart {
-    background: {{ section.settings.add_to_cart_btn_bg | default: '#000000' }} !important;
-  }
-  
-  .add-to-cart-btn:hover,
-  .custom-add-to-cart:hover {
-    background: {{ section.settings.add_to_cart_btn_hover | default: '#333333' }} !important;
-  }
-</style>
-
 {% schema %}
 {
   "name": "Product Information",
