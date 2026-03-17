@@ -1,0 +1,60 @@
+
+
+{% render 'cart-products', block_settings: block.settings %}
+
+{% stylesheet %}
+  .cart-page__title + .cart-page__items {
+    margin-block-start: 24px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cart Products",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between items",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Auto"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "dividers",
+      "label": "Show dividers",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor",
+      "label": "Show vendor",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

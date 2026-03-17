@@ -13,9 +13,13 @@
       </svg>
     </button>
     <h2 class="cart-drawer-title" style="padding-left: 0 !important; margin-left: 0 !important; text-indent: 0 !important; padding-top: 45px !important;">
-      <span>There are </span>
-      <span class="cart-count">0</span>
-      <span> products</span>
+      {% if cart.empty? %}
+        <span>Your cart is empty</span>
+      {% else %}
+        <span>There are </span>
+        <span class="cart-count">{{ cart.item_count }}</span>
+        <span> product{% if cart.item_count != 1 %}s{% endif %}</span>
+      {% endif %}
     </h2>
   </div>
   
@@ -26,6 +30,30 @@
   </div>
   
   <div class="cart-drawer-footer" style="display: none;">
+    <!-- Discount Section -->
+    <div class="cart-discount">
+      <details class="cart-discount__details">
+        <summary class="cart-discount__summary">
+          <span class="cart-discount__label">Discount</span>
+          <span class="cart-discount__icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 4v8M4 8h8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="cart-discount__content">
+          <form class="cart-discount__form" action="{{ routes.cart_url }}" method="post">
+            <input type="text" 
+                   name="discount" 
+                   class="cart-discount__input" 
+                   placeholder="Discount code"
+                   value="">
+            <button type="submit" class="cart-discount__button">Apply</button>
+          </form>
+        </div>
+      </details>
+    </div>
+    
     <div class="cart-subtotal">
       <span class="cart-subtotal-label">Sub Total:</span>
       <span class="cart-subtotal-price">$0.00</span>

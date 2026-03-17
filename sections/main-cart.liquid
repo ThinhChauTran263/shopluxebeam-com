@@ -1,126 +1,360 @@
-{% comment %}
-  Main cart page - Simple version
-{% endcomment %}
-
-<div class="cart-page-wrapper" style="padding: 60px 0; min-height: 60vh;">
+<div class="cart-page-wrapper">
   <div class="container">
-    {% if cart.item_count > 0 %}
-      <div class="cart-header" style="margin-bottom: 40px; text-align: center;">
-        <h1 style="font-size: 36px; margin-bottom: 10px;">Shopping Cart</h1>
-        <p style="color: #666; font-size: 16px;">You have {{ cart.item_count }} item(s) in your cart</p>
-      </div>
+    <div class="cart-page{% if cart.empty? %} cart-page--empty{% endif %}">
       
-      <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
-        <div class="cart-items-wrapper" style="margin-bottom: 40px;">
-          {% for item in cart.items %}
-            <div class="cart-item-row" style="display: flex; gap: 20px; padding: 30px 0; border-bottom: 1px solid #e0e0e0; align-items: center;">
-              <div class="item-image" style="flex-shrink: 0; width: 120px;">
-                {% if item.image %}
-                  <img src="{{ item.image | image_url: width: 150 }}" 
-                       alt="{{ item.product.title | escape }}"
-                       style="width: 100%; border-radius: 8px;">
-                {% endif %}
-              </div>
-              
-              <div class="item-info" style="flex: 1;">
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">
-                  <a href="{{ item.product.url }}" style="color: #000; text-decoration: none;">
-                    {{ item.product.title }}
-                  </a>
-                </h3>
-                
-                {% if item.variant.title != 'Default Title' %}
-                  <p style="color: #666; font-size: 14px; margin-bottom: 8px;">{{ item.variant.title }}</p>
-                {% endif %}
-                
-                <p style="font-size: 18px; font-weight: 700; color: #000;">
-                  {{ item.final_price | money }}
-                </p>
-              </div>
-              
-              <div class="item-quantity" style="flex-shrink: 0;">
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #666;">Quantity:</label>
-                <input type="number" 
-                       name="updates[]" 
-                       id="updates_{{ item.key }}"
-                       value="{{ item.quantity }}"
-                       min="0"
-                       style="width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; text-align: center; font-size: 16px;">
-              </div>
-              
-              <div class="item-total" style="flex-shrink: 0; text-align: right; min-width: 100px;">
-                <p style="font-size: 14px; color: #666; margin-bottom: 4px;">Total:</p>
-                <p style="font-size: 20px; font-weight: 700; color: #000;">
-                  {{ item.final_line_price | money }}
-                </p>
-              </div>
-              
-              <div class="item-remove" style="flex-shrink: 0;">
-                <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" 
-                   style="color: #e74c3c; text-decoration: none; font-size: 24px; padding: 10px;"
-                   title="Remove">
-                  ×
-                </a>
-              </div>
+      {% if cart.empty? %}
+        <div class="cart-page__title">
+          <h1>Your cart is empty</h1>
+        </div>
+        <div class="cart-page__items">
+          <p style="text-align: center; margin-bottom: 20px;">Your cart is currently empty.</p>
+          <a class="button cart-items__empty-button" href="{{ routes.all_products_collection_url }}">
+            <span class="button-text">Continue Shopping</span>
+          </a>
+        </div>
+      {% else %}
+        <div class="cart-page__title">
+          <h1>Shopping Cart ({{ cart.item_count }})</h1>
+        </div>
+
+        <div class="cart-page__items">
+          {% render 'cart-products' %}
+        </div>
+
+        <div class="cart-page__summary">
+          {% render 'cart-summary' %}
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% unless cart.empty? %}
+      <div class="cart-recommendations">
+        <div class="cart-recommendations__header">
+          <h2>You may also like</h2>
+          <a href="{{ routes.all_products_collection_url }}" class="cart-recommendations__view-all">View all</a>
+        </div>
+        <div class="cart-recommendations__grid">
+          {% assign recommendation_limit = 4 %}
+          {% for product in collections.all.products limit: recommendation_limit %}
+            <div class="product-card">
+              <a href="{{ product.url }}" class="product-card__link">
+                <div class="product-card__image">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | image_url: width: 400 }}" 
+                         alt="{{ product.title | escape }}"
+                         loading="lazy">
+                  {% else %}
+                    <div class="product-card__placeholder">No image</div>
+                  {% endif %}
+                  {% if product.compare_at_price > product.price %}
+                    <span class="product-card__badge">Sale</span>
+                  {% endif %}
+                </div>
+                <div class="product-card__info">
+                  <h3 class="product-card__title">{{ product.title }}</h3>
+                  <div class="product-card__price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="product-card__price--sale">{{ product.price | money }}</span>
+                      <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="product-card__price--regular">{{ product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
             </div>
           {% endfor %}
         </div>
-        
-        <div class="cart-footer" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; padding-top: 30px; border-top: 2px solid #000;">
-          <div class="cart-actions">
-            <button type="submit" name="update" 
-                    style="padding: 12px 30px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; cursor: pointer; margin-right: 10px;">
-              Update Cart
-            </button>
-            <a href="{{ routes.all_products_collection_url }}" 
-               style="display: inline-block; padding: 12px 30px; background: #fff; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; text-decoration: none; color: #000;">
-              Continue Shopping
-            </a>
-          </div>
-          
-          <div class="cart-summary" style="min-width: 300px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 24px; font-weight: 700;">
-              <span>Subtotal:</span>
-              <span>{{ cart.total_price | money }}</span>
-            </div>
-            
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
-              Taxes and shipping calculated at checkout
-            </p>
-            
-            <button type="submit" name="checkout" 
-                    style="width: 100%; padding: 16px; background: #007bff; color: #fff; border: none; border-radius: 35px; font-size: 18px; font-weight: 700; cursor: pointer; text-transform: uppercase;">
-              Proceed to Checkout
-            </button>
-          </div>
-        </div>
-      </form>
-    {% else %}
-      <div class="empty-cart" style="text-align: center; padding: 80px 20px;">
-        <div style="width: 120px; height: 120px; margin: 0 auto 30px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-        </div>
-        <h1 style="font-size: 32px; margin-bottom: 15px;">Your cart is empty</h1>
-        <p style="color: #666; font-size: 16px; margin-bottom: 30px;">Add some products to get started!</p>
-        <a href="{{ routes.all_products_collection_url }}" 
-           style="display: inline-block; padding: 16px 40px; background: #007bff; color: #fff; text-decoration: none; border-radius: 35px; font-size: 16px; font-weight: 700; text-transform: uppercase;">
-          Start Shopping
-        </a>
       </div>
-    {% endif %}
+    {% endunless %}
   </div>
 </div>
 
-{{ 'main-cart-responsive.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'cart-quantity-auto-submit.js' | asset_url }}" defer></script>
+{% stylesheet %}
+  .cart-page-wrapper {
+    padding: 60px 0;
+    min-height: 60vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .cart-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .cart-page--empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+  }
+
+  .cart-page--empty .cart-page__title h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .cart-page__title h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .cart-page__summary {
+    padding-top: 24px;
+  }
+
+  .cart-page__title + .cart-page__items {
+    margin-top: 24px;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 16px 40px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 35px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .button:hover {
+    background: #0056b3;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cart-page {
+      grid-template-columns: 1fr 400px;
+      grid-template-rows: auto auto 1fr;
+      gap: 40px;
+    }
+
+    .cart-page__title {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .cart-page__items {
+      grid-column: 1;
+      grid-row: 2 / 4;
+    }
+
+    .cart-page__summary {
+      grid-column: 2;
+      grid-row: 1 / 4;
+      padding-top: 0;
+      position: sticky;
+      top: 20px;
+      align-self: start;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .cart-page {
+      grid-template-columns: 1fr 450px;
+    }
+  }
+
+  /* Product Recommendations */
+  .cart-recommendations {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .cart-recommendations__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .cart-recommendations__header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .cart-recommendations__view-all {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+
+  .cart-recommendations__view-all:hover {
+    color: #000;
+  }
+
+  .cart-recommendations__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .product-card {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .product-card__image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+
+  .product-card__image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .product-card:hover .product-card__image img {
+    transform: scale(1.05);
+  }
+
+  .product-card__placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 14px;
+  }
+
+  .product-card__badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #e74c3c;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .product-card__info {
+    padding: 16px;
+  }
+
+  .product-card__title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .product-card__price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+
+  .product-card__price--sale {
+    color: #e74c3c;
+    font-weight: 600;
+  }
+
+  .product-card__price--compare {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 14px;
+  }
+
+  .product-card__price--regular {
+    font-weight: 600;
+  }
+
+  @media screen and (min-width: 640px) {
+    .cart-recommendations__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .cart-recommendations__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .cart-recommendations__header h2 {
+      font-size: 28px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "Cart",
-  "settings": []
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page width"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ],
+      "default": "page-width"
+    }
+  ]
 }
 {% endschema %}

@@ -1,0 +1,425 @@
+{% liquid
+  assign block_settings = block.settings
+  if block_settings == blank
+    assign gap = 24
+    assign image_ratio = 'portrait'
+    assign dividers = true
+    assign vendor = false
+  else
+    assign gap = block_settings.gap | default: 24
+    assign image_ratio = block_settings.image_ratio | default: 'portrait'
+    assign dividers = block_settings.dividers | default: true
+    assign vendor = block_settings.vendor | default: false
+  endif
+  
+  assign is_drawer = false
+  if drawer_context == 'drawer'
+    assign is_drawer = true
+  endif
+%}
+
+<div class="cart-items__wrapper{% if is_drawer %} cart-items__wrapper--drawer{% endif %}" {{ block.shopify_attributes }}>
+  {% if cart.empty? or force_empty %}
+    <p style="text-align: center; margin-bottom: 20px;">Your cart is currently empty.</p>
+    <a class="button cart-items__empty-button" href="{{ routes.all_products_collection_url }}">
+      <span class="button-text">Continue Shopping</span>
+    </a>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" class="cart-form" id="cart-form" method="post">
+      <div class="cart-items{% if dividers %} cart-items--dividers{% endif %}" style="--cart-items-gap: {{ gap }}px;">
+        <table class="cart-items__table" role="table">
+          <thead class="visually-hidden">
+            <tr>
+              <th scope="col">Product Image</th>
+              <th scope="col">Product Information</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for item in cart.items %}
+              <tr class="cart-items__table-row" data-key="{{ item.key }}">
+                <td class="cart-items__media">
+                  {% if item.image %}
+                    {% liquid
+                      assign ratio = 1
+                      if image_ratio == 'portrait'
+                        assign ratio = 0.8
+                      elsif image_ratio == 'adapt'
+                        assign ratio = item.image.aspect_ratio
+                      endif
+                    %}
+                    <a href="{{ item.url }}" class="cart-items__media-container" style="--ratio:{{ ratio }};">
+                      <img src="{{ item.image | image_url: width: 250 }}" 
+                           alt="{{ item.product.title | escape }}"
+                           class="cart-items__media-image"
+                           width="250"
+                           height="{{ 250 | divided_by: item.image.aspect_ratio | round }}"
+                           loading="lazy">
+                    </a>
+                  {% endif %}
+                </td>
+
+                <td class="cart-items__details">
+                  <div class="cart-items__product-info">
+                    <p>
+                      <a href="{{ item.url }}" class="cart-items__title">
+                        {{ item.product.title }}
+                      </a>
+                    </p>
+                    {% if item.product.vendor and vendor %}
+                      <p class="cart-items__vendor">{{ item.product.vendor }}</p>
+                    {% endif %}
+                  </div>
+
+                  {% if item.product.has_only_default_variant == false %}
+                    <dl class="cart-items__variants">
+                      {% for option in item.options_with_values %}
+                        <div class="cart-items__variant">
+                          <dt class="visually-hidden">{{ option.name }}:</dt>
+                          <dd>{{ option.value }}{% if forloop.last != true %},&nbsp;{% endif %}</dd>
+                        </div>
+                      {% endfor %}
+                    </dl>
+                  {% endif %}
+
+                  <div class="cart-items__unit-price-wrapper">
+                    <div>
+                      {% if item.original_price != item.final_price %}
+                        <span>{{ item.final_price | money }}</span>
+                        <s class="compare-at-price">{{ item.original_price | money }}</s>
+                      {% else %}
+                        <span>{{ item.original_price | money }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </td>
+
+                <td class="cart-items__quantity">
+                  <div class="cart-items__quantity-controls">
+                    <div class="quantity-selector">
+                      <button type="button" class="quantity-selector__button" onclick="this.nextElementSibling.stepDown(); this.nextElementSibling.dispatchEvent(new Event('change'));" aria-label="Decrease quantity">
+                        <svg width="10" height="2" viewBox="0 0 10 2" fill="none"><path d="M0 1h10" stroke="currentColor" stroke-width="2"/></svg>
+                      </button>
+                      <input type="number" 
+                             name="updates[]" 
+                             value="{{ item.quantity }}"
+                             min="0"
+                             class="quantity-selector__input"
+                             data-index="{{ forloop.index }}"
+                             aria-label="Quantity for {{ item.product.title | escape }}">
+                      <button type="button" class="quantity-selector__button" onclick="this.previousElementSibling.stepUp(); this.previousElementSibling.dispatchEvent(new Event('change'));" aria-label="Increase quantity">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 0v10M0 5h10" stroke="currentColor" stroke-width="2"/></svg>
+                      </button>
+                    </div>
+
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" 
+                       class="cart-items__remove"
+                       aria-label="Remove {{ item.product.title | escape }}">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </a>
+                  </div>
+                </td>
+
+                <td class="cart-items__price">
+                  <div class="cart-items__price-container">
+                    <div class="cart-items__line-price">
+                      {{ item.final_line_price | money }}
+                    </div>
+                    <div class="cart-items__unit-price">
+                      {{ item.final_price | money }} each
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+
+<style>
+  .cart-items {
+    width: 100%;
+  }
+
+  .cart-items__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-items__wrapper--drawer {
+    align-items: stretch;
+  }
+
+  .cart-items__table {
+    width: 100%;
+    border-spacing: 0;
+  }
+
+  .cart-items__table-row {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    grid-template-areas:
+      'media details price'
+      'media quantity price';
+    column-gap: 20px;
+    align-items: start;
+    padding-bottom: var(--cart-items-gap, 24px);
+    margin-bottom: 16px;
+  }
+
+  /* Drawer specific styling */
+  .cart-drawer .cart-items__table-row {
+    grid-template-columns: 80px 1fr auto;
+    column-gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 12px;
+  }
+
+  .cart-drawer .cart-items__media-container {
+    width: 80px;
+  }
+
+  .cart-drawer .cart-items__title {
+    font-size: 14px;
+  }
+
+  .cart-drawer .cart-items__price {
+    font-size: 16px;
+  }
+
+  .cart-drawer .cart-items__price-container {
+    text-align: right;
+  }
+
+  .cart-drawer .cart-items__unit-price {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .cart-items--dividers .cart-items__table-row {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: var(--cart-items-gap, 24px);
+  }
+
+  .cart-items--dividers .cart-items__table-row:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .cart-items__media {
+    grid-area: media;
+  }
+
+  .cart-items__media-container {
+    display: flex;
+    aspect-ratio: var(--ratio, 1);
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .cart-items__media-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart-items__details {
+    grid-area: details;
+    color: #666;
+  }
+
+  .cart-items__details > * + * {
+    margin-top: 8px;
+  }
+
+  .cart-items__title {
+    font-size: 16px;
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .cart-items__title:hover {
+    text-decoration: underline;
+  }
+
+  .cart-items__vendor {
+    font-size: 14px;
+    color: #999;
+  }
+
+  .cart-items__variants {
+    display: block;
+    font-size: 14px;
+  }
+
+  .cart-items__variant {
+    display: inline;
+  }
+
+  .cart-items__variant dt,
+  .cart-items__variant dd {
+    display: inline;
+    margin: 0;
+  }
+
+  .cart-items__unit-price-wrapper {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .compare-at-price {
+    color: #999;
+    margin-left: 8px;
+  }
+
+  .cart-items__quantity {
+    grid-area: quantity;
+    margin-top: 12px;
+  }
+
+  .cart-items__quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .quantity-selector__button {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .quantity-selector__button:hover {
+    background: #e0e0e0;
+  }
+
+  .quantity-selector__input {
+    width: 50px;
+    height: 36px;
+    text-align: center;
+    border: none;
+    font-size: 14px;
+    -moz-appearance: textfield;
+  }
+
+  .quantity-selector__input::-webkit-outer-spin-button,
+  .quantity-selector__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .cart-items__remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #e74c3c;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .cart-items__remove:hover {
+    opacity: 0.7;
+  }
+
+  .cart-items__price {
+    grid-area: price;
+    text-align: right;
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 100px;
+  }
+
+  .cart-items__empty-button {
+    display: inline-block;
+    padding: 16px 40px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 35px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .cart-items__empty-button:hover {
+    background: #0056b3;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cart-items__table-row {
+      grid-template-columns: 120px 1fr 150px 120px;
+      grid-template-areas: 'media details quantity price';
+    }
+
+    .cart-items__quantity {
+      margin-top: 0;
+    }
+
+    .cart-items__price {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+</style>
+
+<script>
+  // Auto-update cart when quantity changes
+  document.querySelectorAll('.quantity-selector__input').forEach(input => {
+    let timeout;
+    input.addEventListener('change', function() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        if (this.value === '0') {
+          const index = this.dataset.index;
+          window.location.href = `{{ routes.cart_change_url }}?line=${index}&quantity=0`;
+        } else {
+          document.getElementById('cart-form').submit();
+        }
+      }, 500);
+    });
+  });
+</script>
