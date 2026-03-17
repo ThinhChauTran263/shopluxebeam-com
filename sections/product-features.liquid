@@ -1,21 +1,22 @@
 {% comment %}
-  Product Features Section - Image + Text descriptions
+  Product Features Section - Displays product features using blocks
 {% endcomment %}
 
+{% if section.blocks.size > 0 %}
 <section class="product-features-section">
   <div class="container">
     {% for block in section.blocks %}
-      <div class="feature-row {% if forloop.index == 2 %}reverse{% endif %}">
+      <div class="feature-row {% if forloop.index == 2 %}reverse{% endif %}" {{ block.shopify_attributes }}>
         <div class="feature-image">
-          {% if block.settings.video_url %}
+          {% if block.settings.video_url != blank %}
             <div class="feature-video">
               {% if block.settings.video_url.type == 'youtube' %}
-                <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               {% elsif block.settings.video_url.type == 'vimeo' %}
-                <iframe src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
               {% endif %}
             </div>
-          {% elsif block.settings.image %}
+          {% elsif block.settings.image != blank %}
             <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}" width="600" height="400" loading="lazy">
           {% else %}
             <div class="placeholder-image">
@@ -36,6 +37,7 @@
     {% endfor %}
   </div>
 </section>
+{% endif %}
 
 <style>
 .product-features-section {

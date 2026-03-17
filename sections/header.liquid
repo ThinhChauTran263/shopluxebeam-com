@@ -6,7 +6,14 @@
 <header class="main-header-luxe">
   <div class="container">
     <div class="header-wrapper-luxe">
-      <!-- Main Navigation -->
+      <!-- Mobile Menu Toggle (Shows on mobile, left side) -->
+      <button class="mobile-toggle-luxe" type="button" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Main Navigation (Desktop only) -->
       <nav class="main-navigation-luxe">
         <ul class="nav-menu-luxe">
           <li><a href="{{ routes.root_url }}">HOME</a></li>
@@ -15,7 +22,7 @@
         </ul>
       </nav>
 
-      <!-- Logo -->
+      <!-- Logo (Center on mobile) -->
       <div class="header-logo-luxe">
         <a href="{{ routes.root_url }}">
           {% if section.settings.logo != blank %}
@@ -28,7 +35,7 @@
         </a>
       </div>
 
-      <!-- Header Actions -->
+      <!-- Header Actions (Right side) -->
       <div class="header-actions-luxe">
         <!-- Search -->
         <button class="search-toggle-luxe" type="button" aria-label="Search">
@@ -64,13 +71,6 @@
           </svg>
           <span class="cart-count-luxe">({{ cart.item_count }})</span>
         </a>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-toggle-luxe" type="button" aria-label="Menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </div>
 
@@ -105,50 +105,25 @@
             </div>
           </div>
 
-          <!-- Search Results Section -->
-          <div class="search-section search-results-section" id="searchResultsSection" style="display: none;">
-            <div class="section-header">
-              <h3>Search Results</h3>
-            </div>
-            <div class="products-grid search-results-grid" id="searchResultsGrid">
-              <!-- Search results will be populated here -->
-            </div>
-          </div>
-
           <!-- All Products Section -->
           <div class="search-section products-section">
             <div class="section-header">
               <h3>Products</h3>
             </div>
             <div class="products-grid all-products-grid" id="allProductsGrid">
-              <!-- Fallback products rendered by Liquid -->
-              {% assign featured_products = collections.all.products | limit: 8 %}
-              {% if featured_products.size > 0 %}
-                {% for product in featured_products %}
-                  <div class="product-card" onclick="goToProduct('{{ product.handle }}')">
-                    {% if product.featured_image %}
-                      <img src="{{ product.featured_image | image_url: width: 200, height: 200 }}" alt="{{ product.title }}" class="product-image">
-                    {% else %}
-                      <div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">No Image</div>
-                    {% endif %}
-                    <div class="product-info">
-                      <h4 class="product-title">{{ product.title }}</h4>
-                      <div class="product-price">
-                        <span class="current-price">{{ product.price | money }}</span>
-                        {% if product.compare_at_price > product.price %}
-                          <span class="original-price">{{ product.compare_at_price | money }}</span>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              {% else %}
-                <div class="loading-message">No products available.</div>
-              {% endif %}
+              <!-- Products will be populated here -->
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Mobile Search Form (outside menu, below header) -->
+    <div class="mobile-search-luxe">
+      <form action="{{ routes.search_url }}" method="get">
+        <input type="search" name="q" placeholder="Search products" class="search-input-luxe">
+        <button type="submit" class="search-btn-luxe">Search</button>
+      </form>
     </div>
 
     <!-- Mobile Menu -->
@@ -161,43 +136,80 @@
           {% if customer %}
             <li><a href="{{ routes.account_url }}">My Account</a></li>
             <li><a href="{{ routes.account_logout_url }}">Logout</a></li>
-          {% else %}
-            <li><a href="{{ routes.account_login_url }}">Login</a></li>
-            <li><a href="{{ routes.account_register_url }}">Register</a></li>
           {% endif %}
         {% endif %}
       </ul>
-      
-      <!-- Mobile Search -->
-      <div class="mobile-search-luxe">
-        <form action="{{ routes.search_url }}" method="get">
-          <input type="search" name="q" placeholder="Search products" class="search-input-luxe">
-          <button type="submit" class="search-btn-luxe">Search</button>
-        </form>
-      </div>
     </div>
   </div>
 </header>
 
 <style>
+/* Prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Main Header */
 .main-header-luxe {
   background: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 0;
-  position: sticky;
-  top: 0;
-  z-index: 9999;
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  left: 0;
+  right: 0;
+}
+
+.main-header-luxe .container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .header-wrapper-luxe {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   max-width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  padding: 0 110px;
   position: relative;
+  box-sizing: border-box;
+}
+
+/* iPad Air and similar (820-899px) */
+@media screen and (min-width: 820px) and (max-width: 899px) {
+  .header-wrapper-luxe {
+    padding: 0 25px;
+  }
+}
+
+/* Surface Pro 7 and similar tablets (900-1024px) */
+@media screen and (min-width: 900px) and (max-width: 1024px) {
+  .header-wrapper-luxe {
+    padding: 0 60px;
+  }
+}
+
+/* iPad Pro and larger tablets (1025-1440px) */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+  .header-wrapper-luxe {
+    padding: 0 80px;
+  }
+}
+
+/* Large desktop: More padding */
+@media screen and (min-width: 1441px) {
+  .header-wrapper-luxe {
+    padding: 0 200px;
+  }
 }
 
 /* Main Navigation - Now on the left */
@@ -303,8 +315,8 @@
 }
 
 .mobile-toggle-luxe span {
-  width: 25px;
-  height: 3px;
+  width: 20px;
+  height: 2px;
   background: #000000;
   margin: 3px 0;
   transition: 0.3s;
@@ -330,16 +342,15 @@
 
 .mobile-nav-luxe a {
   display: block;
-  padding: 15px 0;
+  padding: 15px 0 15px 15px;
   color: #000000;
   text-decoration: none;
   font-weight: 500;
 }
 
+/* Mobile Search - Hidden by default, shows below header on mobile */
 .mobile-search-luxe {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  display: none;
 }
 
 .mobile-search-luxe form {
@@ -363,158 +374,6 @@
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .main-navigation-luxe {
-    display: none;
-  }
-  
-  .mobile-toggle-luxe {
-    display: flex;
-  }
-  
-  .mobile-menu-luxe.active {
-    display: block;
-  }
-  
-  .header-actions-luxe {
-    gap: 15px;
-  }
-  
-  .header-logo-luxe {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .header-logo-luxe .logo-img {
-    max-height: 50px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-actions-luxe {
-    gap: 10px;
-  }
-  
-  .header-logo-luxe .logo-img {
-    max-height: 45px;
-  }
-}
-
-/* Account Button Styles */
-.account-button-luxe {
-  display: flex;
-  align-items: center;
-}
-
-shopify-account {
-  --shopify-account-font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --shopify-account-font-heading-weight: 600;
-  --shopify-account-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --shopify-account-font-body-weight: 400;
-  --shopify-account-radius-base: 8px;
-  --shopify-account-radius-button: 4px;
-  --shopify-account-radius-button-small: 4px;
-  --shopify-account-radius-input: 4px;
-  --shopify-account-color-background: #ffffff;
-  --shopify-account-color-text: #000000;
-  --shopify-account-color-accent: #000000;
-  --shopify-account-color-accent-text: #ffffff;
-  --shopify-account-dialog-position-top: 80px;
-}
-
-shopify-account:not(:defined) {
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.account-button__fallback {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #000000;
-}
-
-/* Cart Bubble Styles */
-.cart-bubble {
-  --cart-bubble-size: 18px;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--cart-bubble-size);
-  height: var(--cart-bubble-size);
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.cart-bubble__background {
-  position: absolute;
-  inset: 0;
-  background-color: #000000;
-  border-radius: 50%;
-}
-
-.cart-bubble__text {
-  position: relative;
-  z-index: 1;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.cart-bubble__text-count {
-  display: block;
-}
-
-.cart-bubble.visually-hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.cart-bubble--animating .cart-bubble__background {
-  animation: cart-bubble-grow 0.3s ease;
-}
-
-.cart-bubble--animating .cart-bubble__text {
-  animation: cart-bubble-text-fade 0.3s ease;
-}
-
-@keyframes cart-bubble-grow {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-@keyframes cart-bubble-text-fade {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-/* Utility classes */
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
-
-.hidden {
-  display: none !important;
 }
 
 /* Search Popup Styles */
@@ -710,478 +569,736 @@ shopify-account:not(:defined) {
   color: #666;
 }
 
+/* Additional styles for multi-resource search results */
+.collection-card,
+.page-card,
+.article-card {
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.collection-card:hover,
+.page-card:hover,
+.article-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.collection-card .product-image,
+.page-card .product-image,
+.article-card .product-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
+  .main-header-luxe {
+    padding: 12px 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .main-header-luxe .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .header-wrapper-luxe {
+    padding: 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+  
+  /* Mobile menu button - order 1, left side */
+  .mobile-toggle-luxe {
+    display: flex;
+    order: 1;
+    margin: 0;
+    padding: 5px;
+  }
+  
+  /* Hide desktop navigation */
+  .main-navigation-luxe {
+    display: none;
+  }
+  
+  /* Logo - order 3, center with absolute positioning */
+  .header-logo-luxe {
+    order: 3;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    z-index: 1;
+  }
+  
+  .header-logo-luxe .logo-img {
+    max-height: 40px;
+  }
+  
+  /* Actions - break out to reorder children */
+  .header-actions-luxe {
+    display: contents; /* Break out of flex container */
+  }
+  
+  /* Search icon - order 2, after menu */
+  .search-toggle-luxe {
+    order: 2;
+    margin: 0;
+    padding: 5px;
+  }
+  
+  /* Account - order 4, right side */
+  .account-button-luxe {
+    order: 4;
+    margin-left: auto;
+    z-index: 2;
+  }
+  
+  /* Cart - order 5, right side */
+  .cart-link-luxe {
+    order: 5;
+    z-index: 2;
+  }
+  
+  /* Hide mobile search form - use popup instead */
+  .mobile-search-luxe {
+    display: none !important;
+  }
+  
+  /* Search popup mobile optimization */
+  .search-popup-luxe {
+    background: rgba(0, 0, 0, 0); /* Remove dark overlay on mobile */
+  }
+  
   .search-popup-content {
-    width: 95%;
-    margin: 2% auto;
-    max-height: 90vh;
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    max-width: 100%;
   }
   
   .search-popup-header {
-    padding: 15px 20px;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .search-input-popup {
+    padding: 12px 12px 12px 45px;
+    font-size: 15px;
   }
   
   .search-popup-body {
-    padding: 20px;
+    padding: 15px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+  
+  .section-header h3 {
+    font-size: 16px;
   }
   
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
+  }
+  
+  .product-card {
+    max-height: 220px;
+  }
+  
+  .product-image {
+    height: 120px;
+  }
+  
+  .product-info {
+    padding: 6px;
+  }
+  
+  .product-title {
+    font-size: 11px;
+    height: 26px;
+    -webkit-line-clamp: 2;
+  }
+  
+  .current-price {
+    font-size: 12px;
+  }
+  
+  .original-price {
+    font-size: 10px;
+  }
+  
+  .mobile-menu-luxe.active {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-wrapper-luxe {
+    padding: 0 10px;
+    gap: 8px;
+  }
+  
+  .header-actions-luxe {
+    gap: 10px;
+  }
+  
+  .header-logo-luxe .logo-img {
+    max-height: 35px;
+  }
+  
+  .cart-count-luxe {
+    font-size: 12px;
+  }
+  
+  .search-popup-luxe {
+    background: rgba(0, 0, 0, 0); /* Remove dark overlay on mobile */
+  }
+  
+  .search-popup-content {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    max-width: 100%;
+  }
+  
+  .search-popup-header {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .search-input-popup {
+    padding: 10px 10px 10px 40px;
+    font-size: 14px;
+  }
+  
+  .search-popup-body {
+    padding: 12px;
+    max-height: calc(100vh - 70px);
+  }
+  
+  .products-grid {
+    gap: 8px;
   }
   
   .product-image {
     height: 100px;
   }
   
-  .product-info {
-    padding: 8px;
-  }
-  
   .product-title {
-    font-size: 12px;
-    height: 28px;
+    font-size: 10px;
+    height: 24px;
   }
   
   .current-price {
-    font-size: 13px;
-  }
-  
-  .original-price {
     font-size: 11px;
   }
 }
+
+/* Account Button Styles */
+.account-button-luxe {
+  display: flex;
+  align-items: center;
+}
+
+shopify-account {
+  --shopify-account-font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shopify-account-font-heading-weight: 600;
+  --shopify-account-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shopify-account-font-body-weight: 400;
+  --shopify-account-radius-base: 8px;
+  --shopify-account-radius-button: 4px;
+  --shopify-account-radius-button-small: 4px;
+  --shopify-account-radius-input: 4px;
+  --shopify-account-color-background: #ffffff;
+  --shopify-account-color-text: #000000;
+  --shopify-account-color-accent: #000000;
+  --shopify-account-color-accent-text: #ffffff;
+  --shopify-account-dialog-position-top: 80px;
+}
+
+shopify-account:not(:defined) {
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.account-button__fallback {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #000000;
+}
 </style>
 
-<!-- Search Popup Fix CSS -->
-<link rel="stylesheet" href="{{ 'search-popup-fix.css' | asset_url }}">
-<link rel="stylesheet" href="{{ 'header-actions.css' | asset_url }}">
-
 <script>
-  // Mobile menu toggle
-  document.addEventListener('DOMContentLoaded', function() {
-    const mobileToggle = document.querySelector('.mobile-toggle-luxe');
-    const mobileMenu = document.querySelector('.mobile-menu-luxe');
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileToggle = document.querySelector('.mobile-toggle-luxe');
+  const mobileMenu = document.querySelector('.mobile-menu-luxe');
+  
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener('click', function() {
+      mobileMenu.classList.toggle('active');
+      this.classList.toggle('active');
+    });
+  }
+
+  // Search popup functionality
+  const searchToggle = document.querySelector('.search-toggle-luxe');
+  const searchPopup = document.getElementById('searchPopup');
+  const searchClose = document.querySelector('.search-close-luxe');
+  const searchInput = document.getElementById('searchInput');
+  const recentlyViewedGrid = document.getElementById('recentlyViewedGrid');
+  const allProductsGrid = document.getElementById('allProductsGrid');
+
+  // Debug: Check if elements exist
+  console.log('Search elements found:', {
+    searchToggle: !!searchToggle,
+    searchPopup: !!searchPopup,
+    searchClose: !!searchClose,
+    searchInput: !!searchInput,
+    recentlyViewedGrid: !!recentlyViewedGrid,
+    allProductsGrid: !!allProductsGrid
+  });
+
+  // Recently viewed products functionality
+  class RecentlyViewed {
+    static STORAGE_KEY = 'recentlyViewed';
+    static MAX_PRODUCTS = 4;
     
-    if (mobileToggle && mobileMenu) {
-      mobileToggle.addEventListener('click', function() {
-        mobileMenu.classList.toggle('active');
-        this.classList.toggle('active');
-      });
+    static addProduct(productHandle) {
+      let viewedProducts = this.getProducts();
+      viewedProducts = viewedProducts.filter(handle => handle !== productHandle);
+      viewedProducts.unshift(productHandle);
+      viewedProducts = viewedProducts.slice(0, this.MAX_PRODUCTS);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(viewedProducts));
     }
-
-    // Search popup functionality
-    const searchToggle = document.querySelector('.search-toggle-luxe');
-    const searchPopup = document.getElementById('searchPopup');
-    const searchClose = document.querySelector('.search-close-luxe');
-    const searchInput = document.getElementById('searchInput');
-    const searchResultsSection = document.getElementById('searchResultsSection');
-    const searchResultsGrid = document.getElementById('searchResultsGrid');
-    const recentlyViewedGrid = document.getElementById('recentlyViewedGrid');
-    const allProductsGrid = document.getElementById('allProductsGrid');
-
-    // Open search popup
-    if (searchToggle) {
-      searchToggle.addEventListener('click', function() {
-        searchPopup.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => searchInput.focus(), 300);
-        
-        // Store original products HTML if not already stored
-        if (!originalProductsHTML) {
-          originalProductsHTML = allProductsGrid.innerHTML;
-        }
-        
-        loadRecentlyViewed();
-        loadAllProductsData(); // Load all products for search filtering
-        
-        // Ensure products are displayed
-        if (allProductsGrid.innerHTML.trim() === '' || allProductsGrid.innerHTML.includes('No products found')) {
-          loadOriginalProducts();
-        }
-        
-        console.log('Search popup opened');
-      });
+    
+    static getProducts() {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
     }
-
-    // Close search popup
-    if (searchClose) {
-      searchClose.addEventListener('click', closeSearchPopup);
+    
+    static clearProducts() {
+      localStorage.removeItem(this.STORAGE_KEY);
     }
+  }
 
-    // Close on overlay click
-    if (searchPopup) {
-      searchPopup.addEventListener('click', function(e) {
-        if (e.target === searchPopup) {
-          closeSearchPopup();
-        }
-      });
-    }
+  // Search toggle - Open popup for both desktop and mobile
+  if (searchToggle) {
+    searchToggle.addEventListener('click', function() {
+      console.log('Opening search popup...');
+      searchPopup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => searchInput.focus(), 300);
+      
+      loadRecentlyViewed();
+      loadAllProducts();
+      
+      console.log('Search popup opened successfully');
+    });
+  }
 
-    // Close on escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && searchPopup.classList.contains('active')) {
+  // Close search popup
+  if (searchClose) {
+    searchClose.addEventListener('click', closeSearchPopup);
+  }
+
+  // Close on overlay click
+  if (searchPopup) {
+    searchPopup.addEventListener('click', function(e) {
+      if (e.target === searchPopup) {
         closeSearchPopup();
       }
     });
+  }
 
-    function closeSearchPopup() {
-      searchPopup.classList.remove('active');
-      document.body.style.overflow = '';
-      searchInput.value = '';
-      
-      // Reset sections visibility
-      document.querySelector('.recently-viewed-section').style.display = 'block';
-      document.querySelector('.products-section .section-header h3').textContent = 'Products';
-      
-      // Restore original products
-      restoreOriginalProducts();
+  // Close on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && searchPopup.classList.contains('active')) {
+      closeSearchPopup();
     }
+  });
 
-    // Search functionality
-    let searchTimeout;
-    let allProductsData = []; // Store all products for filtering
-    let originalProductsHTML = ''; // Store original HTML
+  function closeSearchPopup() {
+    searchPopup.classList.remove('active');
+    document.body.style.overflow = '';
+    searchInput.value = '';
     
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
+    // Reset sections visibility
+    document.querySelector('.recently-viewed-section').style.display = 'block';
+    document.querySelector('.products-section .section-header h3').textContent = 'Products';
+    
+    // Restore original products
+    loadAllProducts();
+  }
+
+  // Simple search functionality
+  let searchTimeout;
+  
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const query = this.value.trim();
+      
+      if (query.length > 0) {
+        // Hide recently viewed section when searching
+        document.querySelector('.recently-viewed-section').style.display = 'none';
+        // Show only products section
+        document.querySelector('.products-section .section-header h3').textContent = 'Search Results';
         
-        if (query.length > 0) {
-          // Hide recently viewed section when searching
-          document.querySelector('.recently-viewed-section').style.display = 'none';
-          // Show only products section
-          document.querySelector('.products-section .section-header h3').textContent = 'Search Results';
-          
-          searchTimeout = setTimeout(() => performLocalSearch(query), 100);
+        searchTimeout = setTimeout(() => performSearch(query), 300);
+      } else {
+        // Show recently viewed section when not searching
+        document.querySelector('.recently-viewed-section').style.display = 'block';
+        document.querySelector('.products-section .section-header h3').textContent = 'Products';
+        
+        // Restore original products
+        loadAllProducts();
+      }
+    });
+  }
+
+  function performSearch(query) {
+    allProductsGrid.innerHTML = '<div class="loading-message">Searching...</div>';
+    
+    // Simple search approach
+    searchSimple(query);
+  }
+  
+  function searchSimple(query) {
+    console.log('Simple search for:', query);
+    
+    // Try multiple search approaches
+    trySearchInAllCollection(query)
+      .catch(() => trySearchInCollections(query))
+      .catch(() => {
+        console.error('All search methods failed');
+        allProductsGrid.innerHTML = `<div class="loading-message">No results found for "${query}".</div>`;
+      });
+  }
+  
+  function trySearchInAllCollection(query) {
+    return fetch('/collections/all/products.json?limit=50')
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const products = data.products || [];
+        const filteredProducts = filterProductsByQuery(products, query);
+        
+        if (filteredProducts.length > 0) {
+          console.log(`Found ${filteredProducts.length} products in all collection`);
+          displaySearchResults(filteredProducts.slice(0, 8));
+          return filteredProducts;
         } else {
-          // Show recently viewed section when not searching
-          document.querySelector('.recently-viewed-section').style.display = 'block';
-          document.querySelector('.products-section .section-header h3').textContent = 'Products';
-          
-          // Restore original products
-          restoreOriginalProducts();
+          throw new Error('No matching products found');
         }
       });
-    }
-
-    function performLocalSearch(query) {
-      if (allProductsData.length === 0) {
-        // If we don't have products data yet, load it first
-        loadAllProductsForSearch(query);
-        return;
-      }
-      
-      // Filter products locally - exact match and partial match
-      const filteredProducts = allProductsData.filter(product => {
-        const title = (product.title || '').toLowerCase();
-        const searchQuery = query.toLowerCase();
-        return title.includes(searchQuery);
+  }
+  
+  function trySearchInCollections(query) {
+    return fetch('/collections.json')
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const collections = data.collections || [];
+        if (collections.length === 0) throw new Error('No collections found');
+        
+        return searchInMultipleCollections(collections.slice(0, 5), query, []);
       });
-      
-      console.log(`Search "${query}" found ${filteredProducts.length} products`);
-      displayFilteredProducts(filteredProducts);
-    }
-
-    function loadAllProductsForSearch(query) {
-      allProductsGrid.innerHTML = '<div class="loading-message">Searching...</div>';
-      
-      // Load all products first
-      fetch('/collections/all/products.json?limit=100')
-        .then(response => {
-          if (!response.ok) {
-            return fetch('/search.json?q=*&type=product&limit=100');
-          }
-          return response;
-        })
-        .then(response => response.json())
-        .then(data => {
-          allProductsData = data.products || [];
-          console.log('Loaded products for search:', allProductsData.length);
-          // Now perform the search
-          performLocalSearch(query);
-        })
-        .catch(error => {
-          console.error('Error loading products for search:', error);
-          allProductsGrid.innerHTML = '<div class="loading-message">Search failed. Please try again.</div>';
-        });
-    }
-
-    function displayFilteredProducts(products) {
-      if (products.length === 0) {
-        allProductsGrid.innerHTML = '<div class="loading-message">No products found.</div>';
-        return;
-      }
-
-      const productsHTML = products.map(product => createProductCard(product)).join('');
-      allProductsGrid.innerHTML = productsHTML;
-    }
-
-    function restoreOriginalProducts() {
-      console.log('Restoring original products');
-      if (originalProductsHTML) {
-        allProductsGrid.innerHTML = originalProductsHTML;
-      } else if (allProductsData.length > 0) {
-        // Fallback: show first 8 products
-        const originalProductsHTML = allProductsData.slice(0, 8).map(product => createProductCard(product)).join('');
-        allProductsGrid.innerHTML = originalProductsHTML;
+  }
+  
+  function searchInMultipleCollections(collections, query, allResults) {
+    if (collections.length === 0) {
+      if (allResults.length > 0) {
+        displaySearchResults(allResults.slice(0, 8));
+        return allResults;
       } else {
-        // Load original products
-        loadOriginalProducts();
+        throw new Error('No results found');
       }
     }
-
-    function loadOriginalProducts() {
-      fetch('/collections/all/products.json?limit=8')
-        .then(response => response.json())
-        .then(data => {
-          const products = data.products || [];
-          const productsHTML = products.map(product => createProductCard(product)).join('');
-          allProductsGrid.innerHTML = productsHTML;
-          originalProductsHTML = productsHTML; // Store for future use
-        })
-        .catch(error => {
-          console.error('Error loading original products:', error);
-          allProductsGrid.innerHTML = '<div class="loading-message">Failed to load products.</div>';
-        });
-    }
-
-    function performSearch(query) {
-      searchResultsGrid.innerHTML = '<div class="loading-message">Searching...</div>';
-      
-      // Use Shopify's search endpoint
-      fetch(`/search?q=${encodeURIComponent(query)}&type=product&view=json`)
-        .then(response => {
-          if (!response.ok) {
-            // Fallback to predictive search
-            return fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=8`);
-          }
-          return response;
-        })
-        .then(response => response.json())
-        .then(data => {
-          let products = [];
-          
-          // Handle different response formats
-          if (data.resources && data.resources.results && data.resources.results.products) {
-            products = data.resources.results.products;
-          } else if (data.products) {
-            products = data.products;
-          } else if (Array.isArray(data)) {
-            products = data;
-          }
-          
-          displaySearchResults(products);
-        })
-        .catch(error => {
-          console.error('Search error:', error);
-          // Final fallback - simple search
-          performSimpleSearch(query);
-        });
-    }
-
-    function performSimpleSearch(query) {
-      fetch(`/search.json?q=${encodeURIComponent(query)}&type=product`)
-        .then(response => response.json())
-        .then(data => {
-          const products = data.results || data.products || [];
-          displaySearchResults(products.slice(0, 8));
-        })
-        .catch(error => {
-          console.error('Simple search failed:', error);
-          searchResultsGrid.innerHTML = '<div class="loading-message">Search unavailable. Please try again later.</div>';
-        });
-    }
-
-    function displaySearchResults(products) {
-      if (products.length === 0) {
-        searchResultsGrid.innerHTML = '<div class="loading-message">No products found.</div>';
-        return;
-      }
-
-      const productsHTML = products.map(product => createProductCard(product)).join('');
-      searchResultsGrid.innerHTML = productsHTML;
-    }
-
-    function loadAllProductsData() {
-      // Load all products in background for search functionality
-      fetch('/collections/all/products.json?limit=50')
-        .then(response => {
-          if (!response.ok) {
-            return fetch('/search.json?q=*&type=product&limit=50');
-          }
-          return response;
-        })
-        .then(response => response.json())
-        .then(data => {
-          allProductsData = data.products || [];
-          console.log('Loaded', allProductsData.length, 'products for search');
-        })
-        .catch(error => {
-          console.error('Error loading products data:', error);
-        });
-    }
-
-    function loadRecentlyViewed() {
-      const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-      
-      if (recentlyViewed.length === 0) {
-        recentlyViewedGrid.innerHTML = '<div class="loading-message">No recently viewed products.</div>';
-        return;
-      }
-
-      // Get product details for recently viewed items
-      const productPromises = recentlyViewed.slice(0, 4).map(productId => 
-        fetch(`/products/${productId}.js`).then(r => r.json()).catch(() => null)
-      );
-
-      Promise.all(productPromises).then(products => {
-        const validProducts = products.filter(p => p !== null);
-        const productsHTML = validProducts.map(product => createProductCard(product)).join('');
-        recentlyViewedGrid.innerHTML = productsHTML || '<div class="loading-message">No recently viewed products.</div>';
+    
+    const collection = collections[0];
+    const remainingCollections = collections.slice(1);
+    
+    return fetch(`/collections/${collection.handle}/products.json?limit=20`)
+      .then(response => response.ok ? response.json() : { products: [] })
+      .then(data => {
+        const products = data.products || [];
+        const filteredProducts = filterProductsByQuery(products, query);
+        
+        console.log(`Found ${filteredProducts.length} products in ${collection.handle}`);
+        allResults.push(...filteredProducts);
+        
+        return searchInMultipleCollections(remainingCollections, query, allResults);
+      })
+      .catch(error => {
+        console.error(`Error searching in ${collection.handle}:`, error);
+        return searchInMultipleCollections(remainingCollections, query, allResults);
       });
+  }
+  
+  function filterProductsByQuery(products, query) {
+    return products.filter(product => {
+      const title = (product.title || '').toLowerCase();
+      const searchQuery = query.toLowerCase();
+      
+      // Direct match
+      if (title.includes(searchQuery)) {
+        return true;
+      }
+      
+      // Word-by-word match (for queries like "9 in 1")
+      const queryWords = searchQuery.split(/\s+/).filter(word => word.trim());
+      const titleWords = title.split(/\s+/);
+      
+      // Check if all query words are found in title
+      return queryWords.every(queryWord => 
+        titleWords.some(titleWord => titleWord.includes(queryWord))
+      );
+    });
+  }
+
+  function displaySearchResults(products) {
+    if (products.length === 0) {
+      allProductsGrid.innerHTML = '<div class="loading-message">No products found.</div>';
+      return;
     }
 
-    function loadAllProducts() {
-      allProductsGrid.innerHTML = '<div class="loading-message">Loading products...</div>';
-      console.log('Loading products...');
-      
-      // Try different endpoints for loading products
-      fetch('/collections/all/products.json?limit=8')
-        .then(response => {
-          console.log('First fetch response:', response.status, response.statusText);
-          if (!response.ok) {
-            // Fallback to search endpoint
-            console.log('Trying fallback search...');
-            return fetch('/search.json?q=*&type=product&limit=8');
-          }
-          return response;
-        })
-        .then(response => {
-          console.log('Second fetch response:', response.status, response.statusText);
-          return response.json();
-        })
-        .then(data => {
-          console.log('Products data received:', data);
-          const products = data.products || [];
-          if (products.length === 0) {
-            console.log('No products found, trying collections...');
-            loadProductsFromCollections();
-            return;
-          }
-          const productsHTML = products.map(product => createProductCard(product)).join('');
-          allProductsGrid.innerHTML = productsHTML;
-        })
-        .catch(error => {
-          console.error('Error loading products:', error);
-          // Final fallback - try to get products from collections
-          loadProductsFromCollections();
-        });
+    const productsHTML = products.map(product => createProductCard(product)).join('');
+    allProductsGrid.innerHTML = productsHTML;
+  }
+
+  function loadRecentlyViewed() {
+    const recentlyViewed = RecentlyViewed.getProducts();
+    
+    if (recentlyViewed.length === 0) {
+      recentlyViewedGrid.innerHTML = '<div class="loading-message">No recently viewed products.</div>';
+      return;
     }
 
-    function loadProductsFromCollections() {
-      fetch('/collections.json')
-        .then(response => response.json())
-        .then(data => {
-          if (data.collections && data.collections.length > 0) {
-            const firstCollection = data.collections[0];
-            return fetch(`/collections/${firstCollection.handle}/products.json?limit=8`);
-          }
-          throw new Error('No collections found');
-        })
-        .then(response => response.json())
-        .then(data => {
-          const products = data.products || [];
-          if (products.length === 0) {
-            allProductsGrid.innerHTML = '<div class="loading-message">No products available.</div>';
-            return;
-          }
-          const productsHTML = products.map(product => createProductCard(product)).join('');
-          allProductsGrid.innerHTML = productsHTML;
-        })
-        .catch(error => {
-          console.error('Final fallback failed:', error);
-          allProductsGrid.innerHTML = '<div class="loading-message">Unable to load products.</div>';
-        });
+    // Get product details for recently viewed items
+    const productPromises = recentlyViewed.slice(0, 4).map(productHandle => 
+      fetch(`/products/${productHandle}.js`).then(r => r.json()).catch(() => null)
+    );
+
+    Promise.all(productPromises).then(products => {
+      const validProducts = products.filter(p => p !== null);
+      const productsHTML = validProducts.map(product => createProductCard(product)).join('');
+      recentlyViewedGrid.innerHTML = productsHTML || '<div class="loading-message">No recently viewed products.</div>';
+    });
+  }
+
+  function loadAllProducts() {
+    allProductsGrid.innerHTML = '<div class="loading-message">Loading products...</div>';
+    
+    // Simple approach: just try to get any products that work
+    loadProductsSimple();
+  }
+  
+  function loadProductsSimple() {
+    console.log('Loading products...');
+    
+    // Try multiple approaches in sequence
+    tryLoadFromAllCollection()
+      .catch(() => tryLoadFromCollections())
+      .catch(() => tryLoadFromRecentlyViewed())
+      .catch(() => showFallbackMessage());
+  }
+  
+  function tryLoadFromAllCollection() {
+    return fetch('/collections/all/products.json?limit=8')
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const products = data.products || [];
+        if (products.length === 0) throw new Error('No products found');
+        
+        console.log(`Loaded ${products.length} products from all collection`);
+        const productsHTML = products.map(product => createProductCard(product)).join('');
+        allProductsGrid.innerHTML = productsHTML;
+        return products;
+      });
+  }
+  
+  function tryLoadFromCollections() {
+    return fetch('/collections.json')
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const collections = data.collections || [];
+        if (collections.length === 0) throw new Error('No collections found');
+        
+        // Find a collection with products
+        const validCollections = collections.filter(c => c.products_count > 0);
+        const targetCollection = validCollections.length > 0 ? validCollections[0] : collections[0];
+        
+        return fetch(`/collections/${targetCollection.handle}/products.json?limit=8`)
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            const products = data.products || [];
+            if (products.length === 0) throw new Error('No products in collection');
+            
+            console.log(`Loaded ${products.length} products from ${targetCollection.handle}`);
+            const productsHTML = products.map(product => createProductCard(product)).join('');
+            allProductsGrid.innerHTML = productsHTML;
+            return products;
+          });
+      });
+  }
+  
+  function tryLoadFromRecentlyViewed() {
+    const recentlyViewed = RecentlyViewed.getProducts();
+    
+    if (recentlyViewed.length === 0) {
+      throw new Error('No recently viewed products');
+    }
+    
+    console.log('Loading recently viewed as fallback');
+    
+    const productPromises = recentlyViewed.slice(0, 8).map(productHandle => 
+      fetch(`/products/${productHandle}.js`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    );
+
+    return Promise.all(productPromises).then(products => {
+      const validProducts = products.filter(p => p !== null);
+      
+      if (validProducts.length === 0) {
+        throw new Error('No valid recently viewed products');
+      }
+      
+      console.log(`Showing ${validProducts.length} recently viewed products`);
+      const productsHTML = validProducts.map(product => createProductCard(product)).join('');
+      allProductsGrid.innerHTML = productsHTML;
+      return validProducts;
+    });
+  }
+  
+  function showFallbackMessage() {
+    console.log('All product loading methods failed, showing fallback');
+    allProductsGrid.innerHTML = `
+      <div class="loading-message">
+        <p>Browse our products</p>
+        <a href="/collections/all" style="color: #000; text-decoration: underline; font-weight: 600;">View All Products →</a>
+      </div>
+    `;
+  }
+
+  function createProductCard(product) {
+    const title = product.title || 'Product';
+    const handle = product.handle || '#';
+    
+    // Handle images properly
+    let imageUrl = '';
+    if (product.featured_image) {
+      imageUrl = product.featured_image;
+    } else if (product.images && product.images.length > 0) {
+      imageUrl = product.images[0];
+    } else if (product.image) {
+      imageUrl = product.image;
+    }
+    
+    // Ensure proper image size for Shopify
+    if (imageUrl && imageUrl.includes('shopifycdn.com')) {
+      // Add size parameter for Shopify images
+      if (!imageUrl.includes('_200x200')) {
+        imageUrl = imageUrl.replace(/\.(jpg|jpeg|png|webp|gif)/i, '_200x200.$1');
+      }
+    }
+    
+    // Handle pricing properly
+    let price = '$0.00';
+    let comparePrice = null;
+    
+    if (product.price) {
+      if (typeof product.price === 'number') {
+        price = `$${(product.price / 100).toFixed(2)}`;
+      } else if (typeof product.price === 'string') {
+        // If it's already formatted, use as is
+        price = product.price.includes('$') ? product.price : '$' + product.price;
+      }
+    } else if (product.price_min) {
+      if (typeof product.price_min === 'number') {
+        price = `$${(product.price_min / 100).toFixed(2)}`;
+      } else {
+        price = '$' + product.price_min;
+      }
+    }
+    
+    // Handle compare at price
+    if (product.compare_at_price && product.compare_at_price > (product.price || product.price_min)) {
+      if (typeof product.compare_at_price === 'number') {
+        comparePrice = '$' + (product.compare_at_price / 100).toFixed(2);
+      } else {
+        comparePrice = product.compare_at_price.includes('$') ? product.compare_at_price : '$' + product.compare_at_price;
+      }
+    } else if (product.compare_at_price_max && product.compare_at_price_max > (product.price || product.price_min)) {
+      if (typeof product.compare_at_price_max === 'number') {
+        comparePrice = '$' + (product.compare_at_price_max / 100).toFixed(2);
+      } else {
+        comparePrice = '$' + product.compare_at_price_max;
+      }
     }
 
-    function createProductCard(product) {
-      // Handle different product data formats
-      const title = product.title || product.name || 'Untitled Product';
-      const handle = product.handle || product.url || '#';
-      
-      // Handle images
-      let imageUrl = '';
-      if (product.images && product.images.length > 0) {
-        imageUrl = product.images[0];
-      } else if (product.featured_image) {
-        imageUrl = product.featured_image;
-      } else if (product.image) {
-        imageUrl = product.image;
-      }
-      
-      // Ensure proper image size
-      if (imageUrl && !imageUrl.includes('_200x200')) {
-        imageUrl = imageUrl.replace(/\.(jpg|jpeg|png|webp)/i, '_200x200.$1');
-      }
-      
-      // Handle pricing
-      let price = '0.00';
-      let comparePrice = null;
-      
-      if (product.price) {
-        price = typeof product.price === 'number' ? 
-          (product.price / 100).toFixed(2) : 
-          parseFloat(product.price).toFixed(2);
-      } else if (product.price_min) {
-        price = typeof product.price_min === 'number' ? 
-          (product.price_min / 100).toFixed(2) : 
-          parseFloat(product.price_min).toFixed(2);
-      }
-      
-      if (product.compare_at_price && product.compare_at_price > (product.price || product.price_min)) {
-        comparePrice = typeof product.compare_at_price === 'number' ? 
-          (product.compare_at_price / 100).toFixed(2) : 
-          parseFloat(product.compare_at_price).toFixed(2);
-      } else if (product.compare_at_price_max && product.compare_at_price_max > (product.price || product.price_min)) {
-        comparePrice = typeof product.compare_at_price_max === 'number' ? 
-          (product.compare_at_price_max / 100).toFixed(2) : 
-          parseFloat(product.compare_at_price_max).toFixed(2);
-      }
-
-      return `
-        <div class="product-card" onclick="goToProduct('${handle}')">
-          ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="product-image" onerror="this.style.display='none'">` : '<div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">No Image</div>'}
-          <div class="product-info">
-            <h4 class="product-title">${title}</h4>
-            <div class="product-price">
-              <span class="current-price">$${price}</span>
-              ${comparePrice ? `<span class="original-price">$${comparePrice}</span>` : ''}
-            </div>
+    return `
+      <div class="product-card" onclick="goToProduct('${handle}')">
+        ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="product-image" loading="lazy" width="200" height="180">` : '<div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px;">No Image</div>'}
+        <div class="product-info">
+          <h4 class="product-title">${title}</h4>
+          <div class="product-price">
+            <span class="current-price">${price}</span>
+            ${comparePrice ? `<span class="original-price">${comparePrice}</span>` : ''}
           </div>
         </div>
-      `;
-    }
+      </div>
+    `;
+  }
 
-    // Global functions
-    window.goToProduct = function(handle) {
-      // Save to recently viewed
-      let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-      recentlyViewed = recentlyViewed.filter(id => id !== handle);
-      recentlyViewed.unshift(handle);
-      recentlyViewed = recentlyViewed.slice(0, 10); // Keep only last 10
-      localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
-      
-      // Navigate to product
+  // Global functions
+  window.goToProduct = function(handle) {
+    if (handle && handle !== '#') {
+      RecentlyViewed.addProduct(handle);
       window.location.href = `/products/${handle}`;
-    };
+    }
+  };
 
-    window.clearRecentlyViewed = function() {
-      localStorage.removeItem('recentlyViewed');
-      recentlyViewedGrid.innerHTML = '<div class="loading-message">No recently viewed products.</div>';
-    };
-  });
+  window.clearRecentlyViewed = function() {
+    RecentlyViewed.clearProducts();
+    recentlyViewedGrid.innerHTML = '<div class="loading-message">No recently viewed products.</div>';
+  };
+});
 </script>
 
 {% schema %}

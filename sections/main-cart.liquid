@@ -75,12 +75,40 @@
   .cart-page-wrapper {
     padding: 60px 0;
     min-height: 60vh;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile: Center content and prevent right shift */
+  @media screen and (max-width: 749px) {
+    .cart-page-wrapper {
+      padding: 40px 0;
+    }
+    
+    .container {
+      padding: 0 15px;
+      max-width: 100%;
+    }
+  }
+  
+  /* Tablet: iPad specific fixes */
+  @media screen and (min-width: 750px) and (max-width: 1024px) {
+    .container {
+      padding: 0 25px;
+      max-width: 100%;
+    }
+    
+    .cart-page {
+      gap: 30px;
+    }
   }
 
   .cart-page {
@@ -110,6 +138,13 @@
 
   .cart-page__summary {
     padding-top: 24px;
+  }
+  
+  /* Tablet: Add right padding to summary */
+  @media screen and (min-width: 750px) and (max-width: 1024px) {
+    .cart-page__summary {
+      padding-right: 120px;
+    }
   }
 
   .cart-page__title + .cart-page__items {

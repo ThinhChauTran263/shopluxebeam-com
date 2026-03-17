@@ -9,7 +9,7 @@
   button[name="checkout"],
   .checkout-button,
   .btn-checkout {
-    background: {{ settings.checkout_btn_bg | default: '#b8865f' }} !important;
+    background: {{ settings.checkout_btn_bg | default: '#000000' }} !important;
     color: {{ settings.checkout_btn_text | default: '#ffffff' }} !important;
   }
   
@@ -17,7 +17,7 @@
   button[name="checkout"]:hover,
   .checkout-button:hover,
   .btn-checkout:hover {
-    background: {{ settings.checkout_btn_bg_hover | default: '#a67550' }} !important;
+    background: {{ settings.checkout_btn_bg_hover | default: '#333333' }} !important;
   }
   
   /* Force show checkout button for testing */

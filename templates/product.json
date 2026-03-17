@@ -1,0 +1,64 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "product_features": {
+      "type": "product-features",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "title": "Turns Hours of Scrubbing into Minutes",
+            "description": "High-torque motor that spins the brush heads up to 350 RPM, breaking down soap scum, mildew, and grime without scrubbing by hand."
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "title": "Reaches Every Corner",
+            "description": "Extendable handle and multiple brush heads let you clean hard-to-reach areas like shower ceilings, grout lines, and tight corners effortlessly."
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "title": "Safe on All Surfaces",
+            "description": "Gentle yet effective bristles work on tile, glass, porcelain, and more without scratching or damaging your bathroom surfaces."
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3"
+      ],
+      "settings": {}
+    },
+    "why_choose_us": {
+      "type": "why-choose-us",
+      "settings": {}
+    },
+    "customer_reviews": {
+      "type": "customer-reviews",
+      "settings": {}
+    },
+    "product_faq": {
+      "type": "product-faq",
+      "settings": {}
+    },
+    "related_products": {
+      "type": "related-products",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "product_features",
+    "why_choose_us",
+    "customer_reviews",
+    "product_faq",
+    "related_products"
+  ]
+}

@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "LuxeBeam",
+    "theme_version": "1.0.0",
+    "theme_author": "Custom",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Checkout Button"
+      },
+      {
+        "type": "color",
+        "id": "checkout_btn_bg",
+        "label": "Checkout button background",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "checkout_btn_bg_hover",
+        "label": "Checkout button hover",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "checkout_btn_text",
+        "label": "Checkout button text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Add to Cart Button"
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_bg",
+        "label": "Add to cart background",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_bg_hover",
+        "label": "Add to cart hover",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_text",
+        "label": "Add to cart text",
+        "default": "#ffffff"
+      }
+    ]
+  }
+]

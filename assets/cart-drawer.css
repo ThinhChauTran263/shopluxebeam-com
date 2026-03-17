@@ -42,7 +42,7 @@
   z-index: 999999 !important;
   display: flex !important;
   flex-direction: column !important;
-  transition: right 0.3s ease !important;
+  transition: right 0s ease !important;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -389,8 +389,8 @@
   max-width: 320px;
   margin: 0 auto;
   padding: 16px;
-  background: #b8865f;
-  color: #fff;
+  background: #000000;
+  color: #ffffff;
   text-align: center;
   text-decoration: none;
   border: none;
@@ -399,20 +399,22 @@
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
+  letter-spacing: 2px;
 }
 
 .cart-checkout-btn:hover {
-  background: #a67550;
+  background: #333333;
 }
 
 @media (max-width: 576px) {
   .cart-drawer {
-    width: 100%;
-    right: -100%;
+    width: 100% !important;
+    right: -100% !important;
   }
   
+  /* Hide overlay on mobile */
   .cart-drawer-overlay {
-    right: 0 !important;
+    display: none !important;
   }
 }
 

@@ -1,0 +1,57 @@
+{% comment %}
+  Theme Settings Section
+  Add this section to your theme to enable color customization
+{% endcomment %}
+
+<style>
+  /* Global Checkout Button Colors */
+  .cart-checkout-btn,
+  button[name="checkout"],
+  .checkout-button,
+  .btn-checkout {
+    background: {{ section.settings.checkout_btn_bg }} !important;
+    color: {{ section.settings.checkout_btn_text }} !important;
+  }
+  
+  .cart-checkout-btn:hover,
+  button[name="checkout"]:hover,
+  .checkout-button:hover,
+  .btn-checkout:hover {
+    background: {{ section.settings.checkout_btn_bg_hover }} !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Theme Colors",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Checkout Button"
+    },
+    {
+      "type": "color",
+      "id": "checkout_btn_bg",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "checkout_btn_bg_hover",
+      "label": "Hover color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "checkout_btn_text",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Theme Colors"
+    }
+  ]
+}
+{% endschema %}
