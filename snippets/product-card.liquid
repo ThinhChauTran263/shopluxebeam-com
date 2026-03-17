@@ -1,10 +1,9 @@
 {% comment %}
-  Product card snippet - Simplified for grid display
-  Handles price display with compare_at_price logic
+  Product card snippet - Enhanced for grid display with proper pricing and add to cart
 {% endcomment %}
 
-<div class="product-card">
-  <div class="product-card__image">
+<div class="product-card-enhanced">
+  <div class="product-card-enhanced__image">
     <a href="{{ product.url | default: '#' }}">
       {% if product.featured_media %}
         <img src="{{ product.featured_media | image_url: width: 400 }}" 
@@ -12,226 +11,281 @@
              width="400" 
              height="400" 
              loading="lazy" 
-             class="product-card__img">
+             class="product-card-enhanced__img">
       {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card-enhanced__placeholder' }}
       {% endif %}
     </a>
     
     {% if product.compare_at_price > product.price %}
-      <div class="product-card__badge">
-        <span class="badge-sale">Sale</span>
+      <div class="product-card-enhanced__badge">
+        <span class="badge-sale-enhanced">SALE</span>
       </div>
     {% endif %}
   </div>
   
-  <div class="product-card__info">
-    <h3 class="product-card__title">
+  <div class="product-card-enhanced__info">
+    <h3 class="product-card-enhanced__title">
       <a href="{{ product.url | default: '#' }}">{{ product.title | default: 'Product title' }}</a>
     </h3>
     
-    <div class="product-card__price">
+    <div class="product-card-enhanced__price">
       {% if product.compare_at_price > product.price %}
-        <span class="price price--sale">{{ product.price | money }}</span>
-        <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+        <span class="price-enhanced price-enhanced--sale">{{ product.price | money }}</span>
+        <span class="price-enhanced price-enhanced--compare">{{ product.compare_at_price | money }}</span>
       {% else %}
-        <span class="price">{{ product.price | default: '$0.00' | money }}</span>
+        <span class="price-enhanced">{{ product.price | default: 0 | money }}</span>
       {% endif %}
     </div>
     
     <!-- Add to Cart Button -->
-    {% if product %}
-      <div class="product-card__actions">
-        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-card__form">
+    {% if product and product.available %}
+      <div class="product-card-enhanced__actions">
+        <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-card-enhanced__form">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          <button type="submit" class="product-card__add-to-cart" 
-                  {% unless product.available %}disabled{% endunless %}>
-            {% if product.available %}
-              Add to cart
-            {% else %}
-              Sold out
-            {% endif %}
+          <button type="submit" class="product-card-enhanced__add-to-cart btn-add-to-cart-enhanced">
+            ADD TO CART
           </button>
         </form>
+      </div>
+    {% elsif product and product.available == false %}
+      <div class="product-card-enhanced__actions">
+        <button type="button" class="product-card-enhanced__add-to-cart btn-add-to-cart-enhanced" disabled>
+          SOLD OUT
+        </button>
       </div>
     {% endif %}
   </div>
 </div>
 
 <style>
-  .product-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 400px;
-    transition: all 0.7s ease;
+  .product-card-enhanced {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 450px !important;
+    background: #fff !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
   }
   
-  .product-card__image {
-    position: relative;
-    overflow: hidden;
-    background: #ffffff;
-    margin-bottom: 8px;
-    width: 100%;
-    height: 250px;
-    flex-shrink: 0;
+  .product-card-enhanced:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
   }
   
-  .product-card__image a {
-    display: block;
-    width: 100%;
-    height: 100%;
+  .product-card-enhanced__image {
+    position: relative !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    height: 280px !important;
+    flex-shrink: 0 !important;
   }
   
-  .product-card__img,
-  .product-card__placeholder {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    display: block;
+  .product-card-enhanced__image a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
   }
   
-  .product-card:hover .product-card__img {
-    transform: scale(1.05);
-    transition: transform 0.7s ease;
+  .product-card-enhanced__img,
+  .product-card-enhanced__placeholder {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    transition: transform 0.3s ease !important;
   }
   
-  .product-card__badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 1;
+  .product-card-enhanced:hover .product-card-enhanced__img {
+    transform: scale(1.05) !important;
   }
   
-  .badge-sale {
-    background: #000000;
-    color: white;
-    padding: 4px 8px;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  .product-card-enhanced__badge {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    z-index: 2 !important;
   }
   
-  .product-card__info {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    justify-content: space-between;
+  .badge-sale-enhanced {
+    background: #000000 !important;
+    color: white !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
   }
   
-  .product-card__title {
-    font-size: 1.3125rem;
-    font-weight: 400;
-    margin: 0;
-    line-height: 1.4;
-    text-align: center;
-    transition: all 0.7s ease;
+  .product-card-enhanced__info {
+    padding: 20px 20px 30px 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    flex: 1 !important;
+    justify-content: space-between !important;
   }
   
-  .product-card__title a {
-    color: #000;
-    text-decoration: none;
-    transition: all 0.7s ease;
+  .product-card-enhanced__title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    color: #000 !important;
+    min-height: 44px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
   
-  .product-card:hover .product-card__title {
-    font-weight: 700;
-    transition: all 0.7s ease;
+  .product-card-enhanced__title a {
+    color: #000 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
   }
   
-  .product-card:hover .product-card__title a {
-    text-decoration: underline;
-    transition: all 0.7s ease;
+  .product-card-enhanced__title a:hover {
+    color: #666 !important;
   }
   
-  .product-card__price {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.3125rem;
-    padding-left: 15px;
+  .product-card-enhanced__price {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin: 8px 0 !important;
   }
   
-  .price {
-    font-weight: 600;
+  .price-enhanced {
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    color: #000 !important;
   }
   
-  .price--sale {
-    color: #000000;
+  .price-enhanced--sale {
+    color: #000000 !important;
   }
   
-  .price--compare {
-    color: #999;
-    text-decoration: line-through;
-    font-weight: 400;
-    font-size: 1.21875rem;
+  .price-enhanced--compare {
+    color: #999 !important;
+    text-decoration: line-through !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
   }
   
   /* Add to Cart Button */
-  .product-card__actions {
-    margin-top: 12px;
+  .product-card-enhanced__actions {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 8px !important;
   }
   
-  .product-card__form {
-    margin: 0;
+  .product-card-enhanced__form {
+    margin: 0 !important;
   }
   
-  .product-card__add-to-cart {
-    width: 100%;
-    padding: 10px 16px;
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  .btn-add-to-cart-enhanced {
+    width: 100% !important;
+    padding: 12px 20px !important;
+    background: #000 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    min-height: 48px !important;
+    margin-bottom: 0 !important;
+    position: relative !important;
+    bottom: 8px !important;
   }
   
-  .product-card__add-to-cart:hover:not(:disabled) {
-    background: #333;
-    transform: translateY(-1px);
+  .btn-add-to-cart-enhanced:hover:not(:disabled) {
+    background: #333 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   }
   
-  .product-card__add-to-cart:disabled {
-    background: #ccc;
-    color: #666;
-    cursor: not-allowed;
+  .btn-add-to-cart-enhanced:active:not(:disabled) {
+    transform: translateY(0) !important;
+  }
+  
+  .btn-add-to-cart-enhanced:disabled {
+    background: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Loading state */
+  .btn-add-to-cart-enhanced.loading {
+    background: #007bff !important;
+    pointer-events: none !important;
+  }
+  
+  .btn-add-to-cart-enhanced.success {
+    background: #28a745 !important;
+  }
+  
+  .btn-add-to-cart-enhanced.error {
+    background: #dc3545 !important;
+  }
+  
+  @media (max-width: 989px) {
+    .product-card-enhanced {
+      height: 420px !important;
+    }
+    
+    .product-card-enhanced__image {
+      height: 250px !important;
+    }
+    
+    .product-card-enhanced__info {
+      padding: 16px !important;
+    }
   }
   
   @media (max-width: 749px) {
-    .product-card {
-      height: 380px;
+    .product-card-enhanced {
+      height: 380px !important;
     }
     
-    .product-card__image {
-      height: 220px;
+    .product-card-enhanced__image {
+      height: 220px !important;
     }
     
-    .product-card__title {
-      font-size: 1.21875rem;
+    .product-card-enhanced__info {
+      padding: 12px !important;
+      gap: 8px !important;
     }
     
-    .product-card__price {
-      font-size: 1.21875rem;
-      padding-left: 10px;
+    .product-card-enhanced__title {
+      font-size: 14px !important;
+      min-height: 36px !important;
     }
     
-    .price--compare {
-      font-size: 1.125rem;
+    .price-enhanced {
+      font-size: 16px !important;
     }
     
-    .product-card__add-to-cart {
-      padding: 8px 12px;
-      font-size: 0.8125rem;
+    .price-enhanced--compare {
+      font-size: 14px !important;
+    }
+    
+    .btn-add-to-cart-enhanced {
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+      min-height: 44px !important;
     }
   }
 </style>
@@ -242,7 +296,7 @@
     const CART_ADD_URL = '{{ routes.cart_add_url }}.js';
     
     function initAddToCart() {
-      const addToCartForms = document.querySelectorAll('.product-card__form');
+      const addToCartForms = document.querySelectorAll('.product-card-enhanced__form');
       
       addToCartForms.forEach(form => {
         // Remove existing listener if any
@@ -252,7 +306,7 @@
         newForm.addEventListener('submit', function(e) {
           e.preventDefault();
           
-          const button = this.querySelector('.product-card__add-to-cart');
+          const button = this.querySelector('.product-card-enhanced__add-to-cart');
           const originalText = button.textContent.trim();
           
           // Show loading state

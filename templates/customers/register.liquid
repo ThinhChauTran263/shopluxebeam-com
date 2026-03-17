@@ -1,0 +1,214 @@
+{% comment %}
+  Customer Register Template
+{% endcomment %}
+
+<div class="customer-register-page">
+  <div class="container">
+    <div class="register-wrapper">
+      <div class="register-form-container">
+        <h1 class="register-title">Create Account</h1>
+        
+        {% form 'create_customer', class: 'register-form' %}
+          {% if form.errors %}
+            <div class="form-errors">
+              <ul>
+                {% for error in form.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input 
+              type="text" 
+              name="customer[first_name]" 
+              id="first_name" 
+              value="{{ form.first_name }}"
+              required
+              autocomplete="given-name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input 
+              type="text" 
+              name="customer[last_name]" 
+              id="last_name" 
+              value="{{ form.last_name }}"
+              required
+              autocomplete="family-name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="customer_email">Email</label>
+            <input 
+              type="email" 
+              name="customer[email]" 
+              id="customer_email" 
+              value="{{ form.email }}"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="customer_password">Password</label>
+            <input 
+              type="password" 
+              name="customer[password]" 
+              id="customer_password"
+              required
+              autocomplete="new-password"
+            >
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-register">Create Account</button>
+          </div>
+        {% endform %}
+
+        <div class="login-link">
+          <p>Already have an account? <a href="{{ routes.account_login_url }}">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.customer-register-page {
+  padding: 60px 0;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-form-container {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.form-errors {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.form-errors li {
+  color: #c33;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #000000;
+}
+
+.form-actions {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.btn-register {
+  width: 100%;
+  padding: 15px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-register:hover {
+  background: #333333;
+}
+
+.login-link {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.login-link p {
+  margin: 0;
+  color: #666;
+}
+
+.login-link a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .customer-register-page {
+    padding: 40px 0;
+  }
+  
+  .register-form-container {
+    padding: 30px 20px;
+    margin: 0 20px;
+  }
+  
+  .register-title {
+    font-size: 24px;
+  }
+}
+</style>
