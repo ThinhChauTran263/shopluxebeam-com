@@ -56,6 +56,13 @@
   padding: 1rem;
 }
 
+/* Mobile responsive padding - 24px on mobile */
+@media (max-width: 749px) {
+  .product-card__info {
+    padding: 24px;
+  }
+}
+
 .product-card__title {
   font-size: 1rem;
   font-weight: 600;
