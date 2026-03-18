@@ -1,0 +1,144 @@
+/**
+ * Collection Responsive Styles
+ * Mobile-first responsive design for collection pages
+ */
+
+/* Base Mobile Styles (320px+) */
+.collection-mobile-optimized {
+  /* Ensure proper spacing on small screens */
+}
+
+/* Small Mobile (360px+) */
+@media (min-width: 360px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large Mobile (480px+) */
+@media (min-width: 480px) {
+  .collection-toolbar__right {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .collection-toolbar__count {
+    text-align: left;
+  }
+  
+  .sort-dropdown__button {
+    width: auto;
+    justify-content: flex-start;
+  }
+}
+
+/* Tablet Portrait (768px+) */
+@media (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  
+  .collection-toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .collection-toolbar__left,
+  .collection-toolbar__right {
+    width: auto;
+  }
+  
+  .collection-filters {
+    order: 0;
+    width: auto;
+  }
+}
+
+/* Desktop (990px+) */
+@media (min-width: 990px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+}
+
+/* High Resolution Displays */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
+
+/* Ultra Wide Displays */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+/* Landscape Mobile Orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  .filter-group__dropdown,
+  .sort-dropdown__menu {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sort-dropdown__icon,
+  .filter-group__icon {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .sort-dropdown__icon,
+  .filter-group__icon {
+    transition: none;
+  }
+  
+  .sort-option,
+  .filter-option {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .filter-group__dropdown,
+  .sort-dropdown__menu {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #fff;
+  }
+  
+  .sort-option:hover,
+  .filter-option:hover {
+    background: #2a2a2a;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .collection-toolbar,
+  .collection-pagination {
+    display: none;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .product-grid-item .product-card {
+    height: auto;
+    break-inside: avoid;
+  }
+}

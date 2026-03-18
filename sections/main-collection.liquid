@@ -1,6 +1,6 @@
 {% comment %}
   Main Collection Section
-  Displays products with filtering and sorting
+  Displays products with filtering and sorting - Fixed 4 column layout
 {% endcomment %}
 
 {% comment %} Paginate disabled - show all products {% endcomment %}
@@ -22,11 +22,15 @@
                 </summary>
                 <div class="filter-group__dropdown">
                   <div class="filter-option">
-                    <input type="checkbox" id="filter-in-stock" name="availability" value="in-stock">
+                    <input type="radio" id="filter-all-availability" name="availability" value="" {% unless request.query.availability %}checked{% endunless %}>
+                    <label for="filter-all-availability">All products</label>
+                  </div>
+                  <div class="filter-option">
+                    <input type="radio" id="filter-in-stock" name="availability" value="in-stock" {% if request.query.availability == 'in-stock' %}checked{% endif %}>
                     <label for="filter-in-stock">In stock</label>
                   </div>
                   <div class="filter-option">
-                    <input type="checkbox" id="filter-out-of-stock" name="availability" value="out-of-stock">
+                    <input type="radio" id="filter-out-of-stock" name="availability" value="out-of-stock" {% if request.query.availability == 'out-of-stock' %}checked{% endif %}>
                     <label for="filter-out-of-stock">Out of stock</label>
                   </div>
                 </div>
@@ -145,54 +149,105 @@
               </details>
             </div>
           {% endif %}
-          
-          <!-- Grid Density Toggle -->
-          <div class="collection-view-toggle">
-            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="4" aria-label="4 columns">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <rect x="2" y="2" width="7" height="7"></rect>
-                <rect x="11" y="2" width="7" height="7"></rect>
-                <rect x="11" y="11" width="7" height="7"></rect>
-                <rect x="2" y="11" width="7" height="7"></rect>
-              </svg>
-            </button>
-            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="6" aria-label="6 columns">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <rect x="1" y="1" width="3" height="3"></rect>
-                <rect x="5" y="1" width="3" height="3"></rect>
-                <rect x="9" y="1" width="3" height="3"></rect>
-                <rect x="13" y="1" width="3" height="3"></rect>
-                <rect x="17" y="1" width="2" height="3"></rect>
-                <rect x="1" y="5" width="3" height="3"></rect>
-                <rect x="5" y="5" width="3" height="3"></rect>
-                <rect x="9" y="5" width="3" height="3"></rect>
-                <rect x="13" y="5" width="3" height="3"></rect>
-                <rect x="17" y="5" width="2" height="3"></rect>
-                <rect x="1" y="9" width="3" height="3"></rect>
-                <rect x="5" y="9" width="3" height="3"></rect>
-                <rect x="9" y="9" width="3" height="3"></rect>
-                <rect x="13" y="9" width="3" height="3"></rect>
-                <rect x="17" y="9" width="2" height="3"></rect>
-                <rect x="1" y="13" width="3" height="3"></rect>
-                <rect x="5" y="13" width="3" height="3"></rect>
-                <rect x="9" y="13" width="3" height="3"></rect>
-                <rect x="13" y="13" width="3" height="3"></rect>
-                <rect x="17" y="13" width="2" height="3"></rect>
-                <rect x="1" y="17" width="3" height="2"></rect>
-                <rect x="5" y="17" width="3" height="2"></rect>
-                <rect x="9" y="17" width="3" height="2"></rect>
-                <rect x="13" y="17" width="3" height="2"></rect>
-                <rect x="17" y="17" width="2" height="2"></rect>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
       
       <!-- Products Grid -->
       <div class="collection-products">
-        <div class="products-grid" data-columns="4">
-          {% for product in collection.products %}
+        <div class="products-grid">
+          {% assign filtered_products = collection.products %}
+          
+          {% comment %} Debug info {% endcomment %}
+          {% comment %}
+          <div style="background: #f0f0f0; padding: 10px; margin-bottom: 20px; font-size: 12px;">
+            <strong>Debug Info:</strong><br>
+            Total products: {{ collection.products.size }}<br>
+            Sort by: {{ collection.sort_by | default: 'manual' }}<br>
+            Availability filter: {{ request.query.availability }}<br>
+            Price filter: {{ request.query.price }}<br>
+          </div>
+          {% endcomment %}
+          
+          {% comment %} Apply availability filter - Fixed logic {% endcomment %}
+          {% if request.query.availability %}
+            {% assign availability_filter = request.query.availability %}
+            {% assign temp_products = blank %}
+            {% assign temp_array = '' | split: ',' %}
+            
+            {% for product in filtered_products %}
+              {% assign should_include = false %}
+              
+              {% if availability_filter == 'in-stock' and product.available == true %}
+                {% assign should_include = true %}
+              {% elsif availability_filter == 'out-of-stock' and product.available == false %}
+                {% assign should_include = true %}
+              {% endif %}
+              
+              {% if should_include %}
+                {% assign temp_array = temp_array | concat: product %}
+              {% endif %}
+            {% endfor %}
+            
+            {% assign filtered_products = temp_array %}
+          {% endif %}
+          
+          {% comment %} Apply price filter - Fixed logic {% endcomment %}
+          {% if request.query.price %}
+            {% assign price_filter = request.query.price %}
+            {% assign temp_array = '' | split: ',' %}
+            
+            {% for product in filtered_products %}
+              {% assign product_price = product.price | divided_by: 100.0 %}
+              {% assign should_include = false %}
+              
+              {% case price_filter %}
+                {% when '0-25' %}
+                  {% if product_price < 25 %}
+                    {% assign should_include = true %}
+                  {% endif %}
+                {% when '25-50' %}
+                  {% if product_price >= 25 and product_price < 50 %}
+                    {% assign should_include = true %}
+                  {% endif %}
+                {% when '50-100' %}
+                  {% if product_price >= 50 and product_price < 100 %}
+                    {% assign should_include = true %}
+                  {% endif %}
+                {% when '100+' %}
+                  {% if product_price >= 100 %}
+                    {% assign should_include = true %}
+                  {% endif %}
+              {% endcase %}
+              
+              {% if should_include %}
+                {% assign temp_array = temp_array | concat: product %}
+              {% endif %}
+            {% endfor %}
+            
+            {% assign filtered_products = temp_array %}
+          {% endif %}
+          
+          {% comment %} Sort products - Fixed logic {% endcomment %}
+          {% assign sorted_products = filtered_products %}
+          
+          {% if collection.sort_by == 'price-ascending' %}
+            {% assign sorted_products = filtered_products | sort: 'price' %}
+          {% elsif collection.sort_by == 'price-descending' %}
+            {% assign sorted_products = filtered_products | sort: 'price' | reverse %}
+          {% elsif collection.sort_by == 'title-ascending' %}
+            {% assign sorted_products = filtered_products | sort: 'title' %}
+          {% elsif collection.sort_by == 'title-descending' %}
+            {% assign sorted_products = filtered_products | sort: 'title' | reverse %}
+          {% elsif collection.sort_by == 'created-ascending' %}
+            {% assign sorted_products = filtered_products | sort: 'created_at' %}
+          {% elsif collection.sort_by == 'created-descending' %}
+            {% assign sorted_products = filtered_products | sort: 'created_at' | reverse %}
+          {% elsif collection.sort_by == 'best-selling' %}
+            {% comment %} Use published_at as proxy for best selling {% endcomment %}
+            {% assign sorted_products = filtered_products | sort: 'published_at' | reverse %}
+          {% endif %}
+          
+          {% for product in sorted_products %}
             <div class="product-grid-item">
               {% render 'product-card', product: product %}
             </div>
@@ -202,35 +257,6 @@
             </div>
           {% endfor %}
         </div>
-        
-        <!-- Pagination - Hidden to show all products -->
-        {% comment %}
-        {% if paginate.pages > 1 %}
-          <div class="collection-pagination">
-            {% if paginate.previous %}
-              <a href="{{ paginate.previous.url }}" class="pagination-link pagination-link--prev">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-                Previous
-              </a>
-            {% endif %}
-            
-            <span class="pagination-info">
-              Page {{ paginate.current_page }} of {{ paginate.pages }}
-            </span>
-            
-            {% if paginate.next %}
-              <a href="{{ paginate.next.url }}" class="pagination-link pagination-link--next">
-                Next
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-        {% endcomment %}
       </div>
     </div>
   </div>
@@ -359,44 +385,6 @@
     opacity: 0;
   }
   
-  /* View Toggle */
-  .collection-view-toggle {
-    display: flex;
-    gap: 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .view-toggle {
-    padding: 6px 10px;
-    border: none;
-    border-right: 1px solid #e0e0e0;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .view-toggle:last-child {
-    border-right: none;
-  }
-  
-  .view-toggle:hover {
-    background: #f5f5f5;
-  }
-  
-  .view-toggle.active {
-    background: #000;
-    color: white;
-  }
-  
-  .view-toggle svg {
-    display: block;
-  }
-  
   /* Filters */
   .collection-filters {
     display: flex;
@@ -475,39 +463,23 @@
     margin: 0;
   }
   
-  /* Products Grid */
+  /* Products Grid - Fixed 4 columns */
   .collection-products {
     margin-top: 24px;
   }
   
   .products-grid {
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
   }
   
-  .products-grid[data-columns="4"] {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .products-grid[data-columns="6"] {
-    grid-template-columns: repeat(6, 1fr);
-  }
-  
-  /* Adjust product card heights based on grid density */
-  .products-grid[data-columns="4"] .product-card {
+  .product-grid-item .product-card {
     height: 450px;
   }
   
-  .products-grid[data-columns="4"] .product-card__image {
+  .product-grid-item .product-card__image {
     height: 280px;
-  }
-  
-  .products-grid[data-columns="6"] .product-card {
-    height: 380px;
-  }
-  
-  .products-grid[data-columns="6"] .product-card__image {
-    height: 220px;
   }
   
   /* Pagination */
@@ -550,72 +522,237 @@
     padding: 60px 20px;
   }
   
-  /* Responsive */
+  /* Touch and Mobile Enhancements */
+  @media (hover: none) and (pointer: coarse) {
+    .sort-dropdown__button,
+    .filter-group__header {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .sort-option,
+    .filter-option label {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .filter-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"] {
+      font-size: 16px;
+    }
+  }
   @media (max-width: 989px) {
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="6"] {
+    .products-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
     }
     
-    .products-grid[data-columns="4"] .product-card,
-    .products-grid[data-columns="6"] .product-card {
-      height: 420px;
+    .product-grid-item .product-card {
+      height: 400px;
     }
     
-    .products-grid[data-columns="4"] .product-card__image,
-    .products-grid[data-columns="6"] .product-card__image {
-      height: 250px;
+    .product-grid-item .product-card__image {
+      height: 240px;
+    }
+    
+    .collection-toolbar__right {
+      gap: 12px;
+    }
+    
+    .sort-dropdown__menu {
+      min-width: 180px;
     }
   }
   
   @media (max-width: 749px) {
     .collection-toolbar {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
+      align-items: stretch;
+      gap: 16px;
+      padding: 12px 0;
     }
     
-    .collection-toolbar__left,
+    .collection-toolbar__left {
+      width: 100%;
+      justify-content: flex-start;
+      order: 2;
+    }
+    
     .collection-toolbar__right {
       width: 100%;
       justify-content: space-between;
+      order: 1;
     }
     
     .collection-filters {
-      order: 2;
       width: 100%;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     
     .filter-group__dropdown {
       left: 0;
       right: 0;
-      width: 100%;
+      width: calc(100vw - 32px);
+      max-width: 300px;
     }
     
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="6"] {
+    .sort-dropdown__menu {
+      right: 0;
+      left: auto;
+      min-width: 200px;
+    }
+    
+    .products-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
     
-    .products-grid[data-columns="4"] .product-card,
-    .products-grid[data-columns="6"] .product-card {
-      height: 380px;
+    .product-grid-item .product-card {
+      height: 350px;
     }
     
-    .products-grid[data-columns="4"] .product-card__image,
-    .products-grid[data-columns="6"] .product-card__image {
-      height: 220px;
+    .product-grid-item .product-card__image {
+      height: 200px;
     }
     
     .collection-pagination {
       flex-direction: column;
       gap: 12px;
     }
+    
+    .pagination-link {
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .main-collection {
+      padding: 0 0 32px;
+    }
+    
+    .collection-toolbar {
+      padding: 8px 0;
+      gap: 12px;
+    }
+    
+    .collection-toolbar__count {
+      font-size: 14px;
+    }
+    
+    .sort-dropdown__button {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    
+    .filter-group__header {
+      font-size: 14px;
+      padding: 6px 8px 6px 0;
+    }
+    
+    .filter-group__dropdown {
+      width: calc(100vw - 24px);
+      left: -12px;
+      padding: 8px;
+    }
+    
+    .filter-option {
+      gap: 6px;
+    }
+    
+    .filter-option label {
+      font-size: 14px;
+    }
+    
+    .sort-dropdown__menu {
+      width: calc(100vw - 24px);
+      right: -12px;
+      left: auto;
+    }
+    
+    .sort-option {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    .products-grid {
+      gap: 8px;
+    }
+    
+    .product-grid-item .product-card {
+      height: 320px;
+    }
+    
+    .product-grid-item .product-card__image {
+      height: 180px;
+    }
+    
+    .collection-empty {
+      padding: 40px 16px;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .product-grid-item .product-card {
+      height: 400px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    
+    .product-grid-item .product-card__image {
+      height: 240px;
+    }
+    
+    .collection-toolbar__right {
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+    
+    .collection-toolbar__count {
+      text-align: center;
+      padding: 4px 0;
+    }
+    
+    .sort-dropdown__button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 </style>
 
 <script>
-  // Collection sorting and grid density
+  // Collection sorting and filtering
   document.addEventListener('DOMContentLoaded', function() {
     // Sort functionality
     const sortOptions = document.querySelectorAll('.sort-option');
@@ -630,23 +767,52 @@
       });
     });
     
-    // Grid density toggle
-    const viewToggles = document.querySelectorAll('.view-toggle');
-    const productsGrid = document.querySelector('.products-grid');
+    // Filter functionality
+    const filterCheckboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
     
-    viewToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
-        const columns = this.getAttribute('data-columns');
+    filterCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const filterType = this.name;
+        const filterValue = this.value;
+        const url = new URL(window.location);
         
-        // Update active state
-        viewToggles.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
+        if (this.checked) {
+          url.searchParams.set(filterType, filterValue);
+        } else {
+          url.searchParams.delete(filterType);
+        }
         
-        // Update grid columns
-        if (productsGrid) {
-          productsGrid.setAttribute('data-columns', columns);
+        window.location.href = url.toString();
+      });
+    });
+    
+    // Set initial filter states based on URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    filterCheckboxes.forEach(checkbox => {
+      const filterType = checkbox.name;
+      const filterValue = checkbox.value;
+      const currentFilter = urlParams.get(filterType);
+      
+      if (currentFilter === filterValue) {
+        checkbox.checked = true;
+      }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+      const filterGroups = document.querySelectorAll('.filter-group[open]');
+      const sortDropdown = document.querySelector('.sort-dropdown[open]');
+      
+      filterGroups.forEach(group => {
+        if (!group.contains(event.target)) {
+          group.removeAttribute('open');
         }
       });
+      
+      if (sortDropdown && !sortDropdown.contains(event.target)) {
+        sortDropdown.removeAttribute('open');
+      }
     });
   });
 </script>
@@ -690,6 +856,13 @@
       "id": "show_product_count",
       "label": "Show product count",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_grid_density",
+      "label": "Enable grid density toggle",
+      "default": false,
+      "info": "Show buttons to change grid layout (disabled for fixed 4-column layout)"
     }
   ]
 }

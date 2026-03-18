@@ -4,8 +4,12 @@
   <!-- Basic and Helper page needs -->
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="var(--font-color-primary)">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
   
@@ -50,6 +54,7 @@
   {{ 'style.css' | asset_url | stylesheet_tag }}
   {{ 'base.css' | asset_url | stylesheet_tag }}
   {{ 'shopify_v2.css' | asset_url | stylesheet_tag }}
+  {{ 'collection-responsive.css' | asset_url | stylesheet_tag }}
 
   <style data-shopify>
     /*=====================================
@@ -158,6 +163,7 @@
   <script type="text/javascript" src="{{ 'plugins.js' | asset_url }}" defer></script>
   <script type="text/javascript" src="{{ 'main.js' | asset_url }}" defer></script>
   <script type="text/javascript" src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script type="text/javascript" src="{{ 'collection-sorting.js' | asset_url }}" defer></script>
   
   {% comment %} Load localization script only if needed {% endcomment %}
   {% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
