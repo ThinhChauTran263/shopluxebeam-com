@@ -40,8 +40,7 @@
       font-weight: 400;
       font-style: normal;
       font-display: swap;
-      src: url("{{ 'francoisone_n4.woff2' | asset_url }}") format("woff2"),
-           url("{{ 'francoisone_n4.woff' | asset_url }}") format("woff");
+      src: url('https://fonts.gstatic.com/s/francoisone/v18/nuFlD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKeiunDYbtXK-F2qO0isEw.woff2') format('woff2');
     }
   </style>
 
@@ -155,11 +154,15 @@
   {% section 'theme-settings' %}
 
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  <script type="text/javascript" src="{{ 'error-handler.js' | asset_url }}"></script>
   <script type="text/javascript" src="{{ 'plugins.js' | asset_url }}" defer></script>
   <script type="text/javascript" src="{{ 'main.js' | asset_url }}" defer></script>
   <script type="text/javascript" src="{{ 'theme.js' | asset_url }}" defer></script>
   
-  <script src="{{ 'localization-form.js' | asset_url }}" defer></script>
+  {% comment %} Load localization script only if needed {% endcomment %}
+  {% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
+    <script src="{{ 'localization-form.js' | asset_url }}" defer></script>
+  {% endif %}
 </head>
 
 <body id="{{ page_title | handle }}" class="template-{{ template.name }}">
@@ -176,6 +179,28 @@
   {% render 'cart-drawer-simple' %}
 
   <script>
+    // Error handling for localStorage
+    window.theme = window.theme || {};
+    
+    // Safe localStorage access
+    window.theme.localStorage = {
+      getItem: function(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (e) {
+          console.warn('localStorage access denied:', e);
+          return null;
+        }
+      },
+      setItem: function(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {
+          console.warn('localStorage write denied:', e);
+        }
+      }
+    };
+
     window.shopUrl = '{{ request.origin }}';
     window.routes = {
       cart_add_url: '{{ routes.cart_add_url }}',
