@@ -94,6 +94,17 @@
         </div>
         
         <div class="search-popup-body">
+          <!-- Recent Searches Section -->
+          <div class="search-section recent-searches-section">
+            <div class="section-header">
+              <h3>Recent searches</h3>
+              <button class="clear-btn" onclick="clearRecentSearches()">Clear</button>
+            </div>
+            <div class="recent-searches-list" id="recentSearchesList">
+              <!-- Recent searches will be populated here -->
+            </div>
+          </div>
+
           <!-- Recently Viewed Section -->
           <div class="search-section recently-viewed-section">
             <div class="section-header">
@@ -109,6 +120,52 @@
           <div class="search-section products-section">
             <div class="section-header">
               <h3>Products</h3>
+              <div class="search-controls" style="display: none;">
+                <!-- Desktop: Native select -->
+                <select id="sortSelect" class="sort-select">
+                  <option value="relevance">Most Relevant</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="title-asc">Name: A to Z</option>
+                  <option value="title-desc">Name: Z to A</option>
+                </select>
+                <select id="filterSelect" class="filter-select">
+                  <option value="all">All Products</option>
+                  <option value="sale">On Sale</option>
+                  <option value="instock">In Stock</option>
+                </select>
+
+                <!-- Mobile: Custom dropdown -->
+                <div class="custom-select-wrapper mobile-only">
+                  <button type="button" class="custom-select-button" id="sortButton">
+                    <span class="custom-select-value">Most Relevant</span>
+                    <svg class="custom-select-arrow" width="12" height="12" viewBox="0 0 12 12">
+                      <path fill="currentColor" d="M6 9L1 4h10z"/>
+                    </svg>
+                  </button>
+                  <div class="custom-select-dropdown" id="sortDropdown">
+                    <div class="custom-select-option" data-value="relevance">Most Relevant</div>
+                    <div class="custom-select-option" data-value="price-asc">Price: Low to High</div>
+                    <div class="custom-select-option" data-value="price-desc">Price: High to Low</div>
+                    <div class="custom-select-option" data-value="title-asc">Name: A to Z</div>
+                    <div class="custom-select-option" data-value="title-desc">Name: Z to A</div>
+                  </div>
+                </div>
+
+                <div class="custom-select-wrapper mobile-only">
+                  <button type="button" class="custom-select-button" id="filterButton">
+                    <span class="custom-select-value">All Products</span>
+                    <svg class="custom-select-arrow" width="12" height="12" viewBox="0 0 12 12">
+                      <path fill="currentColor" d="M6 9L1 4h10z"/>
+                    </svg>
+                  </button>
+                  <div class="custom-select-dropdown" id="filterDropdown">
+                    <div class="custom-select-option" data-value="all">All Products</div>
+                    <div class="custom-select-option" data-value="sale">On Sale</div>
+                    <div class="custom-select-option" data-value="instock">In Stock</div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="products-grid all-products-grid" id="allProductsGrid">
               <!-- Products will be populated here -->
@@ -159,7 +216,7 @@ html, body {
   z-index: 100;
   width: 100%;
   box-sizing: border-box;
-  margin: 0;
+  margin: -20px 0 0 0;
   left: 0;
   right: 0;
 }
@@ -390,6 +447,10 @@ html, body {
   transition: all 0.3s ease;
 }
 
+.search-popup-luxe * {
+  box-sizing: border-box;
+}
+
 .search-popup-luxe.active {
   opacity: 1;
   visibility: visible;
@@ -405,6 +466,8 @@ html, body {
   overflow: hidden;
   transform: translateY(-20px);
   transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .search-popup-luxe.active .search-popup-content {
@@ -419,6 +482,10 @@ html, body {
   gap: 20px;
 }
 
+.search-popup-header * {
+  font-size: 16px !important;
+}
+
 .search-input-container {
   flex: 1;
   position: relative;
@@ -431,6 +498,8 @@ html, body {
   left: 15px;
   color: #666;
   z-index: 1;
+  width: 20px;
+  height: 20px;
 }
 
 .search-input-popup {
@@ -438,7 +507,7 @@ html, body {
   padding: 15px 15px 15px 50px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 16px !important;
   outline: none;
 }
 
@@ -463,6 +532,13 @@ html, body {
   padding: 20px 30px;
   max-height: 70vh;
   overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.search-popup-body * {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
 }
 
 .search-section {
@@ -481,7 +557,7 @@ html, body {
 }
 
 .section-header h3 {
-  font-size: 18px;
+  font-size: 18px !important;
   font-weight: 600;
   color: #666;
   margin: 0;
@@ -492,7 +568,7 @@ html, body {
   border: none;
   color: #666;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 14px !important;
   text-decoration: underline;
 }
 
@@ -515,6 +591,12 @@ html, body {
   cursor: pointer;
   height: auto;
   max-height: 250px;
+  font-size: 14px !important;
+}
+
+.product-card * {
+  font-size: inherit !important;
+  line-height: normal !important;
 }
 
 .product-card:hover {
@@ -526,6 +608,7 @@ html, body {
   height: 180px;
   object-fit: cover;
   background: #f8f8f8;
+  display: block;
 }
 
 .product-info {
@@ -533,11 +616,11 @@ html, body {
 }
 
 .product-title {
-  font-size: 13px;
+  font-size: 13px !important;
   font-weight: 600;
   color: #000;
   margin: 0 0 4px 0;
-  line-height: 1.2;
+  line-height: 1.2 !important;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -551,6 +634,7 @@ html, body {
   padding: 2px 4px;
   border-radius: 3px;
   font-weight: 700;
+  font-size: inherit !important;
 }
 
 .product-price {
@@ -560,13 +644,13 @@ html, body {
 }
 
 .current-price {
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 700;
   color: #000;
 }
 
 .original-price {
-  font-size: 12px;
+  font-size: 12px !important;
   color: #999;
   text-decoration: line-through;
 }
@@ -575,6 +659,181 @@ html, body {
   text-align: center;
   padding: 40px;
   color: #666;
+}
+
+/* Recent Searches */
+.recent-searches-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recent-search-item {
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 13px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recent-search-item:hover {
+  background: #e0e0e0;
+}
+
+.recent-search-item .remove-icon {
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.recent-search-item .remove-icon:hover {
+  color: #000;
+}
+
+/* Search Controls */
+.search-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Desktop: Show native select, hide custom */
+.sort-select,
+.filter-select {
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  z-index: 10;
+}
+
+.sort-select:focus,
+.filter-select:focus {
+  border-color: #000;
+  z-index: 20;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Custom Select Styles (for mobile) */
+.custom-select-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.custom-select-button {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  transition: border-color 0.2s;
+}
+
+.custom-select-button:hover {
+  border-color: #999;
+}
+
+.custom-select-button.active {
+  border-color: #000;
+}
+
+.custom-select-value {
+  flex: 1;
+  color: #333;
+}
+
+.custom-select-arrow {
+  transition: transform 0.2s;
+  color: #666;
+}
+
+.custom-select-button.active .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.custom-select-dropdown.active {
+  max-height: 300px;
+  opacity: 1;
+  overflow-y: auto;
+}
+
+.custom-select-option {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.custom-select-option:hover {
+  background: #f5f5f5;
+}
+
+.custom-select-option.selected {
+  background: #e8f4ff;
+  color: #0066cc;
+  font-weight: 600;
+}
+
+/* No Results Suggestions */
+.no-results-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.no-results-container h4 {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.popular-products {
+  margin-top: 20px;
+}
+
+.popular-products h5 {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 /* Additional styles for multi-resource search results */
@@ -756,7 +1015,7 @@ html, body {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1024px) {
   .header-wrapper-luxe {
     padding: 0 10px;
     gap: 8px;
@@ -785,11 +1044,16 @@ html, body {
     margin: 0;
     border-radius: 0;
     max-width: 100%;
+    overflow-y: auto;
   }
   
   .search-popup-header {
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
   }
   
   .search-input-popup {
@@ -799,7 +1063,63 @@ html, body {
   
   .search-popup-body {
     padding: 12px;
-    max-height: calc(100vh - 50px);
+    max-height: none;
+    overflow-y: visible;
+  }
+  
+  /* Mobile: Optimize section header and controls layout */
+  .section-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .section-header h3 {
+    font-size: 15px !important;
+    flex: 0 0 auto;
+  }
+  
+  /* Mobile: Hide native select, show custom dropdown */
+  .sort-select,
+  .filter-select {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: block !important;
+  }
+  
+  /* Mobile: Keep sort and filter on same row, 50% each */
+  .search-controls {
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+    order: 3;
+    flex-basis: 100%;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  
+  .custom-select-wrapper {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  
+  .custom-select-button {
+    width: 100% !important;
+    padding: 10px 28px 10px 10px !important;
+    font-size: 13px !important;
+  }
+  
+  .custom-select-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .custom-select-arrow {
+    flex-shrink: 0;
   }
   
   .products-grid {
@@ -913,6 +1233,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Recent searches functionality
+  class RecentSearches {
+    static STORAGE_KEY = 'recentSearches';
+    static MAX_SEARCHES = 8;
+    
+    static addSearch(query) {
+      if (!query || query.trim().length === 0) return;
+      
+      let searches = this.getSearches();
+      searches = searches.filter(s => s.toLowerCase() !== query.toLowerCase());
+      searches.unshift(query.trim());
+      searches = searches.slice(0, this.MAX_SEARCHES);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(searches));
+    }
+    
+    static getSearches() {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+    }
+    
+    static removeSearch(query) {
+      let searches = this.getSearches();
+      searches = searches.filter(s => s !== query);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(searches));
+    }
+    
+    static clearSearches() {
+      localStorage.removeItem(this.STORAGE_KEY);
+    }
+  }
+
   // Search toggle - Open popup for both desktop and mobile
   if (searchToggle) {
     searchToggle.addEventListener('click', function() {
@@ -921,6 +1271,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.style.overflow = 'hidden';
       setTimeout(() => searchInput.focus(), 300);
       
+      loadRecentSearches();
       loadRecentlyViewed();
       loadAllProducts();
       
@@ -955,8 +1306,10 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.value = '';
     
     // Reset sections visibility
+    document.querySelector('.recent-searches-section').style.display = 'block';
     document.querySelector('.recently-viewed-section').style.display = 'block';
     document.querySelector('.products-section .section-header h3').textContent = 'Products';
+    document.querySelector('.search-controls').style.display = 'none';
     
     // Restore original products
     loadAllProducts();
@@ -973,20 +1326,38 @@ document.addEventListener('DOMContentLoaded', function() {
       const query = this.value.trim();
       
       if (query.length > 0) {
-        // Hide recently viewed section when searching
+        // Hide other sections when searching
+        document.querySelector('.recent-searches-section').style.display = 'none';
         document.querySelector('.recently-viewed-section').style.display = 'none';
-        // Show only products section
-        document.querySelector('.products-section .section-header h3').textContent = 'Search Results';
+        
+        // Use "Results" on mobile, "Search Results" on desktop
+        const isMobile = window.innerWidth <= 480;
+        const headerText = isMobile ? 'Results' : 'Search Results';
+        document.querySelector('.products-section .section-header h3').textContent = headerText;
+        document.querySelector('.search-controls').style.display = 'flex';
         
         isSearching = true;
-        searchTimeout = setTimeout(() => performSearch(query), 300);
+        searchTimeout = setTimeout(() => {
+          performSearch(query);
+          // Save to recent searches after search
+          RecentSearches.addSearch(query);
+          // Update recent searches list immediately
+          loadRecentSearches();
+        }, 300);
       } else {
         // Cancel any pending search
         isSearching = false;
         
-        // Show recently viewed section when not searching
+        // Hide search controls
+        document.querySelector('.search-controls').style.display = 'none';
+        
+        // Show initial sections
+        document.querySelector('.recent-searches-section').style.display = 'block';
         document.querySelector('.recently-viewed-section').style.display = 'block';
         document.querySelector('.products-section .section-header h3').textContent = 'Products';
+        
+        // Reload recent searches to show updated list
+        loadRecentSearches();
         
         // Always restore ALL products when clearing search - no delay
         if (allProductsCache.length > 0) {
@@ -1172,8 +1543,12 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
+    // Save products for sort/filter
+    currentProducts = products;
+    
     if (products.length === 0) {
-      allProductsGrid.innerHTML = '<div class="loading-message">No products found.</div>';
+      // Show "No Results" with suggestions
+      showNoResultsSuggestions();
       return;
     }
 
@@ -1182,7 +1557,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sectionHeader) {
       const query = document.getElementById('searchInput').value.trim();
       if (query) {
-        sectionHeader.textContent = `Search Results (${products.length})`;
+        // Use "Results" on mobile, "Search Results" on desktop
+        const isMobile = window.innerWidth <= 480;
+        const headerText = isMobile ? `Results (${products.length})` : `Search Results (${products.length})`;
+        sectionHeader.textContent = headerText;
       } else {
         sectionHeader.textContent = 'Products';
       }
@@ -1190,6 +1568,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const productsHTML = products.map(product => window.createProductCard(product)).join('');
     allProductsGrid.innerHTML = productsHTML;
+  }
+
+  function showNoResultsSuggestions() {
+    const query = document.getElementById('searchInput').value.trim();
+    
+    // Get popular products (first 8 from cache)
+    const popularProducts = allProductsCache.slice(0, 8);
+    
+    let html = `
+      <div class="no-results-container">
+        <h4>No results found for "${query}"</h4>
+        <p style="color: #999; font-size: 14px;">Try different keywords or browse our popular products below</p>
+    `;
+    
+    if (popularProducts.length > 0) {
+      html += `
+        <div class="popular-products">
+          <h5>Popular Products</h5>
+          <div class="products-grid">
+            ${popularProducts.map(product => window.createProductCard(product)).join('')}
+          </div>
+        </div>
+      `;
+    }
+    
+    html += '</div>';
+    allProductsGrid.innerHTML = html;
   }
 
   function loadRecentlyViewed() {
@@ -1242,6 +1647,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log(`Loaded ${products.length} products from products.json`);
         allProductsCache = products; // Cache ALL products
+        currentProducts = products; // Set currentProducts for sort/filter
         const productsHTML = products.map(product => window.createProductCard(product)).join('');
         allProductsGrid.innerHTML = productsHTML;
         return products;
@@ -1259,6 +1665,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log(`Loaded ${products.length} products from all collection`);
             allProductsCache = products; // Cache ALL products
+            currentProducts = products; // Set currentProducts for sort/filter
             const productsHTML = products.map(product => window.createProductCard(product)).join('');
             allProductsGrid.innerHTML = productsHTML;
             return products;
@@ -1291,6 +1698,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log(`Loaded ${products.length} products from ${targetCollection.handle}`);
             allProductsCache = products; // Cache ALL products
+            currentProducts = products; // Set currentProducts for sort/filter
             const productsHTML = products.map(product => window.createProductCard(product)).join('');
             allProductsGrid.innerHTML = productsHTML;
             return products;
@@ -1322,6 +1730,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       console.log(`Showing ${validProducts.length} recently viewed products`);
       allProductsCache = validProducts; // Cache ALL products
+      currentProducts = validProducts; // Set currentProducts for sort/filter
       const productsHTML = validProducts.map(product => window.createProductCard(product)).join('');
       allProductsGrid.innerHTML = productsHTML;
       return validProducts;
@@ -1353,6 +1762,276 @@ document.addEventListener('DOMContentLoaded', function() {
     RecentlyViewed.clearProducts();
     recentlyViewedGrid.innerHTML = '<div class="loading-message">No recently viewed products.</div>';
   };
+
+  window.clearRecentSearches = function() {
+    RecentSearches.clearSearches();
+    document.getElementById('recentSearchesList').innerHTML = '<div class="loading-message">No recent searches.</div>';
+  };
+
+  // Load recent searches
+  function loadRecentSearches() {
+    const recentSearches = RecentSearches.getSearches();
+    const recentSearchesList = document.getElementById('recentSearchesList');
+    
+    if (recentSearches.length === 0) {
+      recentSearchesList.innerHTML = '<div class="loading-message">No recent searches.</div>';
+      return;
+    }
+
+    const searchesHTML = recentSearches.map(search => `
+      <div class="recent-search-item" onclick="searchFromRecent('${search.replace(/'/g, "\\'")}')">
+        <span>${search}</span>
+        <span class="remove-icon" onclick="event.stopPropagation(); removeRecentSearch('${search.replace(/'/g, "\\'")}')">×</span>
+      </div>
+    `).join('');
+    
+    recentSearchesList.innerHTML = searchesHTML;
+  }
+
+  window.searchFromRecent = function(query) {
+    searchInput.value = query;
+    searchInput.dispatchEvent(new Event('input'));
+  };
+
+  window.removeRecentSearch = function(query) {
+    RecentSearches.removeSearch(query);
+    loadRecentSearches();
+  };
+
+  // Sort and filter functionality
+  let currentSortValue = 'relevance';
+  let currentFilterValue = 'all';
+  let currentProducts = [];
+
+  // Desktop: Native select elements
+  const sortSelect = document.getElementById('sortSelect');
+  const filterSelect = document.getElementById('filterSelect');
+
+  // Mobile: Custom dropdown elements
+  const sortButton = document.getElementById('sortButton');
+  const sortDropdown = document.getElementById('sortDropdown');
+  const filterButton = document.getElementById('filterButton');
+  const filterDropdown = document.getElementById('filterDropdown');
+
+  console.log('Sort/Filter elements:', { 
+    sortSelect: !!sortSelect,
+    filterSelect: !!filterSelect,
+    sortButton: !!sortButton, 
+    sortDropdown: !!sortDropdown,
+    filterButton: !!filterButton,
+    filterDropdown: !!filterDropdown
+  });
+
+  // Desktop: Native select event listeners
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function() {
+      currentSortValue = this.value;
+      console.log('Sort changed to:', currentSortValue, 'Products count:', currentProducts.length);
+      if (currentProducts.length > 0) {
+        applySortAndFilter();
+      }
+    });
+  }
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', function() {
+      currentFilterValue = this.value;
+      console.log('Filter changed to:', currentFilterValue, 'Products count:', currentProducts.length);
+      if (currentProducts.length > 0) {
+        applySortAndFilter();
+      }
+    });
+  }
+
+  // Mobile: Custom dropdown event listeners
+  if (sortButton && sortDropdown) {
+    sortButton.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isActive = sortDropdown.classList.contains('active');
+      
+      // Close all dropdowns
+      document.querySelectorAll('.custom-select-dropdown').forEach(d => d.classList.remove('active'));
+      document.querySelectorAll('.custom-select-button').forEach(b => b.classList.remove('active'));
+      
+      // Toggle this dropdown
+      if (!isActive) {
+        sortDropdown.classList.add('active');
+        sortButton.classList.add('active');
+      }
+    });
+
+    sortDropdown.querySelectorAll('.custom-select-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const value = this.dataset.value;
+        const text = this.textContent;
+        
+        currentSortValue = value;
+        sortButton.querySelector('.custom-select-value').textContent = text;
+        
+        // Update selected state
+        sortDropdown.querySelectorAll('.custom-select-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        // Close dropdown
+        sortDropdown.classList.remove('active');
+        sortButton.classList.remove('active');
+        
+        console.log('Sort changed to:', value, 'Products count:', currentProducts.length);
+        
+        // Apply sort and filter
+        if (currentProducts.length > 0) {
+          applySortAndFilter();
+        }
+      });
+    });
+  }
+
+  if (filterButton && filterDropdown) {
+    filterButton.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isActive = filterDropdown.classList.contains('active');
+      
+      // Close all dropdowns
+      document.querySelectorAll('.custom-select-dropdown').forEach(d => d.classList.remove('active'));
+      document.querySelectorAll('.custom-select-button').forEach(b => b.classList.remove('active'));
+      
+      // Toggle this dropdown
+      if (!isActive) {
+        filterDropdown.classList.add('active');
+        filterButton.classList.add('active');
+      }
+    });
+
+    filterDropdown.querySelectorAll('.custom-select-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const value = this.dataset.value;
+        const text = this.textContent;
+        
+        currentFilterValue = value;
+        filterButton.querySelector('.custom-select-value').textContent = text;
+        
+        // Update selected state
+        filterDropdown.querySelectorAll('.custom-select-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        // Close dropdown
+        filterDropdown.classList.remove('active');
+        filterButton.classList.remove('active');
+        
+        console.log('Filter changed to:', value, 'Products count:', currentProducts.length);
+        
+        // Apply sort and filter
+        if (currentProducts.length > 0) {
+          applySortAndFilter();
+        }
+      });
+    });
+  }
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.custom-select-dropdown').forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('.custom-select-button').forEach(b => b.classList.remove('active'));
+  });
+
+  function applySortAndFilter() {
+    console.log('Applying sort and filter to', currentProducts.length, 'products');
+    console.log('allProductsGrid element:', allProductsGrid);
+    let products = [...currentProducts];
+    
+    // Apply filter
+    console.log('Filtering by:', currentFilterValue);
+    if (currentFilterValue === 'sale') {
+      products = products.filter(p => {
+        const comparePrice = p.compare_at_price || p.compare_at_price_max;
+        const price = p.price || p.price_min;
+        return comparePrice && comparePrice > price;
+      });
+    } else if (currentFilterValue === 'instock') {
+      products = products.filter(p => p.available !== false);
+    }
+
+    // Helper function to parse price to number for comparison
+    function parsePrice(product) {
+      // Try to get raw price value (before formatting)
+      let price = product.price || product.price_min || 0;
+      
+      // If we have variants, try to get price from first variant
+      if ((!price || price === 0) && product.variants && product.variants.length > 0) {
+        price = product.variants[0].price || 0;
+      }
+      
+      // Handle string prices (already formatted like "$29.99")
+      if (typeof price === 'string') {
+        // Remove $ and , then parse
+        const cleanPrice = price.replace(/[$,]/g, '').trim();
+        const numPrice = parseFloat(cleanPrice);
+        
+        if (isNaN(numPrice)) return 0;
+        
+        // If string had decimal point, it's in dollars, convert to cents for comparison
+        if (cleanPrice.includes('.')) {
+          return Math.round(numPrice * 100);
+        }
+        
+        // Otherwise treat as cents
+        return Math.round(numPrice);
+      }
+      
+      // Handle number prices (should be in cents from Shopify API)
+      if (typeof price === 'number') {
+        return Math.round(price);
+      }
+      
+      return 0;
+    }
+
+    // Apply sort
+    console.log('Sorting by:', currentSortValue);
+    if (currentSortValue === 'price-asc') {
+      products.sort((a, b) => {
+        const priceA = parsePrice(a);
+        const priceB = parsePrice(b);
+        console.log('Comparing:', a.title, priceA, 'vs', b.title, priceB);
+        return priceA - priceB;
+      });
+    } else if (currentSortValue === 'price-desc') {
+      products.sort((a, b) => {
+        const priceA = parsePrice(a);
+        const priceB = parsePrice(b);
+        return priceB - priceA;
+      });
+    } else if (currentSortValue === 'title-asc') {
+      products.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    } else if (currentSortValue === 'title-desc') {
+      products.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+    }
+
+    console.log('After filter and sort:', products.length, 'products');
+    console.log('First 3 products:', products.slice(0, 3).map(p => ({ title: p.title, price: parsePrice(p) })));
+    console.log('window.createProductCard exists:', typeof window.createProductCard);
+
+    // Display filtered and sorted products
+    if (products.length === 0) {
+      allProductsGrid.innerHTML = '<div class="loading-message">No products match your filters.</div>';
+    } else {
+      try {
+        const productsHTML = products.map(product => window.createProductCard(product)).join('');
+        console.log('Generated HTML length:', productsHTML.length);
+        console.log('Setting innerHTML...');
+        allProductsGrid.innerHTML = productsHTML;
+        console.log('Products displayed successfully');
+        console.log('Grid children count:', allProductsGrid.children.length);
+      } catch (error) {
+        console.error('Error creating product cards:', error);
+        allProductsGrid.innerHTML = '<div class="loading-message">Error displaying products.</div>';
+      }
+    }
+  }
+
+  // Make applySortAndFilter available globally for debugging
+  window.applySortAndFilter = applySortAndFilter;
+  window.getCurrentProducts = () => currentProducts;
 });
 </script>
 
