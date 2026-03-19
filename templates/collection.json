@@ -12,7 +12,8 @@
         "columns": 4,
         "enable_filtering": true,
         "enable_sorting": true,
-        "show_product_count": true
+        "show_product_count": true,
+        "enable_grid_density": false
       }
     }
   },

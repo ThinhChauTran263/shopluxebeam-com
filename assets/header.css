@@ -1,5 +1,25 @@
 /* Header Styles - Extracted from header.liquid */
 
+/* Disable auto-animations that might cause popup flicker */
+.cart-bubble--animating .cart-bubble__background,
+.cart-bubble--animating .cart-bubble__text {
+  animation: none !important;
+}
+
+/* Prevent any popup animations for first 2 seconds after page load */
+.page-loading * {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}
+
+<script>
+// Prevent popup animations on page load
+document.documentElement.classList.add('page-loading');
+setTimeout(() => {
+  document.documentElement.classList.remove('page-loading');
+}, 2000);
+</script>
+
 /* Announcement Bar */
 .announcement-bar-luxe {
   background: #007bff;

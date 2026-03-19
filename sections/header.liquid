@@ -1,4 +1,4 @@
-{% comment %}
+﻿{% comment %}
   Header section
 {% endcomment %}
 
@@ -461,7 +461,7 @@ html, body {
 
 .search-popup-body {
   padding: 20px 30px;
-  max-height: 50vh;
+  max-height: 70vh;
   overflow-y: auto;
 }
 
@@ -543,6 +543,14 @@ html, body {
   -webkit-box-orient: vertical;
   overflow: hidden;
   height: 32px;
+}
+
+.product-title mark {
+  background: #ffeb3b;
+  color: #000;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 700;
 }
 
 .product-price {
@@ -704,7 +712,7 @@ html, body {
   
   .search-popup-body {
     padding: 15px;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 60px);
     overflow-y: auto;
   }
   
@@ -791,7 +799,7 @@ html, body {
   
   .search-popup-body {
     padding: 12px;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - 50px);
   }
   
   .products-grid {
@@ -849,6 +857,8 @@ shopify-account:not(:defined) {
   background-color: #000000;
 }
 </style>
+
+<script src="{{ 'search-popup.js' | asset_url }}" defer></script>
 
 <script>
 // Mobile menu toggle
@@ -954,6 +964,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Simple search functionality
   let searchTimeout;
+  let allProductsCache = []; // Cache ALL products for quick restore
+  let isSearching = false; // Flag to track if search is in progress
   
   if (searchInput) {
     searchInput.addEventListener('input', function() {
@@ -966,14 +978,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show only products section
         document.querySelector('.products-section .section-header h3').textContent = 'Search Results';
         
+        isSearching = true;
         searchTimeout = setTimeout(() => performSearch(query), 300);
       } else {
+        // Cancel any pending search
+        isSearching = false;
+        
         // Show recently viewed section when not searching
         document.querySelector('.recently-viewed-section').style.display = 'block';
         document.querySelector('.products-section .section-header h3').textContent = 'Products';
         
-        // Restore original products
-        loadAllProducts();
+        // Always restore ALL products when clearing search - no delay
+        if (allProductsCache.length > 0) {
+          // Use cached all products immediately
+          const productsHTML = allProductsCache.map(product => window.createProductCard(product)).join('');
+          allProductsGrid.innerHTML = productsHTML;
+        } else {
+          // Show loading and load all products
+          allProductsGrid.innerHTML = '<div class="loading-message">Loading products...</div>';
+          loadAllProducts();
+        }
       }
     });
   }
@@ -981,19 +1005,69 @@ document.addEventListener('DOMContentLoaded', function() {
   function performSearch(query) {
     allProductsGrid.innerHTML = '<div class="loading-message">Searching...</div>';
     
-    // Simple search approach
+    // Use manual search first for better results
     searchSimple(query);
+  }
+  
+  function searchWithShopifyAPI(query) {
+    console.log('Searching with Shopify API for:', query);
+    
+    // Use Shopify's search endpoint
+    fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=50`)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const products = data.resources?.results?.products || [];
+        if (products.length > 0) {
+          console.log(`Found ${products.length} products via search API`);
+          displaySearchResults(products);
+        } else {
+          // Fallback to manual search
+          searchSimple(query);
+        }
+      })
+      .catch(error => {
+        console.error('Search API failed:', error);
+        // Fallback to manual search
+        searchSimple(query);
+      });
   }
   
   function searchSimple(query) {
     console.log('Simple search for:', query);
     
-    // Try multiple search approaches
-    trySearchInAllCollection(query)
+    // Try products.json first, then collections
+    trySearchInProducts(query)
+      .catch(() => trySearchInAllCollection(query))
       .catch(() => trySearchInCollections(query))
       .catch(() => {
-        console.error('All search methods failed');
-        allProductsGrid.innerHTML = `<div class="loading-message">No results found for "${query}".</div>`;
+        // Only show error if still searching (user hasn't cleared input)
+        if (isSearching) {
+          console.error('All search methods failed');
+          allProductsGrid.innerHTML = `<div class="loading-message">No results found for "${query}".</div>`;
+        }
+      });
+  }
+  
+  function trySearchInProducts(query) {
+    return fetch('/products.json?limit=50')
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        const products = data.products || [];
+        const filteredProducts = filterProductsByQuery(products, query);
+        
+        if (filteredProducts.length > 0) {
+          console.log(`Found ${filteredProducts.length} products in products.json`);
+          displaySearchResults(filteredProducts);
+          return filteredProducts;
+        } else {
+          throw new Error('No matching products found');
+        }
       });
   }
   
@@ -1009,7 +1083,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (filteredProducts.length > 0) {
           console.log(`Found ${filteredProducts.length} products in all collection`);
-          displaySearchResults(filteredProducts.slice(0, 8));
+          displaySearchResults(filteredProducts);
           return filteredProducts;
         } else {
           throw new Error('No matching products found');
@@ -1034,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function searchInMultipleCollections(collections, query, allResults) {
     if (collections.length === 0) {
       if (allResults.length > 0) {
-        displaySearchResults(allResults.slice(0, 8));
+        displaySearchResults(allResults);
         return allResults;
       } else {
         throw new Error('No results found');
@@ -1062,33 +1136,59 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function filterProductsByQuery(products, query) {
+    if (!query || query.trim() === '') return products;
+    
     return products.filter(product => {
       const title = (product.title || '').toLowerCase();
-      const searchQuery = query.toLowerCase();
+      const vendor = (product.vendor || '').toLowerCase();
+      const productType = (product.product_type || '').toLowerCase();
+      const tags = (product.tags || []).join(' ').toLowerCase();
+      const searchQuery = query.toLowerCase().trim();
       
-      // Direct match
-      if (title.includes(searchQuery)) {
+      // Search in title, vendor, product type, and tags
+      const searchableText = `${title} ${vendor} ${productType} ${tags}`;
+      
+      // Direct substring match - most common case
+      if (searchableText.includes(searchQuery)) {
         return true;
       }
       
-      // Word-by-word match (for queries like "9 in 1")
-      const queryWords = searchQuery.split(/\s+/).filter(word => word.trim());
-      const titleWords = title.split(/\s+/);
+      // Word-by-word match for multi-word queries
+      const queryWords = searchQuery.split(/\s+/).filter(word => word.length > 0);
+      if (queryWords.length > 1) {
+        // All words must be found somewhere in searchable text
+        return queryWords.every(queryWord => searchableText.includes(queryWord));
+      }
       
-      // Check if all query words are found in title
-      return queryWords.every(queryWord => 
-        titleWords.some(titleWord => titleWord.includes(queryWord))
-      );
+      // Partial word match - check if query matches start of any word
+      const words = searchableText.split(/\s+/);
+      return words.some(word => word.startsWith(searchQuery));
     });
   }
 
   function displaySearchResults(products) {
+    // Only update if still searching (user hasn't cleared input)
+    if (!isSearching) {
+      return;
+    }
+    
     if (products.length === 0) {
       allProductsGrid.innerHTML = '<div class="loading-message">No products found.</div>';
       return;
     }
 
-    const productsHTML = products.map(product => createProductCard(product)).join('');
+    // Update section header with result count
+    const sectionHeader = document.querySelector('.products-section .section-header h3');
+    if (sectionHeader) {
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) {
+        sectionHeader.textContent = `Search Results (${products.length})`;
+      } else {
+        sectionHeader.textContent = 'Products';
+      }
+    }
+
+    const productsHTML = products.map(product => window.createProductCard(product)).join('');
     allProductsGrid.innerHTML = productsHTML;
   }
 
@@ -1107,7 +1207,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Promise.all(productPromises).then(products => {
       const validProducts = products.filter(p => p !== null);
-      const productsHTML = validProducts.map(product => createProductCard(product)).join('');
+      const productsHTML = validProducts.map(product => window.createProductCard(product)).join('');
       recentlyViewedGrid.innerHTML = productsHTML || '<div class="loading-message">No recently viewed products.</div>';
     });
   }
@@ -1130,7 +1230,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function tryLoadFromAllCollection() {
-    return fetch('/collections/all/products.json?limit=8')
+    // Try different endpoints
+    return fetch('/products.json?limit=50')
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
@@ -1139,10 +1240,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const products = data.products || [];
         if (products.length === 0) throw new Error('No products found');
         
-        console.log(`Loaded ${products.length} products from all collection`);
-        const productsHTML = products.map(product => createProductCard(product)).join('');
+        console.log(`Loaded ${products.length} products from products.json`);
+        allProductsCache = products; // Cache ALL products
+        const productsHTML = products.map(product => window.createProductCard(product)).join('');
         allProductsGrid.innerHTML = productsHTML;
         return products;
+      })
+      .catch(error => {
+        console.error('products.json failed, trying collections/all:', error);
+        return fetch('/collections/all/products.json?limit=50')
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            const products = data.products || [];
+            if (products.length === 0) throw new Error('No products found');
+            
+            console.log(`Loaded ${products.length} products from all collection`);
+            allProductsCache = products; // Cache ALL products
+            const productsHTML = products.map(product => window.createProductCard(product)).join('');
+            allProductsGrid.innerHTML = productsHTML;
+            return products;
+          });
       });
   }
   
@@ -1170,7 +1290,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (products.length === 0) throw new Error('No products in collection');
             
             console.log(`Loaded ${products.length} products from ${targetCollection.handle}`);
-            const productsHTML = products.map(product => createProductCard(product)).join('');
+            allProductsCache = products; // Cache ALL products
+            const productsHTML = products.map(product => window.createProductCard(product)).join('');
             allProductsGrid.innerHTML = productsHTML;
             return products;
           });
@@ -1200,7 +1321,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       console.log(`Showing ${validProducts.length} recently viewed products`);
-      const productsHTML = validProducts.map(product => createProductCard(product)).join('');
+      allProductsCache = validProducts; // Cache ALL products
+      const productsHTML = validProducts.map(product => window.createProductCard(product)).join('');
       allProductsGrid.innerHTML = productsHTML;
       return validProducts;
     });
@@ -1211,80 +1333,13 @@ document.addEventListener('DOMContentLoaded', function() {
     allProductsGrid.innerHTML = `
       <div class="loading-message">
         <p>Browse our products</p>
-        <a href="/collections/all" style="color: #000; text-decoration: underline; font-weight: 600;">View All Products →</a>
+        <a href="/collections/all" style="color: #000; text-decoration: underline; font-weight: 600;">View All Products â†’</a>
       </div>
     `;
   }
 
-  function createProductCard(product) {
-    const title = product.title || 'Product';
-    const handle = product.handle || '#';
-    
-    // Handle images properly
-    let imageUrl = '';
-    if (product.featured_image) {
-      imageUrl = product.featured_image;
-    } else if (product.images && product.images.length > 0) {
-      imageUrl = product.images[0];
-    } else if (product.image) {
-      imageUrl = product.image;
-    }
-    
-    // Ensure proper image size for Shopify
-    if (imageUrl && imageUrl.includes('shopifycdn.com')) {
-      // Add size parameter for Shopify images
-      if (!imageUrl.includes('_200x200')) {
-        imageUrl = imageUrl.replace(/\.(jpg|jpeg|png|webp|gif)/i, '_200x200.$1');
-      }
-    }
-    
-    // Handle pricing properly
-    let price = '$0.00';
-    let comparePrice = null;
-    
-    if (product.price) {
-      if (typeof product.price === 'number') {
-        price = `$${(product.price / 100).toFixed(2)}`;
-      } else if (typeof product.price === 'string') {
-        // If it's already formatted, use as is
-        price = product.price.includes('$') ? product.price : '$' + product.price;
-      }
-    } else if (product.price_min) {
-      if (typeof product.price_min === 'number') {
-        price = `$${(product.price_min / 100).toFixed(2)}`;
-      } else {
-        price = '$' + product.price_min;
-      }
-    }
-    
-    // Handle compare at price
-    if (product.compare_at_price && product.compare_at_price > (product.price || product.price_min)) {
-      if (typeof product.compare_at_price === 'number') {
-        comparePrice = '$' + (product.compare_at_price / 100).toFixed(2);
-      } else {
-        comparePrice = product.compare_at_price.includes('$') ? product.compare_at_price : '$' + product.compare_at_price;
-      }
-    } else if (product.compare_at_price_max && product.compare_at_price_max > (product.price || product.price_min)) {
-      if (typeof product.compare_at_price_max === 'number') {
-        comparePrice = '$' + (product.compare_at_price_max / 100).toFixed(2);
-      } else {
-        comparePrice = '$' + product.compare_at_price_max;
-      }
-    }
-
-    return `
-      <div class="product-card" onclick="goToProduct('${handle}')">
-        ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="product-image" loading="lazy" width="200" height="180">` : '<div class="product-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px;">No Image</div>'}
-        <div class="product-info">
-          <h4 class="product-title">${title}</h4>
-          <div class="product-price">
-            <span class="current-price">${price}</span>
-            ${comparePrice ? `<span class="original-price">${comparePrice}</span>` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  }
+  // Use createProductCard from search-popup.js file
+  // Old function removed due to encoding issues
 
   // Global functions
   window.goToProduct = function(handle) {

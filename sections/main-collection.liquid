@@ -1,197 +1,204 @@
 {% comment %}
-  Main Collection Section
-  Displays products with filtering and sorting
+  Main Collection Section with Shopify Native Filtering (Pure Shine Home Style)
+  Displays products with filtering and sorting - Fixed 4 column layout
 {% endcomment %}
 
-{% comment %} Paginate disabled - show all products {% endcomment %}
-  <div class="main-collection">
-    <div class="container">
+<div class="main-collection">
+  <div class="container">
+    <!-- Native Shopify Filters Form -->
+    <form id="FacetFiltersForm" class="facets-form">
       <!-- Filters and Sorting Bar -->
       <div class="collection-toolbar">
         <div class="collection-toolbar__left">
           <!-- Filters (if enabled) -->
           {% if section.settings.enable_filtering %}
             <div class="collection-filters">
-              <!-- Availability Filter -->
-              <details class="filter-group">
-                <summary class="filter-group__header">
-                  <span>Availability</span>
-                  <svg class="filter-group__icon" width="10" height="10" viewBox="0 0 10 10">
-                    <path d="M5 7L1 3h8z" fill="currentColor"/>
-                  </svg>
-                </summary>
-                <div class="filter-group__dropdown">
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-in-stock" name="availability" value="in-stock">
-                    <label for="filter-in-stock">In stock</label>
+                <!-- Availability Filter -->
+                <details class="filter-group">
+                  <summary class="filter-group__header">
+                    <span>Availability</span>
+                    <svg class="filter-group__icon" width="10" height="10" viewBox="0 0 10 10">
+                      <path d="M5 7L1 3h8z" fill="currentColor"/>
+                    </svg>
+                  </summary>
+                  <div class="filter-group__dropdown">
+                    <div class="filter-option">
+                      <input type="checkbox" id="filter-in-stock" name="filter.v.availability" value="1" {% if request.query['filter.v.availability'] == '1' %}checked{% endif %}>
+                      <label for="filter-in-stock">In stock</label>
+                    </div>
+                    <div class="filter-option">
+                      <input type="checkbox" id="filter-out-of-stock" name="filter.v.availability" value="0" {% if request.query['filter.v.availability'] == '0' %}checked{% endif %}>
+                      <label for="filter-out-of-stock">Out of stock</label>
+                    </div>
                   </div>
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-out-of-stock" name="availability" value="out-of-stock">
-                    <label for="filter-out-of-stock">Out of stock</label>
+                </details>
+                
+                <!-- Price Filter -->
+                <details class="filter-group">
+                  <summary class="filter-group__header">
+                    <span>Price</span>
+                    {% assign min_price = request.query['filter.v.price.gte'] | default: '' %}
+                    {% assign max_price = request.query['filter.v.price.lte'] | default: '' %}
+                    {% if min_price != '' or max_price != '' %}
+                      <span class="price-range-display">
+                        {% if min_price != '' %}${{ min_price }}{% else %}$1.00{% endif %}–{% if max_price != '' %}${{ max_price }}{% else %}$189.00{% endif %}
+                      </span>
+                    {% endif %}
+                    <svg class="filter-group__icon" width="10" height="10" viewBox="0 0 10 10">
+                      <path d="M5 7L1 3h8z" fill="currentColor"/>
+                    </svg>
+                  </summary>
+                  <div class="filter-group__dropdown price-filter-dropdown">
+                    <div class="price-inputs-wrapper">
+                      <div class="price-input-group">
+                        <label class="price-input-label">{{ cart.currency.symbol }}</label>
+                        <input 
+                          type="text" 
+                          id="price-min" 
+                          name="filter.v.price.gte"
+                          value="{% if min_price != '' %}{{ min_price }}{% endif %}"
+                          placeholder="1.00"
+                          class="price-input"
+                          inputmode="decimal"
+                        >
+                      </div>
+                      <span class="price-separator">to</span>
+                      <div class="price-input-group">
+                        <label class="price-input-label">{{ cart.currency.symbol }}</label>
+                        <input 
+                          type="text" 
+                          id="price-max" 
+                          name="filter.v.price.lte"
+                          value="{% if max_price != '' %}{{ max_price }}{% endif %}"
+                          placeholder="189.00"
+                          class="price-input"
+                          inputmode="decimal"
+                        >
+                      </div>
+                    </div>
+                    <div class="price-filter-info">
+                      {% assign highest_price = 0 %}
+                      {% for product in collection.products %}
+                        {% if product.price_max > highest_price %}
+                          {% assign highest_price = product.price_max %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if highest_price > 0 %}
+                        The highest price is {{ highest_price | money }}
+                      {% else %}
+                        The highest price is $189.00
+                      {% endif %}
+                    </div>
+                    {% if min_price != '' or max_price != '' %}
+                      <div class="price-filter-actions">
+                        <button type="button" class="clear-price-filter">Clear</button>
+                      </div>
+                    {% endif %}
                   </div>
-                </div>
-              </details>
-              
-              <!-- Price Filter -->
-              <details class="filter-group">
-                <summary class="filter-group__header">
-                  <span>Price</span>
-                  <svg class="filter-group__icon" width="10" height="10" viewBox="0 0 10 10">
-                    <path d="M5 7L1 3h8z" fill="currentColor"/>
-                  </svg>
-                </summary>
-                <div class="filter-group__dropdown">
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-price-1" name="price" value="0-25">
-                    <label for="filter-price-1">Under $25</label>
-                  </div>
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-price-2" name="price" value="25-50">
-                    <label for="filter-price-2">$25 to $50</label>
-                  </div>
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-price-3" name="price" value="50-100">
-                    <label for="filter-price-3">$50 to $100</label>
-                  </div>
-                  <div class="filter-option">
-                    <input type="checkbox" id="filter-price-4" name="price" value="100+">
-                    <label for="filter-price-4">Over $100</label>
-                  </div>
-                </div>
-              </details>
-            </div>
-          {% endif %}
-        </div>
-        
-        <div class="collection-toolbar__right">
-          <span class="collection-toolbar__count">{{ collection.products_count }} items</span>
+                </details>
+              </div>
+            {% endif %}
+          </div>
           
-          <!-- Sort Dropdown -->
-          {% if section.settings.enable_sorting %}
-            <div class="collection-sort">
-              <details class="sort-dropdown">
-                <summary class="sort-dropdown__button">
-                  <span class="sort-dropdown__label">Sort</span>
-                  <svg class="sort-dropdown__icon" width="10" height="10" viewBox="0 0 10 10">
-                    <path d="M5 7L1 3h8z" fill="currentColor"/>
-                  </svg>
-                </summary>
-                <div class="sort-dropdown__menu">
-                  <button type="button" class="sort-option {% if collection.sort_by == 'manual' or collection.sort_by == blank %}active{% endif %}" data-value="manual">
-                    {% if collection.sort_by == 'manual' or collection.sort_by == blank %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Featured
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'best-selling' %}active{% endif %}" data-value="best-selling">
-                    {% if collection.sort_by == 'best-selling' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Best selling
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'title-ascending' %}active{% endif %}" data-value="title-ascending">
-                    {% if collection.sort_by == 'title-ascending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Alphabetically, A-Z
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'title-descending' %}active{% endif %}" data-value="title-descending">
-                    {% if collection.sort_by == 'title-descending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Alphabetically, Z-A
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'price-ascending' %}active{% endif %}" data-value="price-ascending">
-                    {% if collection.sort_by == 'price-ascending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Price, low to high
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'price-descending' %}active{% endif %}" data-value="price-descending">
-                    {% if collection.sort_by == 'price-descending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Price, high to low
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'created-ascending' %}active{% endif %}" data-value="created-ascending">
-                    {% if collection.sort_by == 'created-ascending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Date, old to new
-                  </button>
-                  <button type="button" class="sort-option {% if collection.sort_by == 'created-descending' %}active{% endif %}" data-value="created-descending">
-                    {% if collection.sort_by == 'created-descending' %}
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                      </svg>
-                    {% endif %}
-                    Date, new to old
-                  </button>
-                </div>
-              </details>
-            </div>
-          {% endif %}
-          
-          <!-- Grid Density Toggle -->
-          <div class="collection-view-toggle">
-            <button type="button" class="view-toggle view-toggle--grid-4 active" data-columns="4" aria-label="4 columns">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <rect x="2" y="2" width="7" height="7"></rect>
-                <rect x="11" y="2" width="7" height="7"></rect>
-                <rect x="11" y="11" width="7" height="7"></rect>
-                <rect x="2" y="11" width="7" height="7"></rect>
-              </svg>
-            </button>
-            <button type="button" class="view-toggle view-toggle--grid-3" data-columns="6" aria-label="6 columns">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <rect x="1" y="1" width="3" height="3"></rect>
-                <rect x="5" y="1" width="3" height="3"></rect>
-                <rect x="9" y="1" width="3" height="3"></rect>
-                <rect x="13" y="1" width="3" height="3"></rect>
-                <rect x="17" y="1" width="2" height="3"></rect>
-                <rect x="1" y="5" width="3" height="3"></rect>
-                <rect x="5" y="5" width="3" height="3"></rect>
-                <rect x="9" y="5" width="3" height="3"></rect>
-                <rect x="13" y="5" width="3" height="3"></rect>
-                <rect x="17" y="5" width="2" height="3"></rect>
-                <rect x="1" y="9" width="3" height="3"></rect>
-                <rect x="5" y="9" width="3" height="3"></rect>
-                <rect x="9" y="9" width="3" height="3"></rect>
-                <rect x="13" y="9" width="3" height="3"></rect>
-                <rect x="17" y="9" width="2" height="3"></rect>
-                <rect x="1" y="13" width="3" height="3"></rect>
-                <rect x="5" y="13" width="3" height="3"></rect>
-                <rect x="9" y="13" width="3" height="3"></rect>
-                <rect x="13" y="13" width="3" height="3"></rect>
-                <rect x="17" y="13" width="2" height="3"></rect>
-                <rect x="1" y="17" width="3" height="2"></rect>
-                <rect x="5" y="17" width="3" height="2"></rect>
-                <rect x="9" y="17" width="3" height="2"></rect>
-                <rect x="13" y="17" width="3" height="2"></rect>
-                <rect x="17" y="17" width="2" height="2"></rect>
-              </svg>
-            </button>
+          <div class="collection-toolbar__right">
+            <span class="collection-toolbar__count">{{ collection.products_count }} items</span>
+            
+            <!-- Clear All Button - hiển thị bên phải khi có filter -->
+            {% assign has_active_filters = false %}
+            {% if request.query['filter.v.availability'] or request.query['filter.v.price.gte'] or request.query['filter.v.price.lte'] %}
+              {% assign has_active_filters = true %}
+            {% endif %}
+            
+            {% if has_active_filters %}
+              <button type="button" class="clear-all-filters">Clear all</button>
+            {% endif %}
+            
+            <!-- Sort Dropdown -->
+            {% if section.settings.enable_sorting %}
+              <div class="collection-sort">
+                <details class="sort-dropdown">
+                  <summary class="sort-dropdown__button">
+                    <span class="sort-dropdown__label">Sort</span>
+                    <svg class="sort-dropdown__icon" width="10" height="10" viewBox="0 0 10 10">
+                      <path d="M5 7L1 3h8z" fill="currentColor"/>
+                    </svg>
+                  </summary>
+                  <div class="sort-dropdown__menu">
+                    <button type="button" class="sort-option {% if collection.sort_by == 'manual' or collection.sort_by == blank %}active{% endif %}" data-value="manual">
+                      {% if collection.sort_by == 'manual' or collection.sort_by == blank %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Featured
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'best-selling' %}active{% endif %}" data-value="best-selling">
+                      {% if collection.sort_by == 'best-selling' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Best selling
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'title-ascending' %}active{% endif %}" data-value="title-ascending">
+                      {% if collection.sort_by == 'title-ascending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Alphabetically, A-Z
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'title-descending' %}active{% endif %}" data-value="title-descending">
+                      {% if collection.sort_by == 'title-descending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Alphabetically, Z-A
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'price-ascending' %}active{% endif %}" data-value="price-ascending">
+                      {% if collection.sort_by == 'price-ascending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Price, low to high
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'price-descending' %}active{% endif %}" data-value="price-descending">
+                      {% if collection.sort_by == 'price-descending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Price, high to low
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'created-ascending' %}active{% endif %}" data-value="created-ascending">
+                      {% if collection.sort_by == 'created-ascending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Date, old to new
+                    </button>
+                    <button type="button" class="sort-option {% if collection.sort_by == 'created-descending' %}active{% endif %}" data-value="created-descending">
+                      {% if collection.sort_by == 'created-descending' %}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                      {% endif %}
+                      Date, new to old
+                    </button>
+                  </div>
+                </details>
+              </div>
+            {% endif %}
           </div>
         </div>
-      </div>
+      </form>
       
       <!-- Products Grid -->
       <div class="collection-products">
-        <div class="products-grid" data-columns="4">
+        <div class="products-grid">
           {% for product in collection.products %}
             <div class="product-grid-item">
               {% render 'product-card', product: product %}
@@ -202,39 +209,9 @@
             </div>
           {% endfor %}
         </div>
-        
-        <!-- Pagination - Hidden to show all products -->
-        {% comment %}
-        {% if paginate.pages > 1 %}
-          <div class="collection-pagination">
-            {% if paginate.previous %}
-              <a href="{{ paginate.previous.url }}" class="pagination-link pagination-link--prev">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-                Previous
-              </a>
-            {% endif %}
-            
-            <span class="pagination-info">
-              Page {{ paginate.current_page }} of {{ paginate.pages }}
-            </span>
-            
-            {% if paginate.next %}
-              <a href="{{ paginate.next.url }}" class="pagination-link pagination-link--next">
-                Next
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-        {% endcomment %}
       </div>
     </div>
   </div>
-{% comment %} End paginate disabled {% endcomment %}
 
 <style>
   .main-collection {
@@ -359,42 +336,102 @@
     opacity: 0;
   }
   
-  /* View Toggle */
-  .collection-view-toggle {
-    display: flex;
-    gap: 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    overflow: hidden;
+  /* Price Filter Styles */
+  .price-filter-dropdown {
+    min-width: 360px;
+    padding: 16px;
   }
   
-  .view-toggle {
-    padding: 6px 10px;
-    border: none;
-    border-right: 1px solid #e0e0e0;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  .price-inputs-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+    margin-bottom: 12px;
   }
   
-  .view-toggle:last-child {
-    border-right: none;
+  .price-input-group {
+    position: relative;
+    flex: 1;
   }
   
-  .view-toggle:hover {
-    background: #f5f5f5;
+  .price-input {
+    width: 100%;
+    min-width: 110px;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
   }
   
-  .view-toggle.active {
-    background: #000;
-    color: white;
+  .price-input:focus {
+    outline: none;
+    border-color: #000;
   }
   
-  .view-toggle svg {
-    display: block;
+  .price-input-label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 14px;
+    pointer-events: none;
+  }
+  
+  .price-separator {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+  
+  .price-filter-info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  
+  .price-filter-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .clear-price-filter {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .clear-price-filter:hover {
+    color: #000;
+  }
+  
+  .price-range-display {
+    font-size: 12px;
+    color: #666;
+    margin-left: 8px;
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Clear All Button */
+  .clear-all-filters {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 16px;
+  }
+  
+  .clear-all-filters:hover {
+    color: #000;
   }
   
   /* Filters */
@@ -420,6 +457,12 @@
     border: none;
     color: #000;
     list-style: none;
+    min-width: 0;
+    flex-shrink: 0;
+  }
+  
+  .filter-group__header > span:first-child {
+    flex-shrink: 0;
   }
   
   .filter-group__header::-webkit-details-marker {
@@ -457,91 +500,69 @@
     gap: 8px;
   }
   
+  /* Filter options - NO hover background, chỉ thay đổi opacity checkbox */
+  .collection-filters .filter-option,
+  .collection-filters .filter-option:hover,
+  .collection-filters .filter-option:focus,
+  .collection-filters .filter-option:active {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #000 !important;
+  }
+  
   .filter-option {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 4px 0;
   }
   
   .filter-option input[type="checkbox"] {
     width: 16px;
     height: 16px;
     cursor: pointer;
+    accent-color: #000;
+    flex-shrink: 0;
+    opacity: 1;
   }
   
-  .filter-option label {
+  /* Khi hover: chỉ làm mờ checkbox chưa check để gợi ý có thể click */
+  .filter-option:hover input[type="checkbox"]:not(:checked) {
+    opacity: 0.4;
+  }
+  
+  .filter-option label,
+  .filter-option label:hover {
     font-size: 0.875rem;
     cursor: pointer;
     margin: 0;
+    color: #000 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    padding: 0;
   }
   
-  /* Products Grid */
+  .filter-option input[type="checkbox"]:checked + label {
+    font-weight: 500;
+  }
+  
+  /* Products Grid - Fixed 4 columns */
   .collection-products {
     margin-top: 24px;
   }
   
   .products-grid {
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
   }
   
-  .products-grid[data-columns="4"] {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .products-grid[data-columns="6"] {
-    grid-template-columns: repeat(6, 1fr);
-  }
-  
-  /* Adjust product card heights based on grid density */
-  .products-grid[data-columns="4"] .product-card {
+  .product-grid-item .product-card {
     height: 450px;
   }
   
-  .products-grid[data-columns="4"] .product-card__image {
+  .product-grid-item .product-card__image {
     height: 280px;
-  }
-  
-  .products-grid[data-columns="6"] .product-card {
-    height: 380px;
-  }
-  
-  .products-grid[data-columns="6"] .product-card__image {
-    height: 220px;
-  }
-  
-  /* Pagination */
-  .collection-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid #e0e0e0;
-  }
-  
-  .pagination-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #000;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-  }
-  
-  .pagination-link:hover {
-    background: #f5f5f5;
-    border-color: #000;
-  }
-  
-  .pagination-info {
-    font-size: 0.875rem;
-    color: #666;
   }
   
   .collection-empty {
@@ -550,103 +571,346 @@
     padding: 60px 20px;
   }
   
-  /* Responsive */
+  /* Touch and Mobile Enhancements */
+  @media (hover: none) and (pointer: coarse) {
+    .sort-dropdown__button,
+    .filter-group__header {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .sort-option,
+    .filter-option label {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .filter-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"] {
+      font-size: 16px;
+    }
+  }
   @media (max-width: 989px) {
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="6"] {
+    .products-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
     }
     
-    .products-grid[data-columns="4"] .product-card,
-    .products-grid[data-columns="6"] .product-card {
-      height: 420px;
+    .product-grid-item .product-card {
+      height: 400px;
     }
     
-    .products-grid[data-columns="4"] .product-card__image,
-    .products-grid[data-columns="6"] .product-card__image {
-      height: 250px;
+    .product-grid-item .product-card__image {
+      height: 240px;
+    }
+    
+    .collection-toolbar__right {
+      gap: 12px;
+    }
+    
+    .sort-dropdown__menu {
+      min-width: 180px;
     }
   }
   
   @media (max-width: 749px) {
     .collection-toolbar {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
+      align-items: stretch;
+      gap: 16px;
+      padding: 12px 0;
     }
     
-    .collection-toolbar__left,
+    .collection-toolbar__left {
+      width: 100%;
+      justify-content: flex-start;
+      order: 2;
+    }
+    
     .collection-toolbar__right {
       width: 100%;
       justify-content: space-between;
+      order: 1;
     }
     
     .collection-filters {
-      order: 2;
       width: 100%;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     
     .filter-group__dropdown {
       left: 0;
       right: 0;
-      width: 100%;
+      width: calc(100vw - 32px);
+      max-width: 300px;
     }
     
-    .products-grid[data-columns="4"],
-    .products-grid[data-columns="6"] {
+    .sort-dropdown__menu {
+      right: 0;
+      left: auto;
+      min-width: 200px;
+    }
+    
+    .products-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
     
-    .products-grid[data-columns="4"] .product-card,
-    .products-grid[data-columns="6"] .product-card {
-      height: 380px;
+    .product-grid-item .product-card {
+      height: 350px;
     }
     
-    .products-grid[data-columns="4"] .product-card__image,
-    .products-grid[data-columns="6"] .product-card__image {
-      height: 220px;
+    .product-grid-item .product-card__image {
+      height: 200px;
     }
     
     .collection-pagination {
       flex-direction: column;
       gap: 12px;
     }
+    
+    .pagination-link {
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .main-collection {
+      padding: 0 0 32px;
+    }
+    
+    .collection-toolbar {
+      padding: 8px 0;
+      gap: 12px;
+    }
+    
+    .collection-toolbar__count {
+      font-size: 14px;
+    }
+    
+    .sort-dropdown__button {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    
+    .filter-group__header {
+      font-size: 14px;
+      padding: 6px 8px 6px 0;
+    }
+    
+    .filter-group__dropdown {
+      width: calc(100vw - 24px);
+      left: -12px;
+      padding: 8px;
+    }
+    
+    .filter-option {
+      gap: 6px;
+    }
+    
+    .filter-option label {
+      font-size: 14px;
+    }
+    
+    .sort-dropdown__menu {
+      width: calc(100vw - 24px);
+      right: -12px;
+      left: auto;
+    }
+    
+    .sort-option {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    .products-grid {
+      gap: 8px;
+    }
+    
+    .product-grid-item .product-card {
+      height: 320px;
+    }
+    
+    .product-grid-item .product-card__image {
+      height: 180px;
+    }
+    
+    .collection-empty {
+      padding: 40px 16px;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .product-grid-item .product-card {
+      height: 400px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    
+    .product-grid-item .product-card__image {
+      height: 240px;
+    }
+    
+    .collection-toolbar__right {
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+    
+    .collection-toolbar__count {
+      text-align: center;
+      padding: 4px 0;
+    }
+    
+    .sort-dropdown__button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 </style>
 
 <script>
-  // Collection sorting and grid density
   document.addEventListener('DOMContentLoaded', function() {
-    // Sort functionality
-    const sortOptions = document.querySelectorAll('.sort-option');
-    const sortDropdown = document.querySelector('.sort-dropdown');
-    
-    sortOptions.forEach(option => {
+    const form = document.getElementById('FacetFiltersForm');
+    if (!form) return;
+
+    // ── Sort ──────────────────────────────────────────────────────────────
+    document.querySelectorAll('.sort-option').forEach(option => {
       option.addEventListener('click', function() {
-        const sortValue = this.getAttribute('data-value');
+        const val = this.getAttribute('data-value');
         const url = new URL(window.location);
-        url.searchParams.set('sort_by', sortValue);
+        if (val === 'manual') {
+          url.searchParams.delete('sort_by');
+        } else {
+          url.searchParams.set('sort_by', val);
+        }
+        url.searchParams.delete('page');
         window.location.href = url.toString();
       });
     });
-    
-    // Grid density toggle
-    const viewToggles = document.querySelectorAll('.view-toggle');
-    const productsGrid = document.querySelector('.products-grid');
-    
-    viewToggles.forEach(toggle => {
-      toggle.addEventListener('click', function() {
-        const columns = this.getAttribute('data-columns');
-        
-        // Update active state
-        viewToggles.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Update grid columns
-        if (productsGrid) {
-          productsGrid.setAttribute('data-columns', columns);
-        }
+
+    // ── Availability ──────────────────────────────────────────────────────
+    // Cho phép chọn cả 2 (In stock / Out of stock) độc lập nhau
+    document.querySelectorAll('input[name="filter.v.availability"]').forEach(cb => {
+      cb.addEventListener('change', function() {
+        const url = new URL(window.location);
+        url.searchParams.delete('filter.v.availability');
+        // Lấy tất cả checkbox đang được check
+        document.querySelectorAll('input[name="filter.v.availability"]:checked').forEach(checked => {
+          url.searchParams.append('filter.v.availability', checked.value);
+        });
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
       });
+    });
+
+    // ── Price filter ──────────────────────────────────────────────────────
+    const priceMin = document.getElementById('price-min');
+    const priceMax = document.getElementById('price-max');
+
+    function applyPriceFilter() {
+      const url = new URL(window.location);
+      url.searchParams.delete('filter.v.price.gte');
+      url.searchParams.delete('filter.v.price.lte');
+
+      const minVal = parseFloat(priceMin.value);
+      const maxVal = parseFloat(priceMax.value);
+
+      if (!isNaN(minVal) && priceMin.value.trim() !== '') {
+        url.searchParams.set('filter.v.price.gte', minVal.toString());
+      }
+      if (!isNaN(maxVal) && priceMax.value.trim() !== '') {
+        url.searchParams.set('filter.v.price.lte', maxVal.toString());
+      }
+
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    }
+
+    if (priceMin && priceMax) {
+      // Enter key → apply ngay
+      priceMin.addEventListener('keydown', e => { if (e.key === 'Enter') applyPriceFilter(); });
+      priceMax.addEventListener('keydown', e => { if (e.key === 'Enter') applyPriceFilter(); });
+
+      // Blur: chỉ apply khi CÙNG LÚC cả 2 ô đều không còn focus
+      // (dùng setTimeout để chờ focus chuyển sang ô kia trước khi kiểm tra)
+      function handleBlur() {
+        setTimeout(function() {
+          const focused = document.activeElement;
+          if (focused !== priceMin && focused !== priceMax) {
+            // Click ra ngoài hoàn toàn → apply filter
+            const hasValue = priceMin.value.trim() !== '' || priceMax.value.trim() !== '';
+            if (hasValue) applyPriceFilter();
+          }
+        }, 150);
+      }
+
+      priceMin.addEventListener('blur', handleBlur);
+      priceMax.addEventListener('blur', handleBlur);
+    }
+    // ── Clear price ───────────────────────────────────────────────────────
+    const clearPrice = document.querySelector('.clear-price-filter');
+    if (clearPrice) {
+      clearPrice.addEventListener('click', function() {
+        const url = new URL(window.location);
+        url.searchParams.delete('filter.v.price.gte');
+        url.searchParams.delete('filter.v.price.lte');
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+      });
+    }
+
+    // ── Clear all ─────────────────────────────────────────────────────────
+    const clearAll = document.querySelector('.clear-all-filters');
+    if (clearAll) {
+      clearAll.addEventListener('click', function() {
+        const url = new URL(window.location);
+        url.searchParams.delete('filter.v.availability');
+        url.searchParams.delete('filter.v.price.gte');
+        url.searchParams.delete('filter.v.price.lte');
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+      });
+    }
+
+    // ── Đóng dropdown khi click ra ngoài ─────────────────────────────────
+    document.addEventListener('click', function(e) {
+      document.querySelectorAll('.filter-group[open]').forEach(g => {
+        if (!g.contains(e.target)) g.removeAttribute('open');
+      });
+      const sd = document.querySelector('.sort-dropdown[open]');
+      if (sd && !sd.contains(e.target)) sd.removeAttribute('open');
     });
   });
 </script>
@@ -662,7 +926,7 @@
       "min": 8,
       "max": 24,
       "step": 4,
-      "default": 12
+      "default": 16
     },
     {
       "type": "range",
@@ -690,6 +954,13 @@
       "id": "show_product_count",
       "label": "Show product count",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_grid_density",
+      "label": "Enable grid density toggle",
+      "default": false,
+      "info": "Show buttons to change grid layout (disabled for fixed 4-column layout)"
     }
   ]
 }

@@ -6,6 +6,13 @@
 // Theme utilities
 window.theme = window.theme || {};
 
+// Safe console logging
+const safeLog = (message, data = null) => {
+  if (typeof console !== 'undefined' && console.log) {
+    console.log(message, data);
+  }
+};
+
 // Cart functionality
 theme.cart = {
   addItem: function(variantId, quantity = 1) {
@@ -18,7 +25,17 @@ theme.cart = {
         id: variantId,
         quantity: quantity
       })
-    }).then(response => response.json());
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch(error => {
+      safeLog('Cart add error:', error);
+      throw error;
+    });
   },
 
   updateItem: function(key, quantity) {
@@ -31,19 +48,43 @@ theme.cart = {
         id: key,
         quantity: quantity
       })
-    }).then(response => response.json());
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .catch(error => {
+      safeLog('Cart update error:', error);
+      throw error;
+    });
   },
 
   getCart: function() {
-    return fetch('/cart.js').then(response => response.json());
+    return fetch('/cart.js')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .catch(error => {
+        safeLog('Cart get error:', error);
+        throw error;
+      });
   }
 };
 
 // Product functionality
 theme.product = {
   init: function() {
-    this.initVariantSelection();
-    this.initQuantityButtons();
+    try {
+      this.initVariantSelection();
+      this.initQuantityButtons();
+    } catch (error) {
+      safeLog('Product init error:', error);
+    }
   },
 
   initVariantSelection: function() {
@@ -61,21 +102,33 @@ theme.product = {
   },
 
   handleVariantChange: function(event) {
-    // Handle variant selection logic
-    const form = event.target.closest('form');
-    const selectedOptions = Array.from(form.querySelectorAll('.variant-select')).map(select => select.value);
-    // Update price, availability, etc.
+    try {
+      // Handle variant selection logic
+      const form = event.target.closest('form');
+      if (form) {
+        const selectedOptions = Array.from(form.querySelectorAll('.variant-select')).map(select => select.value);
+        // Update price, availability, etc.
+      }
+    } catch (error) {
+      safeLog('Variant change error:', error);
+    }
   },
 
   handleQuantityChange: function(event) {
-    const button = event.target;
-    const input = button.parentNode.querySelector('input[type="number"]');
-    const currentValue = parseInt(input.value);
-    
-    if (button.classList.contains('quantity-plus')) {
-      input.value = currentValue + 1;
-    } else if (button.classList.contains('quantity-minus') && currentValue > 1) {
-      input.value = currentValue - 1;
+    try {
+      const button = event.target;
+      const input = button.parentNode.querySelector('input[type="number"]');
+      if (input) {
+        const currentValue = parseInt(input.value) || 1;
+        
+        if (button.classList.contains('quantity-plus')) {
+          input.value = currentValue + 1;
+        } else if (button.classList.contains('quantity-minus') && currentValue > 1) {
+          input.value = currentValue - 1;
+        }
+      }
+    } catch (error) {
+      safeLog('Quantity change error:', error);
     }
   }
 };
@@ -83,17 +136,25 @@ theme.product = {
 // Collection functionality
 theme.collection = {
   init: function() {
-    this.initSorting();
-    this.initFiltering();
+    try {
+      this.initSorting();
+      this.initFiltering();
+    } catch (error) {
+      safeLog('Collection init error:', error);
+    }
   },
 
   initSorting: function() {
     const sortSelect = document.getElementById('SortBy');
     if (sortSelect) {
       sortSelect.addEventListener('change', function() {
-        const url = new URL(window.location);
-        url.searchParams.set('sort_by', this.value);
-        window.location.href = url.toString();
+        try {
+          const url = new URL(window.location);
+          url.searchParams.set('sort_by', this.value);
+          window.location.href = url.toString();
+        } catch (error) {
+          safeLog('Sort error:', error);
+        }
       });
     }
   },
@@ -106,7 +167,11 @@ theme.collection = {
 // Search functionality
 theme.search = {
   init: function() {
-    this.initPredictiveSearch();
+    try {
+      this.initPredictiveSearch();
+    } catch (error) {
+      safeLog('Search init error:', error);
+    }
   },
 
   initPredictiveSearch: function() {
@@ -117,19 +182,27 @@ theme.search = {
   },
 
   handleSearchInput: function(event) {
-    const query = event.target.value;
-    if (query.length > 2) {
-      // Implement predictive search
+    try {
+      const query = event.target.value;
+      if (query.length > 2) {
+        // Implement predictive search
+      }
+    } catch (error) {
+      safeLog('Search input error:', error);
     }
   }
 };
 
 // Initialize theme when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  theme.product.init();
-  theme.collection.init();
-  theme.search.init();
-  
-  // Initialize other components
-  console.log('LuxeBeam theme loaded');
+  try {
+    theme.product.init();
+    theme.collection.init();
+    theme.search.init();
+    
+    // Initialize other components
+    safeLog('LuxeBeam theme loaded successfully');
+  } catch (error) {
+    safeLog('Theme initialization error:', error);
+  }
 });
