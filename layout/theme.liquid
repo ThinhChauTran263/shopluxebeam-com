@@ -39,6 +39,16 @@
 
   <!-- CSS -->
   <style>
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    
     @font-face {
       font-family: "Francois One";
       font-weight: 400;
@@ -151,6 +161,39 @@
   </style>
 
   {{ content_for_header }}
+
+  <style>
+    /* Override any Shopify injected styles */
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    
+    body::before {
+      display: none !important;
+    }
+    
+    #shopify-section-header {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  </style>
+  
+  <script>
+    // Force remove any margin/padding after DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.margin = '0';
+      document.documentElement.style.padding = '0';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      
+      var headerSection = document.getElementById('shopify-section-header');
+      if (headerSection) {
+        headerSection.style.margin = '0';
+        headerSection.style.padding = '0';
+      }
+    });
+  </script>
 
   <!-- Theme Color Variables -->
   {% render 'theme-color-variables' %}
