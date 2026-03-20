@@ -1,126 +1,127 @@
 /* Search Popup Fix - High specificity to prevent override from product pages */
 .search-popup-luxe {
-  font-size: 16px !important;
-  line-height: normal !important;
+  font-size: 16px;
+  line-height: normal;
 }
 
 .search-popup-luxe * {
-  box-sizing: border-box !important;
-  font-family: inherit !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .search-popup-luxe .search-popup-content {
-  font-size: 16px !important;
-  line-height: normal !important;
+  font-size: 16px;
+  line-height: normal;
 }
 
 .search-popup-luxe .section-header h3 {
-  font-size: 18px !important;
-  font-weight: 600 !important;
-  color: #666 !important;
-  margin: 0 !important;
-  line-height: normal !important;
-  font-family: inherit !important;
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+  line-height: normal;
+  font-family: inherit;
 }
 
 .search-popup-luxe .clear-btn {
-  font-size: 14px !important;
-  font-family: inherit !important;
-  line-height: normal !important;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: normal;
 }
 
 .search-popup-luxe .search-input-popup {
-  font-size: 16px !important;
-  font-family: inherit !important;
-  line-height: normal !important;
+  font-size: 16px;
+  font-family: inherit;
+  line-height: normal;
 }
 
 .search-popup-luxe .product-card {
-  background: #fff !important;
-  font-size: 16px !important;
+  background: #fff;
+  font-size: 16px;
 }
 
 .search-popup-luxe .product-image {
-  width: 100% !important;
-  height: 180px !important;
-  object-fit: cover !important;
-  background: #f8f8f8 !important;
-  display: block !important;
-  max-width: none !important;
-  max-height: none !important;
-  transform: none !important;
-  scale: none !important;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #f8f8f8;
+  display: block;
+  max-width: none;
+  max-height: none;
+  transform: none;
+  scale: none;
 }
 
-.search-popup-luxe .product-title {
+/* Only apply these styles within search popup context */
+.search-popup-luxe .product-card .product-title {
   font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #000 !important;
-  margin: 0 0 4px 0 !important;
-  line-height: 1.2 !important;
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  height: 32px !important;
-  font-family: inherit !important;
-  transform: none !important;
-  scale: none !important;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 32px;
+  font-family: inherit;
+  transform: none;
+  scale: none;
 }
 
-.search-popup-luxe .current-price {
+.search-popup-luxe .product-card .current-price {
   font-size: 14px !important;
-  font-weight: 700 !important;
-  color: #000 !important;
-  font-family: inherit !important;
-  line-height: normal !important;
-  transform: none !important;
-  scale: none !important;
+  font-weight: 700;
+  color: #000;
+  font-family: inherit;
+  line-height: normal;
+  transform: none;
+  scale: none;
 }
 
-.search-popup-luxe .original-price {
-  font-size: 12px !important;
-  color: #999 !important;
-  text-decoration: line-through !important;
-  font-family: inherit !important;
-  line-height: normal !important;
-  transform: none !important;
-  scale: none !important;
+.search-popup-luxe .product-card .original-price {
+  font-size: 12px;
+  color: #999;
+  text-decoration: line-through;
+  font-family: inherit;
+  line-height: normal;
+  transform: none;
+  scale: none;
 }
 
 .search-popup-luxe .loading-message {
-  font-size: 16px !important;
-  font-family: inherit !important;
-  line-height: normal !important;
-  transform: none !important;
-  scale: none !important;
+  font-size: 16px;
+  font-family: inherit;
+  line-height: normal;
+  transform: none;
+  scale: none;
 }
 
 /* Reset any zoom/scale effects */
 .search-popup-luxe .product-card * {
-  transform: none !important;
-  scale: none !important;
-  zoom: 1 !important;
+  transform: none;
+  scale: none;
+  zoom: 1;
 }
 
 /* Ensure grid layout is not affected */
 .search-popup-luxe .products-grid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 15px !important;
-  grid-auto-rows: min-content !important;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  grid-auto-rows: min-content;
 }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
   .search-popup-luxe .products-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
   
   .search-popup-luxe .product-image {
-    height: 120px !important;
+    height: 120px;
   }
 }

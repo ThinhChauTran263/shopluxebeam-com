@@ -64,7 +64,9 @@
         {% endif %}
 
         <!-- Bundle Options -->
-        {% render 'product-bundle-selector', section: section %}
+        {% if section.settings.show_bundle_options %}
+          {% render 'product-bundle-selector', section: section %}
+        {% endif %}
 
         <!-- Add to Cart -->
         <form action="{{ routes.cart_add_url }}" method="post" class="product-form" data-ajax-cart="false" novalidate>
@@ -203,6 +205,12 @@
     {
       "type": "header",
       "content": "Bundle Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bundle_options",
+      "label": "Show bundle options",
+      "default": true
     },
     {
       "type": "text",

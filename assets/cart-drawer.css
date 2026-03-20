@@ -2,33 +2,33 @@
 .cart-drawer *,
 .cart-drawer *::before,
 .cart-drawer *::after {
-  box-sizing: border-box !important;
+  box-sizing: border-box;
 }
 
 .cart-drawer-overlay {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
-  right: 400px !important;
-  width: auto !important;
+  right: 400px;
+  width: auto;
   height: 100% !important;
-  background: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999998 !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transition: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: none;
 }
 
 .cart-drawer-overlay.active {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 @media (max-width: 576px) {
   .cart-drawer-overlay {
-    right: 0 !important;
+    right: 0;
   }
 }
 
@@ -36,14 +36,14 @@
   position: fixed !important;
   top: 0 !important;
   right: -400px !important;
-  width: 400px !important;
+  width: 400px;
   height: 100% !important;
-  background: #ffffff !important;
+  background: #ffffff;
   z-index: 999999 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  transition: right 0s ease !important;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  display: flex;
+  flex-direction: column;
+  transition: right 0s ease;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .cart-drawer.active {
@@ -71,15 +71,15 @@
   position: absolute !important;
   top: 15px !important;
   left: 85px !important;
-  right: auto !important;
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  color: #000 !important;
+  right: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  color: #000;
   z-index: 100 !important;
-  transform: translateX(0) !important;
+  transform: translateX(0);
 }
 
 .cart-drawer-title {
@@ -88,8 +88,8 @@
   margin: 0;
   padding: 40px 20px 15px 85px;
   color: #000;
-  padding-left: 85px !important;
-  margin-left: 0 !important;
+  padding-left: 85px;
+  margin-left: 0;
 }
 
 .cart-drawer-title span {
@@ -201,65 +201,65 @@
 }
 
 .qty-btn {
-  all: unset !important;
-  width: 32px !important;
-  height: 32px !important;
-  background: #fff !important;
-  cursor: pointer !important;
-  font-size: 20px !important;
-  font-weight: 300 !important;
-  color: #000 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
-  vertical-align: top !important;
+  all: unset;
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 300;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  vertical-align: top;
 }
 
 .qty-btn:hover {
-  background: #f5f5f5 !important;
+  background: #f5f5f5;
 }
 
 .qty-input {
-  all: unset !important;
-  width: 45px !important;
-  height: 32px !important;
-  border-left: 1px solid #000 !important;
-  border-right: 1px solid #000 !important;
-  text-align: center !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  color: #000 !important;
-  line-height: 32px !important;
-  display: inline-block !important;
-  vertical-align: top !important;
-  background: #fff !important;
-  box-sizing: border-box !important;
+  all: unset;
+  width: 45px;
+  height: 32px;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  line-height: 32px;
+  display: inline-block;
+  vertical-align: top;
+  background: #fff;
+  box-sizing: border-box;
 }
 
 .qty-input::-webkit-outer-spin-button,
 .qty-input::-webkit-inner-spin-button {
-  display: none !important;
+  display: none;
 }
 
 .cart-item-remove {
-  all: unset !important;
-  cursor: pointer !important;
-  color: #999 !important;
-  width: 32px !important;
-  height: 32px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  position: relative !important;
-  top: 5px !important;
+  all: unset;
+  cursor: pointer;
+  color: #999;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 5px;
 }
 
 .cart-item-remove:hover {
-  color: #000 !important;
+  color: #000;
 }
 
 .cart-item-remove svg {

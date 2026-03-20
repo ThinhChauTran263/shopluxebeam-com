@@ -60,232 +60,232 @@
 
 <style>
   .product-card-enhanced {
-    position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 450px !important;
-    background: #fff !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
   
   .product-card-enhanced:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   }
   
   .product-card-enhanced__image {
-    position: relative !important;
-    overflow: hidden !important;
-    background: #ffffff !important;
-    width: 100% !important;
-    height: 280px !important;
-    flex-shrink: 0 !important;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    width: 100%;
+    height: 280px;
+    flex-shrink: 0;
   }
   
   .product-card-enhanced__image a {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   
   .product-card-enhanced__img,
   .product-card-enhanced__placeholder {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    display: block !important;
-    transition: transform 0.3s ease !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.3s ease;
   }
   
   .product-card-enhanced:hover .product-card-enhanced__img {
-    transform: scale(1.05) !important;
+    transform: scale(1.05);
   }
   
   .product-card-enhanced__badge {
-    position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    z-index: 2 !important;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
   }
   
   .badge-sale-enhanced {
-    background: #000000 !important;
-    color: white !important;
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    border-radius: 4px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
+    background: #000000;
+    color: white;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   
   .product-card-enhanced__info {
-    padding: 20px 20px 30px 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    flex: 1 !important;
-    justify-content: space-between !important;
+    padding: 20px 20px 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    justify-content: space-between;
   }
   
   .product-card-enhanced__title {
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    margin: 0 !important;
-    line-height: 1.4 !important;
-    color: #000 !important;
-    min-height: 44px !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+    color: #000;
+    min-height: 44px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   
   .product-card-enhanced__title a {
-    color: #000 !important;
-    text-decoration: none !important;
-    transition: color 0.3s ease !important;
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s ease;
   }
   
   .product-card-enhanced__title a:hover {
-    color: #666 !important;
+    color: #666;
   }
   
   .product-card-enhanced__price {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin: 8px 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
   }
   
   .price-enhanced {
-    font-weight: 700 !important;
-    font-size: 18px !important;
-    color: #000 !important;
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
   }
   
   .price-enhanced--sale {
-    color: #000000 !important;
+    color: #000000;
   }
   
   .price-enhanced--compare {
-    color: #999 !important;
-    text-decoration: line-through !important;
-    font-weight: 400 !important;
-    font-size: 16px !important;
+    color: #999;
+    text-decoration: line-through;
+    font-weight: 400;
+    font-size: 16px;
   }
   
   /* Add to Cart Button */
   .product-card-enhanced__actions {
-    margin-top: auto !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 8px !important;
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-bottom: 8px;
   }
   
   .product-card-enhanced__form {
-    margin: 0 !important;
+    margin: 0;
   }
   
   .btn-add-to-cart-enhanced {
-    width: 100% !important;
-    padding: 12px 20px !important;
-    background: #000 !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    min-height: 48px !important;
-    margin-bottom: 0 !important;
-    position: relative !important;
-    bottom: 8px !important;
+    width: 100%;
+    padding: 12px 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 48px;
+    margin-bottom: 0;
+    position: relative;
+    bottom: 8px;
   }
   
   .btn-add-to-cart-enhanced:hover:not(:disabled) {
-    background: #333 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
   
   .btn-add-to-cart-enhanced:active:not(:disabled) {
-    transform: translateY(0) !important;
+    transform: translateY(0);
   }
   
   .btn-add-to-cart-enhanced:disabled {
-    background: #ccc !important;
-    color: #666 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-    box-shadow: none !important;
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
   
   /* Loading state */
   .btn-add-to-cart-enhanced.loading {
-    background: #007bff !important;
-    pointer-events: none !important;
+    background: #007bff;
+    pointer-events: none;
   }
   
   .btn-add-to-cart-enhanced.success {
-    background: #28a745 !important;
+    background: #28a745;
   }
   
   .btn-add-to-cart-enhanced.error {
-    background: #dc3545 !important;
+    background: #dc3545;
   }
   
   @media (max-width: 989px) {
     .product-card-enhanced {
-      height: 420px !important;
+      height: 420px;
     }
     
     .product-card-enhanced__image {
-      height: 250px !important;
+      height: 250px;
     }
     
     .product-card-enhanced__info {
-      padding: 16px !important;
+      padding: 16px;
     }
   }
   
   @media (max-width: 749px) {
     .product-card-enhanced {
-      height: 380px !important;
+      height: 380px;
     }
     
     .product-card-enhanced__image {
-      height: 220px !important;
+      height: 220px;
     }
     
     .product-card-enhanced__info {
-      padding: 12px !important;
-      gap: 8px !important;
+      padding: 12px;
+      gap: 8px;
     }
     
     .product-card-enhanced__title {
-      font-size: 14px !important;
-      min-height: 36px !important;
+      font-size: 14px;
+      min-height: 36px;
     }
     
     .price-enhanced {
-      font-size: 16px !important;
+      font-size: 16px;
     }
     
     .price-enhanced--compare {
-      font-size: 14px !important;
+      font-size: 14px;
     }
     
     .btn-add-to-cart-enhanced {
-      padding: 10px 16px !important;
-      font-size: 12px !important;
-      min-height: 44px !important;
+      padding: 10px 16px;
+      font-size: 12px;
+      min-height: 44px;
     }
   }
 </style>
